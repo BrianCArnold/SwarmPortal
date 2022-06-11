@@ -1,11 +1,12 @@
-﻿using SwarmPortal.Common;
+﻿using System.Runtime.CompilerServices;
+using SwarmPortal.Common;
 namespace SwarmPortal.Static;
 
-public class StaticLinkItemProvider : ILinkItemProvider
+public class StaticLinkItemProvider : IItemProvider<IGroupableLinkItem>
 {
 
     //This is basically just a mock up of something that takes a while to get individual items.
-    public async IAsyncEnumerable<ILinkItem> GetLinkItemsAsync()
+    public async IAsyncEnumerable<IGroupableLinkItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
     {
         await Task.Delay(10);
         yield return new CommonLinkItem("Google", "Search", "https://google.com");

@@ -1,31 +1,30 @@
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
 namespace SwarmPortal.Common;
 
-public abstract class GroupedItems<TGroupedItem> : IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>>
+public class DictionaryGenerator<TGroupedItem>
+    where TGroupedItem: INamedItem
 {
     private readonly IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> wrapped;
 
-    public GroupedItems(IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> wrapped)
+    public DictionaryGenerator(IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> wrapped)
     {
         this.wrapped = wrapped;
     }
-
-    public IAsyncEnumerator<IAsyncGrouping<string, TGroupedItem>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-        => wrapped.GetAsyncEnumerator(cancellationToken);
+    public async Task<Dictionary<string, IEnumerable<TGroupedItem>>> GetDictionary(CancellationToken ct)
+    {
+        Dictionary<string, IEnumerable<TGroupedItem>> result = new Dictionary<string, IEnumerable<TGroupedItem>>();
+        await foreach (var group in wrapped)
+        {
+            result.Add(group.Key, await group.ToListAsync());
+        }
+        return result;
+    }
 }
-public class GroupedLinks : GroupedItems<IGroupedLinkItem>
+public static class GroupedItemsExtensions
 {
-    public GroupedLinks(IAsyncEnumerable<IAsyncGrouping<string, IGroupedLinkItem>> wrapped)
-        : base(wrapped) {}
-}
-public class GroupedHosts : GroupedItems<IGroupedHostItem>
-{
-    public GroupedHosts(IAsyncEnumerable<IAsyncGrouping<string, IGroupedHostItem>> wrapped)
-        : base(wrapped) {}
-}
-public static class GroupedExtensions
-{
-    public static GroupedHosts ToGroupedHosts(this IAsyncEnumerable<IAsyncGrouping<string, IGroupedHostItem>> toWrap)
-     => new GroupedHosts(toWrap);
-    public static GroupedLinks ToGroupedLinks(this IAsyncEnumerable<IAsyncGrouping<string, IGroupedLinkItem>> toWrap)
-     => new GroupedLinks(toWrap);
+    public static DictionaryGenerator<TGroupedItem> ToDictionaryGenerator<TGroupedItem>(this IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> groups)
+        where TGroupedItem : INamedItem 
+            => new DictionaryGenerator<TGroupedItem>(groups);
 }

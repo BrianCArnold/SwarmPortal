@@ -8,17 +8,19 @@ namespace SwarmPortal.API.Controllers;
 public class HostsController : ControllerBase
 {
     private readonly ILogger<HostsController> _logger;
-    private readonly IHostGroupProvider _hostGroupProvider;
+    private readonly IItemDictionaryGeneratorProvider<IGroupableHostItem, IHostItem> _hostGroupProvider;
 
-    public HostsController(ILogger<HostsController> logger, IHostGroupProvider hostGroupProvider)
+    public HostsController(ILogger<HostsController> logger, IItemDictionaryGeneratorProvider<IGroupableHostItem, IHostItem> hostGroupProvider)
     {
         _logger = logger;
         _hostGroupProvider = hostGroupProvider;
     }
 
-    [HttpGet(Name = "All")]
-    public async Task<ActionResult<IGroupedHosts>> Get()
+    [HttpGet]
+    public async Task<ActionResult<Dictionary<string, IEnumerable<IHostItem>>>> Get(CancellationToken ct)
     {
-        return _hostGroupProvider.GetHostGroupsAsync();
+        var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);
+        var dictionary = await dictionaryGenerator.GetDictionary(ct);
+        return await Task.FromResult(dictionary);
     }
 }
