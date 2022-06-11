@@ -16,6 +16,8 @@ builder.Services.AddStaticLinkProvider();
 
 builder.Services.AddDockerNodeStatusProvider();
 builder.Services.AddDockerServiceStatusProvider();
+builder.Services.AddDockerServiceLinkProvider();
+
 // builder.Services.Configure<JsonOptions>(options =>
 // {
 //     options.JsonSerializerOptions.IgnoreReadOnlyProperties = false;

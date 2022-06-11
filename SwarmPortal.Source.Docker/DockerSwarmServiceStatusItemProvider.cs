@@ -1,9 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using Docker.DotNet;
+using Newtonsoft.Json;
 using SwarmPortal.Common;
 
 namespace SwarmPortal.Source.Docker;
-public class DockerSwarmServiceStatusItemProvider : DockerSwarmStatusItemProvider
+public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
     private const string StackNameLabel = "com.docker.stack.namespace";
     public override async IAsyncEnumerable<IStatusItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
@@ -32,18 +33,21 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmStatusItemProvide
                 stack = "None";
                 name = serviceName;
             }
-            ulong running = service.ServiceStatus.RunningTasks;
-            ulong desired = service.ServiceStatus.DesiredTasks;
+            var inspectData = await client.Swarm.InspectServiceAsync(service.ID);
+            
+            Console.WriteLine(JsonConvert.SerializeObject(inspectData));
+            // ulong running = inspectData.ServiceStatus.RunningTasks;
+            // ulong desired = inspectData.ServiceStatus.DesiredTasks;
 
-            Status status = desired switch {
-                0ul => Status.Unknown,
-                _ => running switch {
-                    0 => Status.Offline,
-                    _ when running < desired => Status.Degraded,
-                    _ => Status.Online
-                }
-            };
-
+            // Status status = desired switch {
+            //     0ul => Status.Unknown,
+            //     _ => running switch {
+            //         0 => Status.Offline,
+            //         _ when running < desired => Status.Degraded,
+            //         _ => Status.Online
+            //     }
+            // };
+            Status status = Status.Unknown;
 
             yield return new CommonStatusItem(name, stack, status);
         }
