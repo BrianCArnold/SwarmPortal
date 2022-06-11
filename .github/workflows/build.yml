@@ -1,5 +1,6 @@
 name: Build Application 
 on:  
+
   pull_request:
     branches:    
       - main
@@ -7,7 +8,8 @@ on:
   #   # * is a special character in YAML so you have to quote this string
   #   - cron:  '30 5,17 * * *'
   push:    
-    branches: [ master ]  
+    branches: 
+      - main
 jobs:   
   build:    
     runs-on: ubuntu-latest   
