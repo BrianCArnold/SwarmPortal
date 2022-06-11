@@ -1,7 +1,7 @@
 namespace SwarmPortal.Common;
-public interface IDashboardItem
+
+public interface IGroupedLinkItem
 {
-    string Group { get; }
     string Name { get; }
     string Url { get; }
 }
