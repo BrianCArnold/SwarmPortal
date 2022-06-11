@@ -3,9 +3,8 @@ using Docker.DotNet;
 using SwarmPortal.Common;
 
 namespace SwarmPortal.Source.Docker;
-public class DockerSwarmNodeStatusItemProvider : DockerSwarmStatusItemProvider
+public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
-    private const string StackNameLabel = "com.docker.stack.namespace";
     public override async IAsyncEnumerable<IStatusItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
     {
         var nodes = await client.Swarm.ListNodesAsync();
