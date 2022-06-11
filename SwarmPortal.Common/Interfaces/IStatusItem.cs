@@ -1,6 +1,6 @@
 namespace SwarmPortal.Common;
 
-public interface IHostItem : INamedItem, IGroupableItem
+public interface IStatusItem : INamedItem, IGroupableItem
 {
     Status Status { get; }
 }

@@ -4,8 +4,8 @@ using SwarmPortal.Static;
 namespace SwarmPortal.Common;
 public static class SwarmPortalStaticServiceExtensions
 {
-    public static IServiceCollection AddStaticHostStatusProvider(this IServiceCollection serviceCollection)
-     => serviceCollection.AddScoped<IItemProvider<IHostItem>, StaticHostItemProvider>();
-    public static IServiceCollection AddStaticLinkStatusProvider(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddStaticStatusProvider(this IServiceCollection serviceCollection)
+     => serviceCollection.AddScoped<IItemProvider<IStatusItem>, StaticStatusItemProvider>();
+    public static IServiceCollection AddStaticLinkProvider(this IServiceCollection serviceCollection)
      => serviceCollection.AddScoped<IItemProvider<ILinkItem>, StaticLinkItemProvider>();
 }
