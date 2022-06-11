@@ -9,11 +9,12 @@ public class CollatingHostGroupProvider : IHostGroupProvider
         this.providers = providers;
     }
 
-    public IAsyncEnumerable<IAsyncGrouping<string, IGroupedHostItem>> GetHostGroupsAsync()
+    public GroupedHosts GetHostGroupsAsync()
     {
         return providers.ToAsyncEnumerable()
             .SelectMany(p => p.GetHostsAsync())
             .OrderBy(i => i.Name)
-            .GroupBy(i => i.Group);
+            .GroupBy(i => i.Group)
+            .ToGroupedHosts();
     }
 }

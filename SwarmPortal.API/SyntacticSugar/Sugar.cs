@@ -1,0 +1,2 @@
+global using IGroupedHosts = System.Collections.Generic.IAsyncEnumerable<System.Linq.IAsyncGrouping<string, SwarmPortal.Common.IGroupedHostItem>>;
+global using IGroupedLinks = System.Collections.Generic.IAsyncEnumerable<System.Linq.IAsyncGrouping<string, SwarmPortal.Common.IGroupedLinkItem>>;

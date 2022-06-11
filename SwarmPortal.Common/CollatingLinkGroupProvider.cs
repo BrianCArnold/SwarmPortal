@@ -9,11 +9,12 @@ public class CollatingLinkGroupProvider : ILinkGroupProvider
         this.providers = providers;
     }
 
-    public IAsyncEnumerable<IAsyncGrouping<string, IGroupedLinkItem>> GetLinkGroupsAsync()
+    public GroupedLinks GetLinkGroupsAsync()
     {
         return providers.ToAsyncEnumerable()
             .SelectMany(p => p.GetLinkItemsAsync())
             .OrderBy(i => i.Name)
-            .GroupBy(i => i.Group);
+            .GroupBy(i => i.Group)
+            .ToGroupedLinks();
     }
 }
