@@ -1,5 +1,6 @@
 namespace SwarmPortal.Common;
-public interface ILinkItem : IGroupedLinkItem
+
+public interface ILinkItem : INamedItem, IGroupableItem
 {
-    string Group { get; }
+    string Url { get; }
 }
