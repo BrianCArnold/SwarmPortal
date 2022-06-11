@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Common", "SwarmPortal.Common\SwarmPortal.Common.csproj", "{739C7C40-19C9-49FE-9370-811CDAEDD32D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Static", "SwarmPortal.Static\SwarmPortal.Static.csproj", "{4BCAE0FF-3D12-470A-AA39-2AD7C6998FF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.Static", "SwarmPortal.Source.Static\SwarmPortal.Source.Static.csproj", "{4BCAE0FF-3D12-470A-AA39-2AD7C6998FF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.API", "SwarmPortal.API\SwarmPortal.API.csproj", "{DB8471E9-5456-4626-87B2-A20B3F37336F}"
 EndProject

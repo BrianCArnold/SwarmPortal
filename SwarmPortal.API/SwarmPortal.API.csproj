@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SwarmPortal.Common\SwarmPortal.Common.csproj" />
-    <ProjectReference Include="..\SwarmPortal.Static\SwarmPortal.Static.csproj" />
+    <ProjectReference Include="..\SwarmPortal.Source.Static\SwarmPortal.Source.Static.csproj" />
   </ItemGroup>
 
 </Project>
