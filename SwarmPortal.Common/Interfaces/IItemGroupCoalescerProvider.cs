@@ -1,8 +1,7 @@
 namespace SwarmPortal.Common;
 
-public interface IItemDictionaryGeneratorProvider<TGroupableItem, TItem>
-    where TItem : class, INamedItem
-    where TGroupableItem : class, IGroupableItem
+public interface IItemDictionaryGeneratorProvider<TGroupableItem>
+    where TGroupableItem : class, IGroupableItem, INamedItem
 {
-    DictionaryGenerator<TItem> GetDictionaryGeneratorAsync(CancellationToken ct);
+    DictionaryGenerator<TGroupableItem> GetDictionaryGeneratorAsync(CancellationToken ct);
 }
