@@ -9,10 +9,13 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHostGroupCoalescerProvider();
+builder.Services.AddStatusGroupCoalescerProvider();
 builder.Services.AddLinkGroupCoalescerProvider();
-builder.Services.AddStaticHostStatusProvider();
-builder.Services.AddStaticLinkStatusProvider();
+builder.Services.AddStaticStatusProvider();
+builder.Services.AddStaticLinkProvider();
+
+builder.Services.AddDockerNodeStatusProvider();
+builder.Services.AddDockerServiceStatusProvider();
 // builder.Services.Configure<JsonOptions>(options =>
 // {
 //     options.JsonSerializerOptions.IgnoreReadOnlyProperties = false;
