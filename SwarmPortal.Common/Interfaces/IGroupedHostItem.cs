@@ -1,7 +1,7 @@
 namespace SwarmPortal.Common;
-public interface IHostStatus
+
+public interface IGroupedHostItem
 {
     string Name { get; }
     Status Status { get; }
 }
-

@@ -1,2 +1,2 @@
 namespace SwarmPortal.Common;
-public record CommonHostStatus(string Name, Status Status) : IHostStatus;
+public record CommonHostStatus(string Name, string Group, Status Status) : IHostItem;
