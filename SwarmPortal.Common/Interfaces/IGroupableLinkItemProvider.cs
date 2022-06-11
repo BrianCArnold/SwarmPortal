@@ -1,4 +1,4 @@
 ﻿namespace SwarmPortal.Common;
-public interface IGroupableLinkItemProvider : IItemProvider<IGroupableLinkItem>
+public interface IGroupableLinkItemProvider : IItemProvider<ILinkItem>
 {
 }

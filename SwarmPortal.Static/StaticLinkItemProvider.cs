@@ -2,11 +2,11 @@
 using SwarmPortal.Common;
 namespace SwarmPortal.Static;
 
-public class StaticLinkItemProvider : IItemProvider<IGroupableLinkItem>
+public class StaticLinkItemProvider : IItemProvider<ILinkItem>
 {
 
     //This is basically just a mock up of something that takes a while to get individual items.
-    public async IAsyncEnumerable<IGroupableLinkItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
+    public async IAsyncEnumerable<ILinkItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
     {
         await Task.Delay(10);
         yield return new CommonLinkItem("Twitter", "Social", "https://twitter.com");

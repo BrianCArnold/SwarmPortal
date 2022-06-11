@@ -5,7 +5,7 @@ namespace SwarmPortal.Common;
 public static class SwarmPortalStaticServiceExtensions
 {
     public static IServiceCollection AddStaticHostStatusProvider(this IServiceCollection serviceCollection)
-     => serviceCollection.AddScoped<IItemProvider<IGroupableHostItem>, StaticHostItemProvider>();
+     => serviceCollection.AddScoped<IItemProvider<IHostItem>, StaticHostItemProvider>();
     public static IServiceCollection AddStaticLinkStatusProvider(this IServiceCollection serviceCollection)
-     => serviceCollection.AddScoped<IItemProvider<IGroupableLinkItem>, StaticLinkItemProvider>();
+     => serviceCollection.AddScoped<IItemProvider<ILinkItem>, StaticLinkItemProvider>();
 }
