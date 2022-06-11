@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SwarmPortal.Common\SwarmPortal.Common.csproj" />
     <ProjectReference Include="..\SwarmPortal.Source.Static\SwarmPortal.Source.Static.csproj" />
+    <ProjectReference Include="..\SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj" />
   </ItemGroup>
 
 </Project>

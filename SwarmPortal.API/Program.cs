@@ -13,6 +13,9 @@ builder.Services.AddStatusGroupCoalescerProvider();
 builder.Services.AddLinkGroupCoalescerProvider();
 builder.Services.AddStaticStatusProvider();
 builder.Services.AddStaticLinkProvider();
+
+builder.Services.AddDockerNodeStatusProvider();
+builder.Services.AddDockerServiceStatusProvider();
 // builder.Services.Configure<JsonOptions>(options =>
 // {
 //     options.JsonSerializerOptions.IgnoreReadOnlyProperties = false;
