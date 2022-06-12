@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.API", "SwarmPor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.Docker", "SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj", "{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.SQLite", "SwarmPortal.Source.SQLite\SwarmPortal.Source.SQLite.csproj", "{F121432A-4C88-494C-B475-503BBE6E22A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F121432A-4C88-494C-B475-503BBE6E22A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F121432A-4C88-494C-B475-503BBE6E22A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F121432A-4C88-494C-B475-503BBE6E22A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F121432A-4C88-494C-B475-503BBE6E22A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
