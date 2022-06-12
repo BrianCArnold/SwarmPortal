@@ -2,9 +2,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace SwarmPortal.Source;
 
-internal class DockerSourceConfiguration : IDockerSourceConfiguration
+public class DockerSourceConfiguration : IDockerSourceConfiguration
 {
-    internal static IDockerSourceConfiguration Create(IConfiguration config)
+    public static IDockerSourceConfiguration Create(IConfiguration config)
     {
         var dockerSourceConfig = new DockerSourceConfiguration();
         config.Bind(dockerSourceConfig);

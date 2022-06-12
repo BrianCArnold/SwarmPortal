@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StatusGroupCardComponent } from './status-group-card/status-group-card.component';
 import { LinkGroupCardComponent } from './link-group-card/link-group-card.component';
+import { StatusScreenComponent } from './status-screen/status-screen.component';
 
 
 export function apiConfigFactory(): Configuration {
@@ -22,7 +23,8 @@ export function apiConfigFactory(): Configuration {
   declarations: [
     AppComponent,
     StatusGroupCardComponent,
-    LinkGroupCardComponent
+    LinkGroupCardComponent,
+    StatusScreenComponent
   ],
   imports: [
     BrowserModule,
