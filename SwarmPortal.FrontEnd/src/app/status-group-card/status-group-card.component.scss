@@ -1,0 +1,19 @@
+.hostList ul li span.host::before {
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+  color: red;
+}
+.hostList ul li span.offline::before {
+  content: "❌";
+}
+.hostList ul li span.online::before {
+  content: "✅";
+}
+.hostList ul li span.unknown::before {
+  content: "❔";
+}
+.hostList ul li span.degraded::before {
+  content: "⬇️";
+}

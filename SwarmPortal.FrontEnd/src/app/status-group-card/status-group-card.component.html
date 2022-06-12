@@ -1,0 +1,14 @@
+<div class="card mb-3 hostList">
+  <div class="card-header">
+    {{groupName}}
+  </div>
+  <div class="card-body">
+    <ul>
+      <li *ngFor="let status of groupStatuses">
+        <span [ngClass]="status.status?.toString()?.toLowerCase() || ''">
+          {{status.name}}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
