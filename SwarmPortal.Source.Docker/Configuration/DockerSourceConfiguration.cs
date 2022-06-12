@@ -13,5 +13,6 @@ internal class DockerSourceConfiguration : IDockerSourceConfiguration
     private  DockerSourceConfiguration()
     {
     }
-    public string DockerSocketUri { get; } = "unix:///var/run/docker.sock";
+    public string DockerSocketUri { get; set; } = "unix:///var/run/docker.sock";
+    public string SwarmPortalLabelPrefix { get; set; } = "swarm.portal";
 }

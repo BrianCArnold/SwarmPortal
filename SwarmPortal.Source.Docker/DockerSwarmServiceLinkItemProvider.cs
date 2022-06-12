@@ -2,7 +2,8 @@ namespace SwarmPortal.Source.Docker;
 
 public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkItem>
 {
-    private const string SwarmPortalLabelPrefix = "swarm.portal.";
+    private string SwarmPortalLabelPrefix
+     => base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".";
 
     public DockerSwarmServiceLinkItemProvider(ILogger<DockerSwarmServiceLinkItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
     {
