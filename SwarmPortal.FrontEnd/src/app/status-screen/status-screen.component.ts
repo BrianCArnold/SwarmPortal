@@ -19,6 +19,11 @@ export class StatusScreenComponent implements OnInit {
   statusGroups: { name: string; values: IStatusItem[]; }[] = [];
   constructor(private activatedRoute: ActivatedRoute) {
   }
+
+
+  siteBackgrounds = ['primary', 'success', 'danger', 'warning'];
+
+
   async ngOnInit(): Promise<void> {
     this.linkDict = this.activatedRoute.snapshot.data["links"];
     this.statusDict = this.activatedRoute.snapshot.data["statuses"];

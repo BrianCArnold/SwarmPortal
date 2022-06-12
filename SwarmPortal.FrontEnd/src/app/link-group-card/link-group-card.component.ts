@@ -8,16 +8,14 @@ import { ILinkItem } from '../api-client';
 })
 export class LinkGroupCardComponent implements OnInit {
 
-  constructor() {
-    this.groupName = "";
-    this.groupLinks = [];
-  }
 
   ngOnInit(): void {
   }
 
   @Input()
-  groupName: string;
+  groupColorName: string = 'primary';
   @Input()
-  groupLinks: ILinkItem[];
+  groupName: string = "";
+  @Input()
+  groupLinks: ILinkItem[] = [];
 }

@@ -8,16 +8,12 @@ import { ILinkItem, IStatusItem } from '../api-client';
 })
 export class StatusGroupCardComponent implements OnInit {
 
-  constructor() {
-    this.groupName = "";
-    this.groupStatuses = [];
-  }
-
   ngOnInit(): void {
   }
-
   @Input()
-  groupName: string;
+  groupColorName: string = 'primary';
   @Input()
-  groupStatuses: IStatusItem[];
+  groupName: string = "";
+  @Input()
+  groupStatuses: IStatusItem[] = [];
 }
