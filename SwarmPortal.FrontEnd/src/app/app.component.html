@@ -1,0 +1,24 @@
+    <h1>Links</h1>
+    <ul>
+      <li *ngFor="let group of linkGroups">
+        {{group.name}}
+        <ul>
+          <li *ngFor="let link of group.values">
+            <a [href]="link.url">{{link.name}}</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Status</h1>
+    <ul>
+      <li *ngFor="let group of statusGroups">
+        {{group.name}}
+        <ul>
+          <li *ngFor="let status of group.values">
+            {{status.name}} - {{status.status}}
+            <!-- Need to replace this with font-awesome for status, with aria attributes for accessibility. -->
+          </li>
+        </ul>
+      </li>
+    </ul>
+<router-outlet></router-outlet>
