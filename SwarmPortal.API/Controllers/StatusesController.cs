@@ -5,18 +5,18 @@ namespace SwarmPortal.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class StatusController : ControllerBase
+public class StatusesController : ControllerBase
 {
-    private readonly ILogger<StatusController> _logger;
+    private readonly ILogger<StatusesController> _logger;
     private readonly IItemDictionaryGeneratorProvider<IStatusItem> _hostGroupProvider;
 
-    public StatusController(ILogger<StatusController> logger, IItemDictionaryGeneratorProvider<IStatusItem> hostGroupProvider)
+    public StatusesController(ILogger<StatusesController> logger, IItemDictionaryGeneratorProvider<IStatusItem> hostGroupProvider)
     {
         _logger = logger;
         _hostGroupProvider = hostGroupProvider;
     }
 
-    [HttpGet]
+    [HttpGet("All")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> Get(CancellationToken ct)
     {
         var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);

@@ -20,7 +20,18 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '6.x.x'
-    - name: Build      
+    - name: Build API
       if: success()
       run: |
         dotnet build
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Build FrontEnd
+      if: success()
+      working-directory: ./SwarmPortal.FrontEnd
+      run: |
+        npm ci
+        npm run build
+        

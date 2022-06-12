@@ -3,9 +3,23 @@ using SwarmPortal.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+const string debugCorsOriginName = "DebugCors";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: debugCorsOriginName,
+                      policy  =>
+                      {
+                          policy.WithOrigins("http://localhost:4200");
+                      });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers().AddNewtonsoftJson();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -14,6 +28,7 @@ builder.Services.AddLinkGroupCoalescerProvider();
 builder.Services.AddStaticStatusProvider();
 builder.Services.AddStaticLinkProvider();
 
+builder.Services.AddDockerConfiguration();
 builder.Services.AddDockerNodeStatusProvider();
 builder.Services.AddDockerServiceStatusProvider();
 builder.Services.AddDockerServiceLinkProvider();
@@ -38,7 +53,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#if !DEBUG
 app.UseHttpsRedirection();
+#endif
+
+app.UseCors(debugCorsOriginName);
 
 app.UseAuthorization();
 

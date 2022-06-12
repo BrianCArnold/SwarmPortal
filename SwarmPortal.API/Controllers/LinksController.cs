@@ -16,7 +16,7 @@ public class LinksController : ControllerBase
         _hostLinkProvider = hostLinkProvider;
     }
 
-    [HttpGet]
+    [HttpGet("All")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<ILinkItem>>>> Get(CancellationToken ct)
     {
         var dictionaryGenerator = _hostLinkProvider.GetDictionaryGeneratorAsync(ct);
