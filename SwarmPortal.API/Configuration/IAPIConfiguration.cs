@@ -5,4 +5,5 @@ public interface IAPIConfiguration
     bool EnableDockerNodeStatus { get; }
     bool EnableDockerServiceStatus { get; }
     bool EnableDockerServiceLinks { get; }
+    bool EnableSQLiteLinks { get; }
 }

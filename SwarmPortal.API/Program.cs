@@ -30,6 +30,8 @@ var apiConfig = APIConfiguration.Create(builder.Configuration);
 builder.Services.AddAPIConfiguration();
 builder.Services.AddDockerConfiguration();
 builder.Services.AddStaticFileConfiguration();
+builder.Services.AddSQLiteFileConfiguration();
+builder.Services.AddSQLiteContext();
 
 
 if (apiConfig.EnableStaticFileLinks)
@@ -40,6 +42,8 @@ if (apiConfig.EnableDockerServiceStatus)
 builder.Services.AddDockerServiceStatusProvider();
 if (apiConfig.EnableDockerServiceLinks)
 builder.Services.AddDockerServiceLinkProvider();
+if (apiConfig.EnableSQLiteLinks)
+builder.Services.AddSQLiteLinkProvider();
 
 // builder.Services.Configure<JsonOptions>(options =>
 // {

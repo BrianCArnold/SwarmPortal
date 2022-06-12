@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -15,6 +19,7 @@
     <ProjectReference Include="..\SwarmPortal.Common\SwarmPortal.Common.csproj" />
     <ProjectReference Include="..\SwarmPortal.Source.Static\SwarmPortal.Source.Static.csproj" />
     <ProjectReference Include="..\SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj" />
+    <ProjectReference Include="..\SwarmPortal.Source.SQLite\SwarmPortal.Source.SQLite.csproj" />
   </ItemGroup>
 
 </Project>
