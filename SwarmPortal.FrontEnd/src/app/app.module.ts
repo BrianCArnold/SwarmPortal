@@ -7,6 +7,7 @@ import { ApiModule, Configuration, ConfigurationParameters } from './api-client'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StatusGroupCardComponent } from './status-group-card/status-group-card.component';
+import { LinkGroupCardComponent } from './link-group-card/link-group-card.component';
 
 
 export function apiConfigFactory(): Configuration {
@@ -20,7 +21,8 @@ export function apiConfigFactory(): Configuration {
 @NgModule({
   declarations: [
     AppComponent,
-    StatusGroupCardComponent
+    StatusGroupCardComponent,
+    LinkGroupCardComponent
   ],
   imports: [
     BrowserModule,

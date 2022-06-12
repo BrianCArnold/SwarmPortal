@@ -1,9 +1,14 @@
 <div class="container">
   <div class="row pl-3 py-3 mr-0">
-    <div class="col-xl-6 col-12" *ngFor="let group of statusGroups">
+    <div class="col-xl-3 col-6" *ngFor="let group of statusGroups">
       <app-status-group-card [groupName]="group.name" [groupStatuses]="group.values">
       </app-status-group-card>
-
+    </div>
+  </div>
+  <div class="row pl-3 py-3 mr-0">
+    <div class="col-xl-6 col-12" *ngFor="let group of linkGroups">
+      <app-link-group-card [groupName]="group.name" [groupLinks]="group.values">
+      </app-link-group-card>
     </div>
   </div>
 </div>
