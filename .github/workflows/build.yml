@@ -24,7 +24,7 @@ jobs:
       if: success()
       run: |
         dotnet build
-    - name: Set up .NET
+    - name: Set up Node
       uses: actions/setup-node@v3
       with:
         node-version: 14
