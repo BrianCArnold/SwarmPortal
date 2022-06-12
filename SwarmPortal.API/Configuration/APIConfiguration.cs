@@ -16,4 +16,5 @@ public class APIConfiguration : IAPIConfiguration
     public bool EnableDockerNodeStatus { get; set; } = true;
     public bool EnableDockerServiceStatus { get; set; } = true;
     public bool EnableDockerServiceLinks { get; set; } = true;
+    public bool EnableSQLiteLinks { get; set; } = true;
 }
