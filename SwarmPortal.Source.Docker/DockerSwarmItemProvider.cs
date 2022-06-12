@@ -9,14 +9,7 @@ public abstract class DockerSwarmItemProvider<TItem> : IItemProvider<TItem>
     protected readonly ILogger<DockerSwarmItemProvider<TItem>> logger;
 
     //This works because the Type attribute for ILogger is *Contravariant*.
-    // When the constructor for a less derived type (a.k.a. parent class)
-    //   is called by the more derived type, the generic ILogger for the more 
-    //   derived type is accepted by typing by the less derived type because
-    //   the generic type parameter is specified with the "out" keyword.
-    //   > public interface ILogger<out TCategoryName> : ILogger
-    // Any covariant type declaration must, by definition, only emit values,
-    //   never accept them as parameters or as assignment.
-    // See bottom of file for example.
+    // See "CoAndContravariance.txt" for more detail.
     public DockerSwarmItemProvider(ILogger<DockerSwarmItemProvider<TItem>> logger, IDockerSourceConfiguration configuration)
     {
         this.logger = logger;

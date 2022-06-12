@@ -25,12 +25,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddStatusGroupCoalescerProvider();
 builder.Services.AddLinkGroupCoalescerProvider();
-builder.Services.AddStaticStatusProvider();
-builder.Services.AddStaticLinkProvider();
 
+var apiConfig = APIConfiguration.Create(builder.Configuration);
+builder.Services.AddAPIConfiguration();
 builder.Services.AddDockerConfiguration();
+
+
+if (apiConfig.EnableStaticStatus)
+builder.Services.AddStaticStatusProvider();
+if (apiConfig.EnableStaticLinks)
+builder.Services.AddStaticLinkProvider();
+if (apiConfig.EnableDockerNodeStatus)
 builder.Services.AddDockerNodeStatusProvider();
+if (apiConfig.EnableDockerServiceStatus)
 builder.Services.AddDockerServiceStatusProvider();
+if (apiConfig.EnableDockerServiceLinks)
 builder.Services.AddDockerServiceLinkProvider();
 
 // builder.Services.Configure<JsonOptions>(options =>
