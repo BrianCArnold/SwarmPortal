@@ -12,8 +12,7 @@ public class APIConfiguration : IAPIConfiguration
     {
     }
     //Does this configuration need to be handled by the libraries that provide these sources? Not certain, will revisit.
-    public bool EnableStaticLinks { get; set; } = false;
-    public bool EnableStaticStatus { get; set; } = false;
+    public bool EnableStaticFileLinks { get; set; } = true;
     public bool EnableDockerNodeStatus { get; set; } = true;
     public bool EnableDockerServiceStatus { get; set; } = true;
     public bool EnableDockerServiceLinks { get; set; } = true;

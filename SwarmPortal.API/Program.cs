@@ -29,12 +29,11 @@ builder.Services.AddLinkGroupCoalescerProvider();
 var apiConfig = APIConfiguration.Create(builder.Configuration);
 builder.Services.AddAPIConfiguration();
 builder.Services.AddDockerConfiguration();
+builder.Services.AddStaticFileConfiguration();
 
 
-if (apiConfig.EnableStaticStatus)
-builder.Services.AddStaticStatusProvider();
-if (apiConfig.EnableStaticLinks)
-builder.Services.AddStaticLinkProvider();
+if (apiConfig.EnableStaticFileLinks)
+builder.Services.AddStaticLinkFileProvider();
 if (apiConfig.EnableDockerNodeStatus)
 builder.Services.AddDockerNodeStatusProvider();
 if (apiConfig.EnableDockerServiceStatus)
