@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using SwarmPortal.Common;
 using SwarmPortal.Source;
 
-namespace SwarmPortal.Source.SQLite;
+namespace SwarmPortal.SQLite;
 
 public class SQLiteFileLinkItemProvider : IItemProvider<ILinkItem>
 {

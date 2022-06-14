@@ -19,7 +19,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: debugCorsOriginName,
                       policy  =>
                       {
-                          policy.WithOrigins("http://localhost:4200");
+                          policy.WithOrigins("http://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                       });
 });
 
@@ -63,16 +66,16 @@ builder.Services.AddAuthorization(o => {
 builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddStatusGroupCoalescerProvider();
-builder.Services.AddLinkGroupCoalescerProvider();
-
-builder.Services.AddAPIConfiguration();
-builder.Services.AddDockerConfiguration();
-builder.Services.AddStaticFileConfiguration();
-builder.Services.AddSQLiteFileConfiguration();
-builder.Services.AddSQLiteContext();
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddStatusGroupCoalescerProvider()
+    .AddLinkGroupCoalescerProvider()
+    .AddAPIConfiguration()
+    .AddDockerConfiguration()
+    .AddStaticFileConfiguration()
+    .AddSwarmPortalSQLiteContext(builder.Configuration)
+    .AddSQLiteFileConfiguration();
 
 
 if (apiConfig.EnableStaticFileLinks)
@@ -83,8 +86,6 @@ if (apiConfig.EnableDockerServiceStatus)
 builder.Services.AddDockerServiceStatusProvider();
 if (apiConfig.EnableDockerServiceLinks)
 builder.Services.AddDockerServiceLinkProvider();
-if (apiConfig.EnableSQLiteLinks)
-builder.Services.AddSQLiteLinkProvider();
 
 // builder.Services.Configure<JsonOptions>(options =>
 // {
@@ -112,6 +113,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(debugCorsOriginName);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
