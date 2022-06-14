@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SwarmPortal.Common;
@@ -37,7 +36,7 @@ builder.Services.AddAuthentication(options =>
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = false,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = false,
                     ValidIssuer = authConfig.Issuer,
@@ -52,8 +51,8 @@ builder.Services.AddAuthentication(options =>
                         Console.WriteLine(c.Exception.Message);
                         c.NoResult();
 
-                        c.Response.StatusCode = 500;
-                        c.Response.ContentType = "text/plain";
+                        // c.Response.StatusCode = 500;
+                        // c.Response.ContentType = "text/plain";
                         return c.Response.WriteAsync("An error occured processing your authentication.");
                     }
                 };
@@ -86,6 +85,8 @@ if (apiConfig.EnableDockerServiceStatus)
 builder.Services.AddDockerServiceStatusProvider();
 if (apiConfig.EnableDockerServiceLinks)
 builder.Services.AddDockerServiceLinkProvider();
+if (apiConfig.EnableSQLiteLinks)
+builder.Services.AddSQLiteLinkProvider();
 
 // builder.Services.Configure<JsonOptions>(options =>
 // {
