@@ -5,7 +5,7 @@ import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { first, firstValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService, Configuration, LinksService } from './api';
-import { UserService } from './services/user.service';
+import { HttpService } from './services/http.service';
 
 @Component({
   selector: 'app-root',
@@ -15,12 +15,12 @@ import { UserService } from './services/user.service';
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
 
-  constructor(private userService: UserService) {
+  constructor(private http: HttpService) {
   }
   async ngOnInit(): Promise<void> {
-    if (this.userService.IsLoggedIn) {
-      console.log(this.userService.identity);
-      console.log(this.userService.token);
+    if (this.http.IsLoggedIn) {
+      console.log(this.http.identity);
+      console.log(this.http.token);
     }
     else {
       console.log("Not logged in");
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     // this.oauthService.initCodeFlow();
   }
   login() {
-    this.userService.LogIn();
+    this.http.LogIn();
 
   }
 }

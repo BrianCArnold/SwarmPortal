@@ -2,17 +2,49 @@ import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { firstValueFrom } from 'rxjs';
-import { AuthConfig, AuthService } from '../api';
+import { AuthConfig, AuthService, LinksService, StatusesService } from '../api';
 import { IdentityClaims } from './IdentityClaims';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class HttpService {
   private _identity: IdentityClaims | null = null;
   private _token: string | null = null;
 
-  constructor(private oauth: OAuthService, private auth: AuthService) { }
+  _isAuthUpdated: boolean = false;
+  public get Auth(): AuthService {
+    if (!this._isAuthUpdated && this.IsLoggedIn) {
+      this.auth.defaultHeaders = this.auth.defaultHeaders.set('Authorization', 'Bearer ' + this.token);
+      this._isAuthUpdated = true;
+    }
+    return this.auth;
+  }
+
+
+  _isLinksUpdated: boolean = false;
+  public get Links(): LinksService {
+    if (!this._isLinksUpdated && this.IsLoggedIn) {
+      this.linksService.defaultHeaders = this.linksService.defaultHeaders.set('Authorization', 'Bearer ' + this.token);
+      this._isLinksUpdated = true;
+    }
+    return this.linksService;
+  }
+
+  _isStatusesUpdated: boolean = false;
+  public get Statuses(): StatusesService {
+    if (!this._isStatusesUpdated && this.IsLoggedIn) {
+      this.statusesService.defaultHeaders = this.statusesService.defaultHeaders.set('Authorization', 'Bearer ' + this.token);
+      this._isStatusesUpdated = true;
+    }
+    return this.statusesService;
+  }
+
+  constructor(private oauth: OAuthService,
+    private auth: AuthService,
+    private linksService: LinksService,
+    private statusesService: StatusesService) { }
+
   public get token(): string {
     if (this.IsLoggedIn && this._token != null) {
       return this._token;

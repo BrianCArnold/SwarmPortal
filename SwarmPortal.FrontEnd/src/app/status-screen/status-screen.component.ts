@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { first, firstValueFrom } from 'rxjs';
 import { ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
-import { UserService } from '../services/user.service';
+import { HttpService } from '../services/http.service';
 
 @Component({
   selector: 'app-status-screen',
@@ -20,9 +20,7 @@ export class StatusScreenComponent implements OnInit {
   linkGroups: { name: string; values: ILinkItem[]; }[] = [];
   statusGroups: { name: string; values: IStatusItem[]; }[] = [];
   constructor(
-    private linksService: LinksService,
-    private statusesService: StatusesService,
-    private userService: UserService) {
+    private http: HttpService) {
   }
 
 
@@ -30,12 +28,8 @@ export class StatusScreenComponent implements OnInit {
 
 
   async ngOnInit(): Promise<void> {
-    if (this.userService.IsLoggedIn) {
-      this.statusesService.defaultHeaders = this.statusesService.defaultHeaders.set('Authorization', 'Bearer ' + this.userService.token);
-      this.linksService.defaultHeaders = this.linksService.defaultHeaders.set('Authorization', 'Bearer ' + this.userService.token);
-    }
-    this.statusDict = await firstValueFrom(this.statusesService.statusesAllGet());
-    this.linkDict = await firstValueFrom(this.linksService.linksAllGet());
+    this.statusDict = await firstValueFrom(this.http.Statuses.statusesAllGet());
+    this.linkDict = await firstValueFrom(this.http.Links.linksAllGet());
 
     this.linkGroups = this.dictionaryToEnumerable(this.linkDict);
     this.statusGroups = this.dictionaryToEnumerable(this.statusDict);
