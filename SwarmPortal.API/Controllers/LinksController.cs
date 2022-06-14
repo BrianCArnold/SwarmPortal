@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwarmPortal.Common;
@@ -19,12 +20,11 @@ public class LinksController : ControllerBase
     [HttpGet("All")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<ILinkItem>>>> Get(CancellationToken ct)
     {
+        var userRoles = User.Claims.GetRoles();
         var dictionaryGenerator = _hostLinkProvider.GetDictionaryGeneratorAsync(ct);
-        var dictionary = await dictionaryGenerator.GetDictionary(ct);
+        var dictionary = await dictionaryGenerator.GetDictionaryWithRoles(ct, userRoles);
+        
+      
         return await Task.FromResult(dictionary);
     }
-    [Authorize(Roles = "Science")]
-    [HttpGet("Personal")]
-    public async Task<ActionResult<Dictionary<string, IEnumerable<ILinkItem>>>> GetPersonal(CancellationToken ct)
-     => Ok(new());
 }

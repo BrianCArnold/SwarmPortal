@@ -22,7 +22,9 @@ public class SQLiteFileLinkItemProvider : IItemProvider<ILinkItem>
 
     //This is basically just a mock up of something that takes a while to get individual items.
     public IAsyncEnumerable<ILinkItem> GetItemsAsync(CancellationToken ct)
-     => context.Links.Include(l => l.Group)
-                    .Select(l => new CommonLinkItem(l.Name, l.Group.Name, l.Url))
-                    .AsAsyncEnumerable();
+     => context.Links
+        .Include(l => l.Group)
+        .Include(l => l.Roles)
+        .AsAsyncEnumerable()
+        .Select(l => new CommonLinkItem(l.Name, l.Group.Name, l.Url, l.Roles.Select(r => r.Name)));
 }

@@ -12,6 +12,7 @@ public class SourceContext : DbContext, ISourceContext
     public DbSet<SwarmPortalUser> Users { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Link> Links { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
 
     public SourceContext(DbContextOptions<SourceContext> options): base(options) {

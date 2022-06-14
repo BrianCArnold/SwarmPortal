@@ -6,5 +6,5 @@ public class Link
     public string Name { get; set; }
     public string Url { get; set; }
     public Group Group { get; set; }
-    public SwarmPortalUser User { get; set; }
+    public ICollection<Role> Roles { get; set; }
 }

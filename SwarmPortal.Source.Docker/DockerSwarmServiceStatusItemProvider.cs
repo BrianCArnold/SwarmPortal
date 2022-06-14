@@ -18,8 +18,7 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
             var (stack, serviceName) = await GetStackAndServiceName(service);
             
             Status status = await GetStatus(service);
-
-            yield return new CommonStatusItem(serviceName, stack, status);
+            yield return new CommonStatusItem(serviceName, stack, status, Enumerable.Empty<string>());
         }
     }
 

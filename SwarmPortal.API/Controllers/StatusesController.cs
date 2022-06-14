@@ -21,13 +21,12 @@ public class StatusesController : ControllerBase
     [HttpGet("All")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> Get(CancellationToken ct)
     {
-        
-        foreach (var c in this.User.Claims)
-        {
-            _logger.LogInformation($"Claim: {c.Type} {c.Value}");
-        }
+        var userRoles = User.Claims.GetRoles();
         var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);
-        var dictionary = await dictionaryGenerator.GetDictionary(ct);
+        var dictionary = await dictionaryGenerator.GetDictionaryWithRoles(ct, userRoles);
+
+
+        // Console.WriteLine(userRoles.StringJoin(","));
         return await Task.FromResult(dictionary);
     }
     

@@ -38,18 +38,17 @@ export class AppComponent implements OnInit {
       new JwksValidationHandler();
 
     await this.oauthService.loadDiscoveryDocumentAndTryLogin();
-    await this.showClaims();
+
+    /*
+
+      Next Steps: Need to store the token in local storage.
+      Check if it's not valid coming back from the server, then refresh it.
+      Create API endpoints to add Roles and Links.
+      Check swarm node labels to check for roles.
+      Switch out to MySQL, Postgres, or MSSQL.
+
+    */
     // this.oauthService.initCodeFlow();
-  }
-  async showClaims(){
-
-    let claims = this.oauthService.getIdentityClaims();
-    console.log(claims);
-    var token = this.oauthService.getAccessToken();
-    console.log(token);
-    this.links.defaultHeaders = this.links.defaultHeaders.append('Authorization', 'Bearer ' + token);
-
-    console.log(await firstValueFrom(this.links.linksAllGet()));
   }
   login() {
     this.oauthService.initCodeFlow();

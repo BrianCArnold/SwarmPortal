@@ -26,24 +26,26 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
     private async IAsyncEnumerable<ILinkItem> GetServiceItems(SwarmService service, [EnumeratorCancellation] CancellationToken ct)
     {
         logger.LogTrace("Setting up IEnumerable to skip labels we aren't looking for.");
-        var swarmPortalLabels = service.Spec.Labels.ToAsyncEnumerable().Where(l => l.Key.StartsWith(SwarmPortalLabelPrefix));
-        await foreach (var label in swarmPortalLabels)
+        var swarmPortalLabels = service.Spec.Labels.Where(l => l.Key.StartsWith(SwarmPortalLabelPrefix));
+        var swarmPortalLabelGroups = swarmPortalLabels.GroupBy(l => l.Key.Substring(SwarmPortalLabelPrefix.Length).Split(".").Take(2).StringJoin("."));
+        foreach (var labelGroup in swarmPortalLabelGroups)
         {
-            logger.LogTrace("Separating Label Key into period deliminated parts");
-            var relevantKeyPortions = label.Key.Substring(SwarmPortalLabelPrefix.Length).Split(".");
-            logger.LogTrace("Setting Link Group to first part.");
-            var group = relevantKeyPortions.First();
-            logger.LogTrace("Setting Link Name from remaining parts.");
-            var name = relevantKeyPortions.Skip(1).StringJoin(" ");
-
-            logger.LogTrace("Setting Link URL from label Value.");
-            var url = label.Value;
-            logger.LogInformation("Found Link Item.", new {
-                Name = name,
-                Group = group,
-                URL = url
-            });
-            yield return new CommonLinkItem(name, group, url);
+            var group = labelGroup.Key.Split(".").First();
+            var name = labelGroup.Key.Split(".").Skip(1).First();
+            var roles = new List<string>();
+            string url = string.Empty;
+            foreach (var label in labelGroup)
+            {
+                if (label.Key.Substring(SwarmPortalLabelPrefix.Length+labelGroup.Key.Length+1).StartsWith("Role"))
+                {
+                    roles.Add(label.Value);
+                }
+                else if (label.Key.Substring(SwarmPortalLabelPrefix.Length+labelGroup.Key.Length+1).StartsWith("Url"))
+                {
+                    url = label.Value;
+                }
+            }
+            yield return new CommonLinkItem(name, group, url, roles);
         }
     }
 }
