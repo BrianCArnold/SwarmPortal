@@ -1,4 +1,4 @@
-namespace SwarmPortal.Source.SQLite;
+namespace SwarmPortal.SQLite;
 
 public class Group
 {
