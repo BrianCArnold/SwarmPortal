@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { AuthService } from './api/auth.service';
 import { LinksService } from './api/links.service';
 import { StatusesService } from './api/statuses.service';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { first, firstValueFrom } from 'rxjs';
-import { ILinkItem, IStatusItem, LinksService, StatusesService } from '../api-client';
+import { ILinkItem, IStatusItem } from '../api';
 
 @Component({
   selector: 'app-status-screen',

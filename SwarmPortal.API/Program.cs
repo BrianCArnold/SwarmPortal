@@ -1,9 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using SwarmPortal.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+var authConfig = new AuthConfig();
+builder.Configuration.GetSection("Jwt").Bind(authConfig);
+var apiConfig = APIConfiguration.Create(builder.Configuration);
+builder.Services.AddSingleton<IAuthConfig>(authConfig);
 
 const string debugCorsOriginName = "DebugCors";
 
@@ -18,6 +25,41 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 
+builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = false,
+                    ValidIssuer = authConfig.Issuer,
+                    ValidAudience = authConfig.Audience
+                };
+                o.Authority = authConfig.Authority;
+                o.Audience = authConfig.Audience;
+                o.Events = new JwtBearerEvents()
+                {
+                    OnAuthenticationFailed = c =>
+                    {
+                        Console.WriteLine(c.Exception.Message);
+                        c.NoResult();
+
+                        c.Response.StatusCode = 500;
+                        c.Response.ContentType = "text/plain";
+                        return c.Response.WriteAsync("An error occured processing your authentication.");
+                    }
+                };
+            });
+builder.Services.AddAuthorization(o => {
+    // o.AddPolicy("Standard", p => {});
+    o.AddPolicy("Admin", p => p.RequireRole("Science"));
+});
+
 builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +68,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddStatusGroupCoalescerProvider();
 builder.Services.AddLinkGroupCoalescerProvider();
 
-var apiConfig = APIConfiguration.Create(builder.Configuration);
 builder.Services.AddAPIConfiguration();
 builder.Services.AddDockerConfiguration();
 builder.Services.AddStaticFileConfiguration();

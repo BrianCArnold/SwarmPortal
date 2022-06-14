@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ILinkItem } from '../api-client';
+import { firstValueFrom } from 'rxjs';
+import * as URLParse from 'url-parse';
+import { LinksService } from '../api';
+// import { ILinkItem } from '../api-client';
 
 @Component({
   selector: 'app-link-group-card',
@@ -8,8 +11,16 @@ import { ILinkItem } from '../api-client';
 })
 export class LinkGroupCardComponent implements OnInit {
 
+  constructor(private links: LinksService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+  }
+
+  async doPersonal(){
+    var personal = await firstValueFrom( this.links.linksPersonalGet());
+    console.log("PERSONAL");
+    console.log(personal);
   }
 
   @Input()
@@ -17,5 +28,5 @@ export class LinkGroupCardComponent implements OnInit {
   @Input()
   groupName: string = "";
   @Input()
-  groupLinks: ILinkItem[] = [];
+  groupLinks: any[] = [];
 }

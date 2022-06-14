@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwarmPortal.Common;
 
@@ -15,7 +16,6 @@ public class LinksController : ControllerBase
         _logger = logger;
         _hostLinkProvider = hostLinkProvider;
     }
-
     [HttpGet("All")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<ILinkItem>>>> Get(CancellationToken ct)
     {
@@ -23,4 +23,8 @@ public class LinksController : ControllerBase
         var dictionary = await dictionaryGenerator.GetDictionary(ct);
         return await Task.FromResult(dictionary);
     }
+    [Authorize(Roles = "Science")]
+    [HttpGet("Personal")]
+    public async Task<ActionResult<Dictionary<string, IEnumerable<ILinkItem>>>> GetPersonal(CancellationToken ct)
+     => Ok(new());
 }

@@ -5,7 +5,7 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { IStatusItem, StatusesService } from '../api-client';
+import { IStatusItem, StatusesService } from '../api';
 
 @Injectable({
   providedIn: 'root'

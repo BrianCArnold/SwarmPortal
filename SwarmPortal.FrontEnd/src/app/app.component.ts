@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+
+import { OAuthService } from 'angular-oauth2-oidc';
+import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { first, firstValueFrom } from 'rxjs';
-import { ILinkItem, IStatusItem, LinksService, StatusesService } from './api-client';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthService, Configuration, LinksService } from './api';
 
 @Component({
   selector: 'app-root',
@@ -9,27 +13,46 @@ import { ILinkItem, IStatusItem, LinksService, StatusesService } from './api-cli
 })
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
-  linkDictionary: { [key: string]: ILinkItem[]; } = {};
-  get linkGroups(): {
-    name: string;
-    values: ILinkItem[];
-  }[] {
-    return Object.getOwnPropertyNames(this.linkDictionary)
-      .map(p => ({ name: p, values: this.linkDictionary[p]}));
-  }
-  statusDictionary: { [key: string]: IStatusItem[]; } = {};
-  get statusGroups(): {
-    name: string;
-    values: IStatusItem[];
-  }[] {
-    return Object.getOwnPropertyNames(this.statusDictionary)
-      .map(p => ({ name: p, values: this.statusDictionary[p]}));
-  }
-  constructor(public linksService: LinksService,
-    public statusService: StatusesService) {
+
+  constructor(private oauthService: OAuthService,
+    private a: AuthService,
+    private links: LinksService,
+    private cookies: CookieService) {
   }
   async ngOnInit(): Promise<void> {
-    this.linkDictionary = await firstValueFrom(this.linksService.linksAllGet());
-    this.statusDictionary = await firstValueFrom(this.statusService.statusesAllGet());
+    var authConf = await firstValueFrom(this.a.authConfigGet());
+
+
+    // var authConfiguration = await new AuthApi(config).authConfigGet();
+
+
+    this.oauthService.configure({
+      issuer: authConf.issuer || "",
+      clientId: authConf.clientId || "",
+      redirectUri: authConf.redirectUri || "",
+      scope: authConf.scope || "",
+      requireHttps: authConf.requireHttps,
+      responseType: 'code'
+    });
+    this.oauthService.tokenValidationHandler =
+      new JwksValidationHandler();
+
+    await this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    await this.showClaims();
+    // this.oauthService.initCodeFlow();
+  }
+  async showClaims(){
+
+    let claims = this.oauthService.getIdentityClaims();
+    console.log(claims);
+    var token = this.oauthService.getAccessToken();
+    console.log(token);
+    this.links.defaultHeaders = this.links.defaultHeaders.append('Authorization', 'Bearer ' + token);
+
+    console.log(await firstValueFrom(this.links.linksAllGet()));
+  }
+  login() {
+    this.oauthService.initCodeFlow();
+
   }
 }
