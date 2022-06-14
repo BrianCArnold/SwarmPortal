@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/admin.service.ts
 api/api.ts
 api/auth.service.ts
 api/links.service.ts

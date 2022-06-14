@@ -74,7 +74,8 @@ builder.Services
     .AddDockerConfiguration()
     .AddStaticFileConfiguration()
     .AddSwarmPortalSQLiteContext(builder.Configuration)
-    .AddSQLiteFileConfiguration();
+    .AddSQLiteFileConfiguration()
+    .AddSQLiteAccessors();
 
 
 if (apiConfig.EnableStaticFileLinks)

@@ -17,12 +17,6 @@ export class LinkGroupCardComponent implements OnInit {
 
   }
 
-  async doPersonal(){
-    var personal = await firstValueFrom( this.links.linksPersonalGet());
-    console.log("PERSONAL");
-    console.log(personal);
-  }
-
   @Input()
   groupColorName: string = 'primary';
   @Input()

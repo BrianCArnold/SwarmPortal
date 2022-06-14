@@ -16,6 +16,7 @@ public static class SwarmPortalStaticServiceExtensions
         var dbPath = Path.Join(path, "swarmportal.db");
         var connectionString = $"DataSource={dbPath};Cache=Shared";
         services.AddDbContext<SourceContext>(o => o.UseSqlite(connectionString));
+        services.AddScoped<ISourceContext>(services => services.GetRequiredService<SourceContext>());
         return services;
     }
     // public static IServiceCollection AddDefaultIdentity(this IServiceCollection services)
@@ -25,4 +26,8 @@ public static class SwarmPortalStaticServiceExtensions
     //  }
     public static IServiceCollection AddSQLiteLinkProvider(this IServiceCollection serviceCollection)
      => serviceCollection.AddScoped<IItemProvider<ILinkItem>, SQLiteFileLinkItemProvider>();
+    public static IServiceCollection AddSQLiteAccessors(this IServiceCollection serviceCollection)
+     => serviceCollection.AddScoped<IGroupAccessor, GroupAccessor>()
+                         .AddScoped<ILinkAccessor, LinkAccessor>()
+                         .AddScoped<IRoleAccessor, RoleAccessor>();
 }

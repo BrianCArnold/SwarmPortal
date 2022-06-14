@@ -14,6 +14,7 @@
 export interface ILinkItem { 
     readonly url?: string | null;
     readonly name?: string | null;
+    readonly roles?: Array<string> | null;
     readonly group?: string | null;
 }
 

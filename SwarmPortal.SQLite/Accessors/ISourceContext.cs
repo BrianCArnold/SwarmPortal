@@ -8,5 +8,7 @@ namespace SwarmPortal.SQLite
         DbSet<Group> Groups { get; }
         DbSet<Link> Links { get; }
         DbSet<Role> Roles { get; }
+        int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

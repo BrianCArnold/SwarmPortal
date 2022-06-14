@@ -5,6 +5,7 @@ import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { first, firstValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService, Configuration, LinksService } from './api';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -14,30 +15,20 @@ import { AuthService, Configuration, LinksService } from './api';
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
 
-  constructor(private oauthService: OAuthService,
-    private a: AuthService,
-    private links: LinksService,
-    private cookies: CookieService) {
+  constructor(private userService: UserService) {
   }
   async ngOnInit(): Promise<void> {
-    var authConf = await firstValueFrom(this.a.authConfigGet());
-
+    if (this.userService.IsLoggedIn) {
+      console.log(this.userService.identity);
+      console.log(this.userService.token);
+    }
+    else {
+      console.log("Not logged in");
+    }
 
     // var authConfiguration = await new AuthApi(config).authConfigGet();
 
 
-    this.oauthService.configure({
-      issuer: authConf.issuer || "",
-      clientId: authConf.clientId || "",
-      redirectUri: authConf.redirectUri || "",
-      scope: authConf.scope || "",
-      requireHttps: authConf.requireHttps,
-      responseType: 'code'
-    });
-    this.oauthService.tokenValidationHandler =
-      new JwksValidationHandler();
-
-    await this.oauthService.loadDiscoveryDocumentAndTryLogin();
 
     /*
 
@@ -51,7 +42,7 @@ export class AppComponent implements OnInit {
     // this.oauthService.initCodeFlow();
   }
   login() {
-    this.oauthService.initCodeFlow();
+    this.userService.LogIn();
 
   }
 }
