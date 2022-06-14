@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SwarmPortal.Source.SQLite;
+using SwarmPortal.SQLite;
 
 #nullable disable
 
-namespace SwarmPortal.Source.SQLite.Migrations
+namespace SwarmPortal.SQLite.Migrations
 {
     [DbContext(typeof(SourceContext))]
     partial class SourceContextModelSnapshot : ModelSnapshot
@@ -16,7 +16,7 @@ namespace SwarmPortal.Source.SQLite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
-            modelBuilder.Entity("SwarmPortal.Source.SQLite.Group", b =>
+            modelBuilder.Entity("SwarmPortal.SQLite.Group", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,7 +31,7 @@ namespace SwarmPortal.Source.SQLite.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("SwarmPortal.Source.SQLite.Link", b =>
+            modelBuilder.Entity("SwarmPortal.SQLite.Link", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,25 +48,58 @@ namespace SwarmPortal.Source.SQLite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<ulong>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Links");
                 });
 
-            modelBuilder.Entity("SwarmPortal.Source.SQLite.Link", b =>
+            modelBuilder.Entity("SwarmPortal.SQLite.SwarmPortalUser", b =>
                 {
-                    b.HasOne("SwarmPortal.Source.SQLite.Group", "Group")
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OIDCUserKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SwarmPortal.SQLite.Link", b =>
+                {
+                    b.HasOne("SwarmPortal.SQLite.Group", "Group")
                         .WithMany("Links")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SwarmPortal.SQLite.SwarmPortalUser", "User")
+                        .WithMany("Links")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Group");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SwarmPortal.Source.SQLite.Group", b =>
+            modelBuilder.Entity("SwarmPortal.SQLite.Group", b =>
+                {
+                    b.Navigation("Links");
+                });
+
+            modelBuilder.Entity("SwarmPortal.SQLite.SwarmPortalUser", b =>
                 {
                     b.Navigation("Links");
                 });

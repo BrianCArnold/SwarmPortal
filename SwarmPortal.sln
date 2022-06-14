@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.API", "SwarmPor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.Docker", "SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj", "{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.SQLite", "SwarmPortal.Source.SQLite\SwarmPortal.Source.SQLite.csproj", "{F121432A-4C88-494C-B475-503BBE6E22A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.SQLite", "SwarmPortal.SQLite\SwarmPortal.SQLite.csproj", "{F121432A-4C88-494C-B475-503BBE6E22A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

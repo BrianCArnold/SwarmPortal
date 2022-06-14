@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace SwarmPortal.Source.SQLite.Migrations
+namespace SwarmPortal.SQLite.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +22,19 @@ namespace SwarmPortal.Source.SQLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    OIDCUserKey = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Links",
                 columns: table => new
                 {
@@ -29,7 +42,8 @@ namespace SwarmPortal.Source.SQLite.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Url = table.Column<string>(type: "TEXT", nullable: false),
-                    GroupId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                    GroupId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<ulong>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,12 +54,23 @@ namespace SwarmPortal.Source.SQLite.Migrations
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Links_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Links_GroupId",
                 table: "Links",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Links_UserId",
+                table: "Links",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -55,6 +80,9 @@ namespace SwarmPortal.Source.SQLite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
