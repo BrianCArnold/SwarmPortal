@@ -3,6 +3,11 @@ using Microsoft.IdentityModel.Tokens;
 using SwarmPortal.Common;
 
 var builder = WebApplication.CreateBuilder(args);
+if (!File.Exists("persist/settings.json"))
+{
+    File.Copy("ExampleFiles/settings.json", "persist/settings.json");
+}
+builder.Configuration.AddJsonFile("persist/settings.json", false);
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -18,7 +23,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: debugCorsOriginName,
                       policy  =>
                       {
-                          policy.WithOrigins("http://localhost:4200")
+                          policy.WithOrigins(builder.Configuration["CORSUrl"])
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
@@ -57,10 +62,7 @@ builder.Services.AddAuthentication(options =>
                     }
                 };
             });
-builder.Services.AddAuthorization(o => {
-    // o.AddPolicy("Standard", p => {});
-    o.AddPolicy("Admin", p => p.RequireRole("Science"));
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 
@@ -109,9 +111,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-#if !DEBUG
-app.UseHttpsRedirection();
-#endif
+//Intended to be hosted behind a reverse proxy in a docker container.
+// #if !DEBUG
+// app.UseHttpsRedirection();
+// #endif
 
 app.UseCors(debugCorsOriginName);
 

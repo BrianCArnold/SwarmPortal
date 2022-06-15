@@ -1,0 +1,21 @@
+{
+    "Jwt": {
+      "Authority": "https://KeyCloak.local/auth/realms/master",
+      "Audience": "account",
+      "Issuer": "https://KeyCloak.local/auth/realms/master",
+      "ClientId": "SwarmPortal",
+      "RedirectUri": "http://localhost:4200",
+      "Scope": "openid profile email",
+      "RequireHttps": false
+    },
+    "CORSUrl": "http://localhost:4200",
+    "SQLiteFileDirectory": "persist",
+    "EnableDockerServiceStatus": false,
+    "EnableStaticFileLinks": true,
+    "EnableDockerNodeStatus": true,
+    "EnableDockerServiceLinks": true,
+    "EnableSQLiteLinks": true,
+    "DockerSocketUri": "unix:///var/run/docker.sock",
+    "SwarmPortalLabelPrefix": "swarm.portal",
+    "StaticLinksFileName": "persist/links.json"
+}
