@@ -22,15 +22,15 @@ public class RoleAccessor : IRoleAccessor
         }
     }
 
-    public async Task DeleteRole(string role, CancellationToken ct = default)
+    public async Task DeleteRole(ulong roleId, CancellationToken ct = default)
     {
-        if (await _context.Links.AnyAsync(l => l.Roles.Any(r => r.Name == role), ct))
+        if (await _context.Links.AnyAsync(l => l.Roles.Any(r => r.Id == roleId), ct))
         {
             throw new InvalidOperationException("Role has links, please delete them first");
         }
         else 
         {
-            var dbRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == role, ct);
+            var dbRole = await _context.Roles.SingleOrDefaultAsync(r => r.Id == roleId, ct);
             if (dbRole != null)
             {
                 _context.Roles.Remove(dbRole);
@@ -39,9 +39,11 @@ public class RoleAccessor : IRoleAccessor
         }
     }
 
-    public async Task<IEnumerable<string>> GetRoles(CancellationToken ct = default)
+    public async Task<IEnumerable<IRole>> GetRoles(CancellationToken ct = default)
     {
-        return await _context.Roles.Select(r => r.Name).ToListAsync(ct);
+        return await _context.Roles.ToListAsync(ct);
     }
+
+
 
 }

@@ -18,6 +18,10 @@ import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import { CheckboxEditor } from './cell-editors/checkbox/checkbox.component';
+import { CheckboxRenderer } from './cell-renderers/checkbox/checkbox.component';
+import { DeleteRenderer } from './cell-renderers/delete/delete.component';
 
 
 export function apiConfigFactory (): Configuration {
@@ -42,7 +46,10 @@ export function apiConfigFactory (): Configuration {
     AdminRolesComponent,
     AdminGroupsComponent,
     NavigationComponent,
-    LoginCompleteComponent
+    LoginCompleteComponent,
+    CheckboxEditor,
+    CheckboxRenderer,
+    DeleteRenderer
   ],
   imports: [
     FormsModule,
@@ -51,7 +58,8 @@ export function apiConfigFactory (): Configuration {
     AppRoutingModule,
     HttpClientModule,
     OAuthModule.forRoot(),
-    ApiModule.forRoot(apiConfigFactory)
+    ApiModule.forRoot(apiConfigFactory),
+    AgGridModule.withComponents([CheckboxEditor])
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

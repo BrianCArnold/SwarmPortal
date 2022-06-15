@@ -1,7 +1,12 @@
 <ul class="roleList">
   <li *ngFor="let role of roles">
-    <a class="link" (click)="deleteRole(role)">❌</a> {{role}}
+    <a class="link" (click)="deleteRole(role)">❌</a> {{role.name}}
   </li>
 </ul>
 <input [(ngModel)]="roleName" />
 <button (click)="addRole(roleName)">Add Role</button>
+<ul class="roleList">
+  <li *ngFor="let role of detectedRoles">
+    <a class="link" (click)="addRole(role)">➕</a> {{role}}
+  </li>
+</ul>

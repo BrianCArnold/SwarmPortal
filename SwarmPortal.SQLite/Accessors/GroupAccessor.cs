@@ -22,15 +22,15 @@ public class GroupAccessor : IGroupAccessor
         }
     }
 
-    public async Task DeleteGroup(string groupName, CancellationToken ct = default)
+    public async Task DeleteGroup(ulong groupId, CancellationToken ct = default)
     {
-        if (await _context.Links.AnyAsync(l => l.Group.Name == groupName, ct))
+        if (await _context.Links.AnyAsync(l => l.Group.Id == groupId, ct))
         {
             throw new InvalidOperationException("Group has links, please delete them first");
         }
         else 
         {
-            var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Name == groupName, ct);
+            var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Id == groupId, ct);
             if (dbGroup != null)
             {
                 _context.Groups.Remove(dbGroup);
@@ -39,9 +39,9 @@ public class GroupAccessor : IGroupAccessor
         }
     }
 
-    public async Task<IEnumerable<string>> GetGroups(CancellationToken ct = default)
+    public async Task<IEnumerable<IGroup>> GetGroups(CancellationToken ct = default)
     {
-        return await _context.Groups.Select(r => r.Name).ToListAsync(ct);
+        return await _context.Groups.ToListAsync(ct);
     }
 
 }

@@ -21,7 +21,13 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { CommonLinkItem } from '../model/commonLinkItem';
 // @ts-ignore
+import { IGroup } from '../model/iGroup';
+// @ts-ignore
+import { ILink } from '../model/iLink';
+// @ts-ignore
 import { ILinkItem } from '../model/iLinkItem';
+// @ts-ignore
+import { IRole } from '../model/iRole';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -216,24 +222,20 @@ export class AdminService {
     }
 
     /**
-     * @param linkName 
-     * @param linkGroup 
+     * @param linkId 
      * @param role 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminAddLinkRoleLinkGroupLinkNameRolePost(linkName: string, linkGroup: string, role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
-    public adminAddLinkRoleLinkGroupLinkNameRolePost(linkName: string, linkGroup: string, role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
-    public adminAddLinkRoleLinkGroupLinkNameRolePost(linkName: string, linkGroup: string, role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
-    public adminAddLinkRoleLinkGroupLinkNameRolePost(linkName: string, linkGroup: string, role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
-        if (linkName === null || linkName === undefined) {
-            throw new Error('Required parameter linkName was null or undefined when calling adminAddLinkRoleLinkGroupLinkNameRolePost.');
-        }
-        if (linkGroup === null || linkGroup === undefined) {
-            throw new Error('Required parameter linkGroup was null or undefined when calling adminAddLinkRoleLinkGroupLinkNameRolePost.');
+    public adminAddLinkRoleLinkIdRolePost(linkId: number, role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
+    public adminAddLinkRoleLinkIdRolePost(linkId: number, role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public adminAddLinkRoleLinkIdRolePost(linkId: number, role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public adminAddLinkRoleLinkIdRolePost(linkId: number, role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (linkId === null || linkId === undefined) {
+            throw new Error('Required parameter linkId was null or undefined when calling adminAddLinkRoleLinkIdRolePost.');
         }
         if (role === null || role === undefined) {
-            throw new Error('Required parameter role was null or undefined when calling adminAddLinkRoleLinkGroupLinkNameRolePost.');
+            throw new Error('Required parameter role was null or undefined when calling adminAddLinkRoleLinkIdRolePost.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -269,7 +271,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.post<string>(`${this.configuration.basePath}/Admin/AddLinkRole/${encodeURIComponent(String(linkGroup))}/${encodeURIComponent(String(linkName))}/${encodeURIComponent(String(role))}`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/Admin/AddLinkRole/${encodeURIComponent(String(linkId))}/${encodeURIComponent(String(role))}`,
             null,
             {
                 context: localVarHttpContext,
@@ -346,9 +348,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminAllLinksForRoleGet(role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILinkItem>>;
-    public adminAllLinksForRoleGet(role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILinkItem>>>;
-    public adminAllLinksForRoleGet(role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILinkItem>>>;
+    public adminAllLinksForRoleGet(role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILink>>;
+    public adminAllLinksForRoleGet(role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILink>>>;
+    public adminAllLinksForRoleGet(role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILink>>>;
     public adminAllLinksForRoleGet(role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (role === null || role === undefined) {
             throw new Error('Required parameter role was null or undefined when calling adminAllLinksForRoleGet.');
@@ -387,7 +389,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<ILinkItem>>(`${this.configuration.basePath}/Admin/All/LinksFor/${encodeURIComponent(String(role))}`,
+        return this.httpClient.get<Array<ILink>>(`${this.configuration.basePath}/Admin/All/LinksFor/${encodeURIComponent(String(role))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -403,9 +405,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminAllLinksGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILinkItem>>;
-    public adminAllLinksGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILinkItem>>>;
-    public adminAllLinksGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILinkItem>>>;
+    public adminAllLinksGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILink>>;
+    public adminAllLinksGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILink>>>;
+    public adminAllLinksGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILink>>>;
     public adminAllLinksGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -441,7 +443,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<ILinkItem>>(`${this.configuration.basePath}/Admin/All/Links`,
+        return this.httpClient.get<Array<ILink>>(`${this.configuration.basePath}/Admin/All/Links`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -454,16 +456,16 @@ export class AdminService {
     }
 
     /**
-     * @param group 
+     * @param groupId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminDeleteGroupGroupDelete(group: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public adminDeleteGroupGroupDelete(group: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public adminDeleteGroupGroupDelete(group: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public adminDeleteGroupGroupDelete(group: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
-        if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling adminDeleteGroupGroupDelete.');
+    public adminDeleteGroupGroupIdDelete(groupId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public adminDeleteGroupGroupIdDelete(groupId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public adminDeleteGroupGroupIdDelete(groupId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public adminDeleteGroupGroupIdDelete(groupId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        if (groupId === null || groupId === undefined) {
+            throw new Error('Required parameter groupId was null or undefined when calling adminDeleteGroupGroupIdDelete.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -496,7 +498,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteGroup/${encodeURIComponent(String(group))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteGroup/${encodeURIComponent(String(groupId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -509,20 +511,16 @@ export class AdminService {
     }
 
     /**
-     * @param linkName 
-     * @param linkGroup 
+     * @param linkId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminDeleteLinkLinkGroupLinkNameDelete(linkName: string, linkGroup: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public adminDeleteLinkLinkGroupLinkNameDelete(linkName: string, linkGroup: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public adminDeleteLinkLinkGroupLinkNameDelete(linkName: string, linkGroup: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public adminDeleteLinkLinkGroupLinkNameDelete(linkName: string, linkGroup: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
-        if (linkName === null || linkName === undefined) {
-            throw new Error('Required parameter linkName was null or undefined when calling adminDeleteLinkLinkGroupLinkNameDelete.');
-        }
-        if (linkGroup === null || linkGroup === undefined) {
-            throw new Error('Required parameter linkGroup was null or undefined when calling adminDeleteLinkLinkGroupLinkNameDelete.');
+    public adminDeleteLinkLinkIdDelete(linkId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public adminDeleteLinkLinkIdDelete(linkId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public adminDeleteLinkLinkIdDelete(linkId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public adminDeleteLinkLinkIdDelete(linkId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        if (linkId === null || linkId === undefined) {
+            throw new Error('Required parameter linkId was null or undefined when calling adminDeleteLinkLinkIdDelete.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -555,7 +553,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteLink/${encodeURIComponent(String(linkGroup))}/${encodeURIComponent(String(linkName))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteLink/${encodeURIComponent(String(linkId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -568,24 +566,20 @@ export class AdminService {
     }
 
     /**
-     * @param linkName 
-     * @param linkGroup 
+     * @param linkId 
      * @param role 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminDeleteLinkRoleLinkGroupLinkNameRoleDelete(linkName: string, linkGroup: string, role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public adminDeleteLinkRoleLinkGroupLinkNameRoleDelete(linkName: string, linkGroup: string, role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public adminDeleteLinkRoleLinkGroupLinkNameRoleDelete(linkName: string, linkGroup: string, role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public adminDeleteLinkRoleLinkGroupLinkNameRoleDelete(linkName: string, linkGroup: string, role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
-        if (linkName === null || linkName === undefined) {
-            throw new Error('Required parameter linkName was null or undefined when calling adminDeleteLinkRoleLinkGroupLinkNameRoleDelete.');
-        }
-        if (linkGroup === null || linkGroup === undefined) {
-            throw new Error('Required parameter linkGroup was null or undefined when calling adminDeleteLinkRoleLinkGroupLinkNameRoleDelete.');
+    public adminDeleteLinkRoleLinkIdRoleDelete(linkId: number, role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public adminDeleteLinkRoleLinkIdRoleDelete(linkId: number, role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public adminDeleteLinkRoleLinkIdRoleDelete(linkId: number, role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public adminDeleteLinkRoleLinkIdRoleDelete(linkId: number, role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        if (linkId === null || linkId === undefined) {
+            throw new Error('Required parameter linkId was null or undefined when calling adminDeleteLinkRoleLinkIdRoleDelete.');
         }
         if (role === null || role === undefined) {
-            throw new Error('Required parameter role was null or undefined when calling adminDeleteLinkRoleLinkGroupLinkNameRoleDelete.');
+            throw new Error('Required parameter role was null or undefined when calling adminDeleteLinkRoleLinkIdRoleDelete.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -618,7 +612,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteLinkRole/${encodeURIComponent(String(linkGroup))}/${encodeURIComponent(String(linkName))}/${encodeURIComponent(String(role))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteLinkRole/${encodeURIComponent(String(linkId))}/${encodeURIComponent(String(role))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -631,16 +625,16 @@ export class AdminService {
     }
 
     /**
-     * @param role 
+     * @param roleId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminDeleteRoleRoleDelete(role: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public adminDeleteRoleRoleDelete(role: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public adminDeleteRoleRoleDelete(role: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public adminDeleteRoleRoleDelete(role: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
-        if (role === null || role === undefined) {
-            throw new Error('Required parameter role was null or undefined when calling adminDeleteRoleRoleDelete.');
+    public adminDeleteRoleRoleIdDelete(roleId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public adminDeleteRoleRoleIdDelete(roleId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public adminDeleteRoleRoleIdDelete(roleId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public adminDeleteRoleRoleIdDelete(roleId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        if (roleId === null || roleId === undefined) {
+            throw new Error('Required parameter roleId was null or undefined when calling adminDeleteRoleRoleIdDelete.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -673,7 +667,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteRole/${encodeURIComponent(String(role))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/Admin/DeleteRole/${encodeURIComponent(String(roleId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -691,9 +685,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILinkItem>>;
-    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILinkItem>>>;
-    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILinkItem>>>;
+    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILink>>;
+    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILink>>>;
+    public adminGroupLinksForRoleGet(role: string, group: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILink>>>;
     public adminGroupLinksForRoleGet(role: string, group: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (role === null || role === undefined) {
             throw new Error('Required parameter role was null or undefined when calling adminGroupLinksForRoleGet.');
@@ -735,7 +729,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<ILinkItem>>(`${this.configuration.basePath}/Admin/${encodeURIComponent(String(group))}/LinksFor/${encodeURIComponent(String(role))}`,
+        return this.httpClient.get<Array<ILink>>(`${this.configuration.basePath}/Admin/${encodeURIComponent(String(group))}/LinksFor/${encodeURIComponent(String(role))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -752,9 +746,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminGroupLinksGet(group: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILinkItem>>;
-    public adminGroupLinksGet(group: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILinkItem>>>;
-    public adminGroupLinksGet(group: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILinkItem>>>;
+    public adminGroupLinksGet(group: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ILink>>;
+    public adminGroupLinksGet(group: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ILink>>>;
+    public adminGroupLinksGet(group: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ILink>>>;
     public adminGroupLinksGet(group: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (group === null || group === undefined) {
             throw new Error('Required parameter group was null or undefined when calling adminGroupLinksGet.');
@@ -793,7 +787,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<ILinkItem>>(`${this.configuration.basePath}/Admin/${encodeURIComponent(String(group))}/Links`,
+        return this.httpClient.get<Array<ILink>>(`${this.configuration.basePath}/Admin/${encodeURIComponent(String(group))}/Links`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -809,9 +803,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminGroupsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<string>>;
-    public adminGroupsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<string>>>;
-    public adminGroupsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<string>>>;
+    public adminGroupsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<IGroup>>;
+    public adminGroupsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<IGroup>>>;
+    public adminGroupsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<IGroup>>>;
     public adminGroupsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -847,7 +841,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/Admin/Groups`,
+        return this.httpClient.get<Array<IGroup>>(`${this.configuration.basePath}/Admin/Groups`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -863,9 +857,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public adminRolesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<string>>;
-    public adminRolesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<string>>>;
-    public adminRolesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<string>>>;
+    public adminRolesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<IRole>>;
+    public adminRolesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<IRole>>>;
+    public adminRolesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<IRole>>>;
     public adminRolesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -901,7 +895,7 @@ export class AdminService {
             }
         }
 
-        return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/Admin/Roles`,
+        return this.httpClient.get<Array<IRole>>(`${this.configuration.basePath}/Admin/Roles`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

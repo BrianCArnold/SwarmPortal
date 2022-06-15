@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { IRole } from '../api/model/iRole';
 import { HttpService } from '../services/http.service';
 
 @Component({
@@ -8,22 +9,33 @@ import { HttpService } from '../services/http.service';
   styleUrls: ['./admin-roles.component.scss']
 })
 export class AdminRolesComponent implements OnInit {
-  roles: string[] = [];
+  roles: IRole[] = [];
   roleName: string = "";
+  detectedRoles!: string[];
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService) {
+  }
+
+
+
 
   async ngOnInit(): Promise<void> {
-    this.roles = await firstValueFrom(this.http.Admin.adminRolesGet())
+    await this.loadRoles();
   }
-  async deleteRole(role: string) {
-    this.roleName = role;
-    await firstValueFrom(this.http.Admin.adminDeleteRoleRoleDelete(role));
-    this.roles = await firstValueFrom(this.http.Admin.adminRolesGet())
+  private async loadRoles() {
+    this.roles = await firstValueFrom(this.http.Admin.adminRolesGet());
+    const existingRoles = this.roles.map(ro => ro.name);
+    this.detectedRoles = (this.http.Identity?.roles || []).filter(r => !existingRoles.includes(r));
+  }
+
+  async deleteRole(role: IRole) {
+    this.roleName = role.name || '';
+    await firstValueFrom(this.http.Admin.adminDeleteRoleRoleIdDelete(role.id || -1));
+    await this.loadRoles();
   }
   async addRole(role: string) {
     await firstValueFrom(this.http.Admin.adminAddRoleRolePost(role));
     this.roleName = '';
-    this.roles = await firstValueFrom(this.http.Admin.adminRolesGet())
+    await this.loadRoles();
   }
 }

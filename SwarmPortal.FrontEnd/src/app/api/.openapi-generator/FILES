@@ -12,8 +12,14 @@ git_push.sh
 index.ts
 model/authConfig.ts
 model/commonLinkItem.ts
+model/group.ts
+model/iGroup.ts
+model/iLink.ts
 model/iLinkItem.ts
+model/iRole.ts
 model/iStatusItem.ts
+model/link.ts
 model/models.ts
+model/role.ts
 model/status.ts
 variables.ts

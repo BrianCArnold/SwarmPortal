@@ -1,21 +1,44 @@
-<ul>
-  <li *ngFor="let link of allLinks">
-    <a class="link" (click)="deleteLink(link)">❌</a>
-    {{link.name}}
-    {{link.url}}
-    {{link.group}}
-    <span *ngFor="let role of link.roles">{{role}}</span>
+<ag-grid-angular
+style="width: 100; height: 500px"
+class="ag-theme-alpine-dark"
+[rowData]="rowData"
+[columnDefs]="gridColumns"
+[singleClickEdit]="true"
+[suppressAutoSize]="false"
+[autoSizePadding]="20"
 
-  </li>
+(gridReady)="onGridReady($event)"
+[stopEditingWhenCellsLoseFocus]="true"
+></ag-grid-angular>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2">
+      Group
+    </div>
+    <div class="col-lg-3">
+      Name
+    </div>
+    <div class="col-lg-5">
+      URL
+    </div>
 
-</ul>
 
-<input [(ngModel)]="linkName" placeholder="Name"/>
-<input [(ngModel)]="linkUrl" placeholder="URL" />
-<select [(ngModel)]="linkGroup" aria-placeholder="Group">
-  <option *ngFor="let group of allGroups" [value]="group">{{group}}</option>
-</select>
-<select multiple [(ngModel)]="linkRoles" aria-placeholder="Role">
-  <option *ngFor="let role of allRoles" [value]="role">{{role}}</option>
-</select>
-<button (click)="addLink()">Add Link</button>
+  </div>
+  <div class="row">
+    <div class="col-lg-2">
+      <select placeholder="Group" [(ngModel)]="linkGroup" class="form-select">
+        <option *ngFor="let group of allGroups" [value]="group.name">{{group.name}}</option>
+      </select>
+    </div>
+    <div class="col-lg-3">
+      <input placeholder="SwarmPortal" class="form-control" [(ngModel)]="linkName" />
+    </div>
+    <div class="col-lg-5">
+      <input placeholder="https://swarmportal.com" class="form-control" [(ngModel)]="linkUrl" />
+    </div>
+    <div class="col-lg-2">
+      <button [disabled]="isAddDisabled" class="form-control btn btn-primary col-lg-2" (click)="addLink()">Add Link</button>
+
+    </div>
+  </div>
+</div>

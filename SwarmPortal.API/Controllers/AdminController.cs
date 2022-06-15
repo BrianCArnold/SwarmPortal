@@ -31,82 +31,84 @@ public class AdminController : ControllerBase
         this.groupAccessor = groupAccessor;
     }
     [HttpGet("All/Links")]
-    public async Task<ActionResult<IEnumerable<ILinkItem>>> GetDatabaseLinks(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinks(CancellationToken ct)
     {
-        return Ok(await linkAccessor.GetLinks());
+        
+        return await linkAccessor.GetLinks(ct).OkAsync();
     }
     [HttpGet("{group}/Links")]
-    public async Task<ActionResult<IEnumerable<ILinkItem>>> GetDatabaseLinksInGroup(string group, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinksInGroup(string group, CancellationToken ct)
     {
-        return Ok(await linkAccessor.GetLinksForGroup(group));
+        return await linkAccessor.GetLinksForGroup(group, ct).OkAsync();
     }
     [HttpGet("All/LinksFor/{role}")]
-    public async Task<ActionResult<IEnumerable<ILinkItem>>> GetDatabaseLinksForRole(string role, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinksForRole(string role, CancellationToken ct)
     {
-        return Ok(await linkAccessor.GetLinksForRole(role));
+        return await linkAccessor.GetLinksForRole(role, ct).OkAsync();
     }
 
     [HttpGet("{group}/LinksFor/{role}")]
-    public async Task<ActionResult<IEnumerable<ILinkItem>>> GetDatabaseLinksForRoleInGroup(string role, string group, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinksForRoleInGroup(string role, string group, CancellationToken ct)
     {
-        return Ok(await linkAccessor.GetLinksForGroupAndRole(role, group));
+        return await linkAccessor.GetLinksForGroupAndRole(role, group, ct).OkAsync();
     }
     [HttpGet("Roles")]
-    public async Task<ActionResult<IEnumerable<string>>> GetDatabaseRoles(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<IRole>>> GetDatabaseRoles(CancellationToken ct)
     {
-        return Ok(await roleAccessor.GetRoles());
+        return await roleAccessor.GetRoles(ct).OkAsync();
     }
     [HttpPost("AddRole/{role}")]
     public async Task<ActionResult<string>> AddRole([FromRoute] string role, CancellationToken ct)
     {
-        await roleAccessor.AddRole(role);
-        return Ok(role);
+        await roleAccessor.AddRole(role, ct);
+        return role.Ok();
     }
-    [HttpDelete("DeleteRole/{role}")]
-    public async Task<ActionResult> DeleteRole([FromRoute] string role, CancellationToken ct)
+    [HttpDelete("DeleteRole/{roleId}")]
+    public async Task<ActionResult> DeleteRole([FromRoute] ulong roleId, CancellationToken ct)
     {
-        await roleAccessor.DeleteRole(role);
+        await roleAccessor.DeleteRole(roleId, ct);
         return Ok();
     }
     [HttpGet("Groups")]
-    public async Task<ActionResult<IEnumerable<string>>> GetDatabaseGroups(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<IGroup>>> GetDatabaseGroups(CancellationToken ct)
     {
-        return Ok(await groupAccessor.GetGroups());
+        return await groupAccessor.GetGroups(ct).OkAsync();
     }
     [HttpPost("AddGroup/{group}")]
     public async Task<ActionResult<string>> AddGroup([FromRoute] string group, CancellationToken ct)
     {
         await groupAccessor.AddGroup(group);
-        return Ok(group);
+        return group.Ok();
     }
-    [HttpDelete("DeleteGroup/{group}")]
-    public async Task<ActionResult> DeleteGroup([FromRoute] string group, CancellationToken ct)
+    [HttpDelete("DeleteGroup/{groupId}")]
+    public async Task<ActionResult> DeleteGroup([FromRoute] ulong groupId, CancellationToken ct)
     {
-        await groupAccessor.DeleteGroup(group);
+        await groupAccessor.DeleteGroup(groupId);
         return Ok();
     }
     [HttpPost("AddLink")]
     public async Task<ActionResult<ILinkItem>> AddLink([FromBody] CommonLinkItem link, CancellationToken ct)
     {
-        await linkAccessor.AddLink(link);
-        return Ok(link);
+        ILinkItem item = link;
+        await linkAccessor.AddLink(item);
+        return item.Ok();
     }
-    [HttpPost("AddLinkRole/{linkGroup}/{linkName}/{role}")]
-    public async Task<ActionResult<string>> AddLinkRole(string linkName, string linkGroup, string role, CancellationToken ct)
+    [HttpPost("AddLinkRole/{linkId}/{role}")]
+    public async Task<ActionResult<string>> AddLinkRole(ulong linkId, string role, CancellationToken ct)
     {
-        await linkAccessor.AddLinkRole(linkName, linkGroup, role);
-        return Ok(role);
+        await linkAccessor.AddLinkRole(linkId, role);
+        return role.Ok();
     }
-    [HttpDelete("DeleteLink/{linkGroup}/{linkName}")]
-    public async Task<ActionResult> DeleteLink(string linkName, string linkGroup, CancellationToken ct)
+    [HttpDelete("DeleteLink/{linkId}")]
+    public async Task<ActionResult> DeleteLink(ulong linkId, CancellationToken ct)
     {
-        await linkAccessor.DeleteLink(linkName, linkGroup);
+        await linkAccessor.DeleteLink(linkId);
         return Ok();
     }
-    [HttpDelete("DeleteLinkRole/{linkGroup}/{linkName}/{role}")]
-    public async Task<ActionResult> DeleteLinkRole(string linkName, string linkGroup, string role, CancellationToken ct)
+    [HttpDelete("DeleteLinkRole/{linkId}/{role}")]
+    public async Task<ActionResult> DeleteLinkRole(ulong linkId, string role, CancellationToken ct)
     {
-        await linkAccessor.DeleteLinkRole(linkName, linkGroup, role);
+        await linkAccessor.DeleteLinkRole(linkId, role);
         return Ok();
     }
 }
