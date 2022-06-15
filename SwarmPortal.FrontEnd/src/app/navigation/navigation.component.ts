@@ -16,6 +16,9 @@ export class NavigationComponent implements OnInit {
   get Identity(): IdentityClaims | null {
     return this.http.Identity;
   }
+  get Roles(): string[] {
+    return this.http.Identity?.roles || [];
+  }
   get isLoggedIn(): boolean {
     return this.http.Identity != null;
   }

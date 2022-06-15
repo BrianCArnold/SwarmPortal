@@ -9,7 +9,7 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/">Home</a>
         </li>
-        <li class="nav-item dropdown" *ngIf="isLoggedIn">
+        <li class="nav-item dropdown" *ngIf="isLoggedIn && Roles.includes('admin')">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Admin
           </a>
