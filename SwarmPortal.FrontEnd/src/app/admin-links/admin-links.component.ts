@@ -68,7 +68,7 @@ export class AdminLinksComponent implements OnInit {
     ))
   }
   private staticColumnDefs: ColDef[] = [
-    { valueGetter: _ => '❌', width: 35, sortable: true, filter: true, onCellClicked: (event: CellClickedEvent) => { this.deleteLink(event.data) } },
+    { valueGetter: _ => '❌', width: 60, sortable: true, filter: true, onCellClicked: (event: CellClickedEvent) => { this.deleteLink(event.data) } },
     { field: 'group', sortable: true, filter: true },
     { field: 'name', sortable: true, filter: true },
     { field: 'url', sortable: true, filter: true },

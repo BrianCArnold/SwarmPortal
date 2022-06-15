@@ -1,12 +1,42 @@
-<ul class="roleList">
-  <li *ngFor="let role of roles">
-    <a class="link" (click)="deleteRole(role)">❌</a> {{role.name}}
-  </li>
-</ul>
-<input [(ngModel)]="roleName" />
-<button (click)="addRole(roleName)">Add Role</button>
-<ul class="roleList">
-  <li *ngFor="let role of detectedRoles">
-    <a class="link" (click)="addRole(role)">➕</a> {{role}}
-  </li>
-</ul>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h2>Role Management</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h4>Existing Roles</h4>
+    </div>
+    <div class="col-6">
+      <h4>Suggested Roles</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <ul class="roleList">
+        <li *ngFor="let role of roles">
+          <a class="link" (click)="deleteRole(role)">❌</a> {{role.name}}
+        </li>
+      </ul>
+    </div>
+    <div class="col-6">
+      <ul class="roleList">
+        <li *ngFor="let role of detectedRoles">
+          <a class="link" (click)="addRole(role)">➕</a> {{role}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <input placeholder="Role Name" [(ngModel)]="roleName" class="form-control"/>
+    </div>
+    <div class="col-lg-2">
+      <button (click)="addRole(roleName)" class="form-control btn btn-primary col-lg-2">Add Role</button>
+    </div>
+    <div class="col-12">
+    </div>
+  </div>
+</div>
+
