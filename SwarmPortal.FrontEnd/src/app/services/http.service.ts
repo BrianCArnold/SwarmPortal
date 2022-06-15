@@ -1,8 +1,9 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { firstValueFrom } from 'rxjs';
-import { AuthConfig, AuthService, LinksService, StatusesService } from '../api';
+import { AdminService, AuthConfig, AuthService, LinksService, StatusesService } from '../api';
 import { IdentityClaims } from './IdentityClaims';
 
 @Injectable({
@@ -10,13 +11,20 @@ import { IdentityClaims } from './IdentityClaims';
 })
 export class HttpService {
 
-  _isAuthUpdated: boolean = false;
+  public get Admin(): AdminService {
+    return this.attachHeaders(this.admin);
+  }
+
   public get Auth(): AuthService {
-    if (!this._isAuthUpdated && this.Token != null) {
-      this.auth.defaultHeaders = this.auth.defaultHeaders.set('Authorization', 'Bearer ' + this.Token);
-      this._isAuthUpdated = true;
-    }
-    return this.auth;
+    return this.attachHeaders(this.auth);
+  }
+
+  public get Links(): LinksService {
+    return this.attachHeaders(this.linksService);
+  }
+
+  public get Statuses(): StatusesService {
+    return this.attachHeaders(this.statusesService);
   }
 
   public SetAuth(token: string, identity: IdentityClaims) {
@@ -26,29 +34,16 @@ export class HttpService {
     this.Token = token;
   }
 
-
-  _isLinksUpdated: boolean = false;
-  public get Links(): LinksService {
-    if (!this._isLinksUpdated && this.Token != null) {
-      this.linksService.defaultHeaders = this.linksService.defaultHeaders.set('Authorization', 'Bearer ' + this.Token);
-      this._isLinksUpdated = true;
-    }
-    return this.linksService;
-  }
-
-  _isStatusesUpdated: boolean = false;
-  public get Statuses(): StatusesService {
-    if (!this._isStatusesUpdated && this.Token != null) {
-      this.statusesService.defaultHeaders = this.statusesService.defaultHeaders.set('Authorization', 'Bearer ' + this.Token);
-      this._isStatusesUpdated = true;
-    }
-    return this.statusesService;
+  private attachHeaders<TService extends {defaultHeaders: HttpHeaders}>(service: TService): TService {
+    service.defaultHeaders = service.defaultHeaders.set('Authorization', 'Bearer ' + this.Token);
+    return service;
   }
 
   constructor(private oauth: OAuthService,
     private auth: AuthService,
     private linksService: LinksService,
-    private statusesService: StatusesService) { }
+    private statusesService: StatusesService,
+    private admin: AdminService) { }
 
   public get Token(): string{
     return localStorage.getItem('token') || '';

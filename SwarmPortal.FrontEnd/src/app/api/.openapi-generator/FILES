@@ -11,6 +11,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/authConfig.ts
+model/commonLinkItem.ts
 model/iLinkItem.ts
 model/iStatusItem.ts
 model/models.ts

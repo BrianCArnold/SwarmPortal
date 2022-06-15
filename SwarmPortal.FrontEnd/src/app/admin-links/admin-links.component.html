@@ -1,1 +1,21 @@
-<p>admin-links works!</p>
+<ul>
+  <li *ngFor="let link of allLinks">
+    <a class="link" (click)="deleteLink(link)">❌</a>
+    {{link.name}}
+    {{link.url}}
+    {{link.group}}
+    <span *ngFor="let role of link.roles">{{role}}</span>
+
+  </li>
+
+</ul>
+
+<input [(ngModel)]="linkName" placeholder="Name"/>
+<input [(ngModel)]="linkUrl" placeholder="URL" />
+<select [(ngModel)]="linkGroup" aria-placeholder="Group">
+  <option *ngFor="let group of allGroups" [value]="group">{{group}}</option>
+</select>
+<select multiple [(ngModel)]="linkRoles" aria-placeholder="Role">
+  <option *ngFor="let role of allRoles" [value]="role">{{role}}</option>
+</select>
+<button (click)="addLink()">Add Link</button>

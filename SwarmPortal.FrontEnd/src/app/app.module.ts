@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +17,7 @@ import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
+import { FormsModule } from '@angular/forms';
 
 
 export function apiConfigFactory (): Configuration {
@@ -43,7 +45,9 @@ export function apiConfigFactory (): Configuration {
     LoginCompleteComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     OAuthModule.forRoot(),

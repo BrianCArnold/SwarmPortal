@@ -15,21 +15,35 @@ public class LinkAccessor : ILinkAccessor
     {
         var group = await _context.Groups.SingleOrDefaultAsync(g => g.Name == link.Group, ct) ?? new Group{ Name = link.Group };
         var allRoles = await _context.Roles.ToDictionaryAsync(r => r.Name, ct);
-        var rolesForLink = link.Roles.Select(r => allRoles.ContainsKey(r) ? allRoles[r]: new Role{ Name = r }).ToList();
         var dbLink = new Link{
             Name = link.Name,
             Group = group,
-            Url = link.Url,
-            Roles = rolesForLink
+            Url = link.Url
         };
         _context.Links.Add(dbLink);
         await _context.SaveChangesAsync(ct);
     }
 
-    public async Task DeleteLink(ILinkItem link, CancellationToken ct = default)
+    public async Task DeleteLink(string linkName, string linkGroup, CancellationToken ct = default)
     {
-        var dblink = await _context.Links.Where(l => l.Name == link.Name && l.Group.Name == link.Group).SingleAsync(ct);
+        var dblink = await _context.Links.Where(l => l.Name == linkName && l.Group.Name == linkGroup).SingleAsync(ct);
         _context.Links.Remove(dblink);
+        await _context.SaveChangesAsync(ct);
+    }
+    public async Task AddLinkRole(string linkName, string linkGroup, string linkRole, CancellationToken ct = default)
+    {
+        var dblink = await _context.Links.Where(l => l.Name == linkName && l.Group.Name == linkGroup).SingleAsync(ct);
+        var role = await _context.Roles.SingleOrDefaultAsync(r => r.Name == linkRole, ct) ?? new Role{ Name = linkRole };
+        dblink.Roles.Add(role);
+        await _context.SaveChangesAsync(ct);
+    }
+    public async Task DeleteLinkRole(string linkName, string linkGroup, string linkRole, CancellationToken ct = default)
+    {
+        var dblink = await _context.Links.Where(l => l.Name == linkName && l.Group.Name == linkGroup).SingleAsync(ct);
+        var dbRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == linkRole, ct);
+        if (dbRole == null)
+            return;
+        dblink.Roles.Remove(dbRole);
         await _context.SaveChangesAsync(ct);
     }
 

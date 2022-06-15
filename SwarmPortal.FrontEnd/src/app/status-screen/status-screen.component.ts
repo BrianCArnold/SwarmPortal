@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { first, firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, interval, Observable, timer } from 'rxjs';
 import { ILinkItem, IStatusItem } from '../api';
 import { HttpService } from '../services/http.service';
 
@@ -10,19 +10,21 @@ import { HttpService } from '../services/http.service';
   templateUrl: './status-screen.component.html',
   styleUrls: ['./status-screen.component.scss']
 })
-export class StatusScreenComponent implements OnInit {
+export class StatusScreenComponent implements OnInit, OnDestroy {
+  refreshTimer: any;
   ;
   dictionaryToEnumerable<TItem>(dict: { [key: string]: TItem[]; }): { name: string; values: TItem[]; }[] {
     return Object.getOwnPropertyNames(dict)
       .map(p => ({ name: p, values: dict[p]}));
   }
-  linkDict: { [key: string]: ILinkItem[]; } = {};
-  statusDict: { [key: string]: IStatusItem[]; } = {};
   linkGroups: { name: string; values: ILinkItem[]; }[] = [];
   statusGroups: { name: string; values: IStatusItem[]; }[] = [];
   constructor(
     private http: HttpService,
     private oauth: OAuthService) {
+  }
+  ngOnDestroy(): void {
+    this.refreshTimer.unsubscribe();
   }
 
 
@@ -36,13 +38,20 @@ export class StatusScreenComponent implements OnInit {
     return this.http.Identity != null ? this.http.Links.linksAllGet() : this.http.Links.linksPublicGet();
   }
   async ngOnInit(): Promise<void> {
-    //This is to allow the login/logout to finish happening.
-    await this.delay(10);
-    this.statusDict = await firstValueFrom(this.getStatuses());
-    this.linkDict = await firstValueFrom(this.getLinks());
-
-    this.linkGroups = this.dictionaryToEnumerable(this.linkDict);
-    this.statusGroups = this.dictionaryToEnumerable(this.statusDict);
+    await this.loadLinks()
+    await this.loadStatuses();
+    this.refreshTimer = interval(5000).subscribe(async _ => {
+      await this.loadLinks();
+      await this.loadStatuses();
+    });
+  }
+  async loadLinks(): Promise<void> {
+    const linkDict = await firstValueFrom(this.getLinks());
+    this.linkGroups = this.dictionaryToEnumerable(linkDict);
+  }
+  async loadStatuses(): Promise<void> {
+    const statusDict = await firstValueFrom(this.getStatuses());
+    this.statusGroups = this.dictionaryToEnumerable(statusDict);
   }
   async delay(delayInms: number): Promise<void> {
     return new Promise(resolve  => {
