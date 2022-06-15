@@ -15,10 +15,12 @@ public class LinkAccessor : ILinkAccessor
     {
         var group = await _context.Groups.SingleOrDefaultAsync(g => g.Name == link.Group, ct) ?? new Group{ Name = link.Group };
         var allRoles = await _context.Roles.ToDictionaryAsync(r => r.Name, ct);
+        var rolesForLink = link.Roles.Select(r => allRoles.ContainsKey(r) ? allRoles[r]: new Role{ Name = r }).ToList();
         var dbLink = new Link{
             Name = link.Name,
             Group = group,
-            Url = link.Url
+            Url = link.Url,
+            Roles = rolesForLink
         };
         _context.Links.Add(dbLink);
         await _context.SaveChangesAsync(ct);
