@@ -116,11 +116,19 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 // #endif
 
+// app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
 app.UseCors(debugCorsOriginName);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllers();
 
+app.MapFallbackToFile("index.html");
+
 app.Run();
+
