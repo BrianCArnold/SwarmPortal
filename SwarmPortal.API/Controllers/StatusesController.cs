@@ -18,8 +18,15 @@ public class StatusesController : ControllerBase
     }
 
     
-    [HttpGet("All")]
+    [HttpGet("Public")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> Get(CancellationToken ct)
+     => Ok(await GetStatusesInternal(ct));
+    
+    [Authorize]
+    [HttpGet("All")]
+    public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> GetAll(CancellationToken ct)
+     => Ok(await GetStatusesInternal(ct));
+    private async Task<Dictionary<string, IEnumerable<IStatusItem>>> GetStatusesInternal(CancellationToken ct)
     {
         var userRoles = User.Claims.GetRoles();
         var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);

@@ -14,6 +14,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { AdminLinksComponent } from './admin-links/admin-links.component';
 import { AdminRolesComponent } from './admin-roles/admin-roles.component';
 import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { LoginCompleteComponent } from './login-complete/login-complete.component';
 
 
 export function apiConfigFactory (): Configuration {
@@ -36,7 +38,9 @@ export function apiConfigFactory (): Configuration {
     StatusScreenComponent,
     AdminLinksComponent,
     AdminRolesComponent,
-    AdminGroupsComponent
+    AdminGroupsComponent,
+    NavigationComponent,
+    LoginCompleteComponent
   ],
   imports: [
     BrowserModule,

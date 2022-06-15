@@ -15,16 +15,10 @@ import { IdentityClaims } from './services/IdentityClaims';
 })
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
-  get Identity(): IdentityClaims | null {
-    return this.http.Identity;
-  }
 
   constructor(private http: HttpService,
     private auth: AuthService,
     private oauth: OAuthService) {
-  }
-  get isLoggedIn(): boolean {
-    return this.http.Identity != null;
   }
 
   async ngOnInit(): Promise<void> {
@@ -33,7 +27,7 @@ export class AppComponent implements OnInit {
     this.oauth.configure({
       issuer: _authConfig.issuer || "",
       clientId: _authConfig.clientId || "",
-      redirectUri: _authConfig.redirectUri || "",
+      redirectUri: _authConfig.redirectUri + "/Login" || "",
       scope: _authConfig.scope || "",
       requireHttps: _authConfig.requireHttps,
       responseType: 'code'
@@ -41,9 +35,5 @@ export class AppComponent implements OnInit {
     this.oauth.tokenValidationHandler = new JwksValidationHandler();
     await this.oauth.loadDiscoveryDocumentAndTryLogin();
     this.http.SetAuth(this.oauth.getAccessToken(), <IdentityClaims>this.oauth.getIdentityClaims());
-  }
-  async login() {
-    this.oauth.initCodeFlow();
-
   }
 }

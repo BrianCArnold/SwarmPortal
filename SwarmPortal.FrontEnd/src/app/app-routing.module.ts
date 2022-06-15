@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
 import { AdminLinksComponent } from './admin-links/admin-links.component';
 import { AdminRolesComponent } from './admin-roles/admin-roles.component';
+import { AdminGuard } from './guards/admin.guard';
+import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { StatusScreenComponent } from './status-screen/status-screen.component';
 
 const routes: Routes = [
@@ -11,16 +13,23 @@ const routes: Routes = [
     component: StatusScreenComponent
   },
   {
+    path: 'Login',
+    component: LoginCompleteComponent
+  },
+  {
     path: 'admin/links',
-    component: AdminLinksComponent
+    component: AdminLinksComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/roles',
-    component: AdminRolesComponent
+    component: AdminRolesComponent,
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/groups',
-    component: AdminGroupsComponent
+    component: AdminGroupsComponent,
+    canActivate: [AdminGuard]
   },
 
 ];
