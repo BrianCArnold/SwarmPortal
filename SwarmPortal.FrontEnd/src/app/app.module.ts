@@ -11,6 +11,9 @@ import { StatusScreenComponent } from './status-screen/status-screen.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
 import { CookieService } from 'ngx-cookie-service';
+import { AdminLinksComponent } from './admin-links/admin-links.component';
+import { AdminRolesComponent } from './admin-roles/admin-roles.component';
+import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
 
 
 export function apiConfigFactory (): Configuration {
@@ -30,7 +33,10 @@ export function apiConfigFactory (): Configuration {
     AppComponent,
     StatusGroupCardComponent,
     LinkGroupCardComponent,
-    StatusScreenComponent
+    StatusScreenComponent,
+    AdminLinksComponent,
+    AdminRolesComponent,
+    AdminGroupsComponent
   ],
   imports: [
     BrowserModule,

@@ -3,15 +3,20 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="isLoggedIn; else LoginSection">Welcome {{identity?.given_name}}</li>
+      <li *ngIf="isLoggedIn; else LoginSection">Welcome {{Identity?.given_name}}</li>
       <ng-template #LoginSection>
         <li>
           <span (click)="login()">Login</span>
         </li>
       </ng-template>
+      <li *ngIf="Identity?.roles?.includes('Science')"><a routerLink="admin/links" >Manage Links</a></li>
+      <li *ngIf="Identity?.roles?.includes('Science')"><a routerLink="admin/groups" >Manage Link Groups</a></li>
+      <li *ngIf="Identity?.roles?.includes('Science')"><a routerLink="admin/roles" >Manage Roles</a></li>
     </ul>
   </div>
 </nav>
-<router-outlet>
-  <!-- Will add routes to handle editing Database sourced links, etc. -->
-</router-outlet>
+<div class="container">
+  <router-outlet>
+    <!-- Will add routes to handle editing Database sourced links, etc. -->
+  </router-outlet>
+</div>

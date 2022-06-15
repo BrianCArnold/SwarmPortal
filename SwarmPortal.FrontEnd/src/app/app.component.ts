@@ -15,7 +15,7 @@ import { IdentityClaims } from './services/IdentityClaims';
 })
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
-  get identity(): IdentityClaims | null {
+  get Identity(): IdentityClaims | null {
     return this.http.Identity;
   }
 
