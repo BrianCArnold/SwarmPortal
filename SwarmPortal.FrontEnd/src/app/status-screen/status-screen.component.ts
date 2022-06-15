@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { first, firstValueFrom } from 'rxjs';
-import { ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
+import { ILinkItem, IStatusItem } from '../api';
 import { HttpService } from '../services/http.service';
 
 @Component({

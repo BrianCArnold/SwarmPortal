@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
-import { first, firstValueFrom } from 'rxjs';
+import { first, firstValueFrom, throttleTime } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthService, Configuration, LinksService } from './api';
+import { AuthConfig, AuthService, Configuration, LinksService } from './api';
 import { HttpService } from './services/http.service';
+import { IdentityClaims } from './services/IdentityClaims';
 
 @Component({
   selector: 'app-root',
@@ -14,35 +15,35 @@ import { HttpService } from './services/http.service';
 })
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
-
-  constructor(private http: HttpService) {
+  get identity(): IdentityClaims | null {
+    return this.http.Identity;
   }
+
+  constructor(private http: HttpService,
+    private auth: AuthService,
+    private oauth: OAuthService) {
+  }
+  get isLoggedIn(): boolean {
+    return this.http.Identity != null;
+  }
+
   async ngOnInit(): Promise<void> {
-    if (this.http.IsLoggedIn) {
-      console.log(this.http.identity);
-      console.log(this.http.token);
-    }
-    else {
-      console.log("Not logged in");
-    }
 
-    // var authConfiguration = await new AuthApi(config).authConfigGet();
-
-
-
-    /*
-
-      Next Steps: Need to store the token in local storage.
-      Check if it's not valid coming back from the server, then refresh it.
-      Create API endpoints to add Roles and Links.
-      Check swarm node labels to check for roles.
-      Switch out to MySQL, Postgres, or MSSQL.
-
-    */
-    // this.oauthService.initCodeFlow();
+    const _authConfig = await firstValueFrom(this.auth.authConfigGet());;
+    this.oauth.configure({
+      issuer: _authConfig.issuer || "",
+      clientId: _authConfig.clientId || "",
+      redirectUri: _authConfig.redirectUri || "",
+      scope: _authConfig.scope || "",
+      requireHttps: _authConfig.requireHttps,
+      responseType: 'code'
+    });
+    this.oauth.tokenValidationHandler = new JwksValidationHandler();
+    await this.oauth.loadDiscoveryDocumentAndTryLogin();
+    this.http.SetAuth(this.oauth.getAccessToken(), <IdentityClaims>this.oauth.getIdentityClaims());
   }
-  login() {
-    this.http.LogIn();
+  async login() {
+    this.oauth.initCodeFlow();
 
   }
 }
