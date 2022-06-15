@@ -24,3 +24,13 @@ $black: #fff;
 //$body-color: #000;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+@import 'ag-grid-community/dist/styles/ag-grid.css';
+@import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+
+html, body {
+   height: 100%;
+   width: 100%;
+   box-sizing: border-box;
+   -webkit-overflow-scrolling: touch;
+}

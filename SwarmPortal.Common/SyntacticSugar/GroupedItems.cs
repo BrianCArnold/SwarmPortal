@@ -12,12 +12,19 @@ public class DictionaryGenerator<TGroupedItem>
     {
         this.wrapped = wrapped;
     }
-    public async Task<Dictionary<string, IEnumerable<TGroupedItem>>> GetDictionary(CancellationToken ct)
+    public async Task<Dictionary<string, IEnumerable<TGroupedItem>>> GetDictionaryWithRoles(CancellationToken ct, HashSet<string> roles)
     {
+        
         Dictionary<string, IEnumerable<TGroupedItem>> result = new Dictionary<string, IEnumerable<TGroupedItem>>();
         await foreach (var group in wrapped)
         {
-            result.Add(group.Key, await group.ToListAsync());
+            var links = group
+                .Where(g => !g.Roles.Any() || g.Roles.Any(r => roles.Contains(r)))
+                .ToEnumerable();
+            if (links.Any())
+            {
+                result.Add(group.Key, links);
+            }
         }
         return result;
     }

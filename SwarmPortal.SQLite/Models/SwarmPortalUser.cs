@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 
 namespace SwarmPortal.SQLite;
 

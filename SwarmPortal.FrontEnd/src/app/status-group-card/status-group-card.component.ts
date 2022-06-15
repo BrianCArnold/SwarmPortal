@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ILinkItem, IStatusItem } from '../api-client';
+// import { ILinkItem, IStatusItem } from '../api-client';
 
 @Component({
   selector: 'app-status-group-card',
@@ -15,5 +15,5 @@ export class StatusGroupCardComponent implements OnInit {
   @Input()
   groupName: string = "";
   @Input()
-  groupStatuses: IStatusItem[] = [];
+  groupStatuses: any[] = [];
 }

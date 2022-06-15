@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwarmPortal.Common;
 
@@ -16,11 +17,24 @@ public class StatusesController : ControllerBase
         _hostGroupProvider = hostGroupProvider;
     }
 
-    [HttpGet("All")]
+    
+    [HttpGet("Public")]
     public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> Get(CancellationToken ct)
+     => Ok(await GetStatusesInternal(ct));
+    
+    [Authorize]
+    [HttpGet("All")]
+    public async Task<ActionResult<Dictionary<string, IEnumerable<IStatusItem>>>> GetAll(CancellationToken ct)
+     => Ok(await GetStatusesInternal(ct));
+    private async Task<Dictionary<string, IEnumerable<IStatusItem>>> GetStatusesInternal(CancellationToken ct)
     {
+        var userRoles = User.Claims.GetRoles();
         var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);
-        var dictionary = await dictionaryGenerator.GetDictionary(ct);
+        var dictionary = await dictionaryGenerator.GetDictionaryWithRoles(ct, userRoles);
+
+
+        // Console.WriteLine(userRoles.StringJoin(","));
         return await Task.FromResult(dictionary);
     }
+    
 }

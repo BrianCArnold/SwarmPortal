@@ -29,7 +29,8 @@ public class StaticFileLinkItemProvider : IItemProvider<ILinkItem>
             exampleFileData.Groups["Group Name"] = new []{
                 new StaticLink{
                     Name = "Link Name",
-                    Url = "http://linkaddress.com"
+                    Url = "http://linkaddress.com",
+                    Roles = new []{"Role Name"}
                 }
             };
             var exampleFileJson = JsonConvert.SerializeObject(exampleFileData, Formatting.Indented);
@@ -48,7 +49,7 @@ public class StaticFileLinkItemProvider : IItemProvider<ILinkItem>
             {
                 var name = link.Name;
                 var url = link.Url;
-                yield return new CommonLinkItem(name, group, url);
+                yield return new CommonLinkItem(name, group, url, link.Roles);
             }
         }
     }

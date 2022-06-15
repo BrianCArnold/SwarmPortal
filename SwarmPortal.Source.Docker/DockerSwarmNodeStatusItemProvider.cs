@@ -19,7 +19,7 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
             logger.LogTrace("Getting Node Name");
             Status status = await GetStatus(node);
             logger.LogInformation("Node Status: ", new { Name = name, Status = status });
-            yield return new CommonStatusItem(name, group, status);
+            yield return new CommonStatusItem(name, group, status, Enumerable.Empty<string>());
         }
     }
 

@@ -1,0 +1,7 @@
+<ul class="groupList">
+  <li *ngFor="let group of groups">
+    <a class="link" (click)="deleteGroup(group)">❌</a> {{group.name}}
+  </li>
+</ul>
+<input [(ngModel)]="groupName" />
+<button (click)="addGroup(groupName)">Add Group</button>

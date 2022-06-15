@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { first, firstValueFrom } from 'rxjs';
-import { ILinkItem, IStatusItem, LinksService, StatusesService } from './api-client';
+
+import { OAuthService } from 'angular-oauth2-oidc';
+import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
+import { first, firstValueFrom, throttleTime } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthConfig, AuthService, Configuration, LinksService } from './api';
+import { HttpService } from './services/http.service';
+import { IdentityClaims } from './services/IdentityClaims';
 
 @Component({
   selector: 'app-root',
@@ -9,27 +15,25 @@ import { ILinkItem, IStatusItem, LinksService, StatusesService } from './api-cli
 })
 export class AppComponent implements OnInit {
   title = '@swarm-portal/frontend';
-  linkDictionary: { [key: string]: ILinkItem[]; } = {};
-  get linkGroups(): {
-    name: string;
-    values: ILinkItem[];
-  }[] {
-    return Object.getOwnPropertyNames(this.linkDictionary)
-      .map(p => ({ name: p, values: this.linkDictionary[p]}));
+
+  constructor(private http: HttpService,
+    private auth: AuthService,
+    private oauth: OAuthService) {
   }
-  statusDictionary: { [key: string]: IStatusItem[]; } = {};
-  get statusGroups(): {
-    name: string;
-    values: IStatusItem[];
-  }[] {
-    return Object.getOwnPropertyNames(this.statusDictionary)
-      .map(p => ({ name: p, values: this.statusDictionary[p]}));
-  }
-  constructor(public linksService: LinksService,
-    public statusService: StatusesService) {
-  }
+
   async ngOnInit(): Promise<void> {
-    this.linkDictionary = await firstValueFrom(this.linksService.linksAllGet());
-    this.statusDictionary = await firstValueFrom(this.statusService.statusesAllGet());
+
+    const _authConfig = await firstValueFrom(this.auth.authConfigGet());;
+    this.oauth.configure({
+      issuer: _authConfig.issuer || "",
+      clientId: _authConfig.clientId || "",
+      redirectUri: _authConfig.redirectUri + "/Login" || "",
+      scope: _authConfig.scope || "",
+      requireHttps: _authConfig.requireHttps,
+      responseType: 'code'
+    });
+    this.oauth.tokenValidationHandler = new JwksValidationHandler();
+    await this.oauth.loadDiscoveryDocumentAndTryLogin();
+    this.http.SetAuth(this.oauth.getAccessToken(), <IdentityClaims>this.oauth.getIdentityClaims());
   }
 }
