@@ -1,7 +1,27 @@
-<ul class="groupList">
-  <li *ngFor="let group of groups">
-    <a class="link" (click)="deleteGroup(group)">❌</a> {{group.name}}
-  </li>
-</ul>
-<input [(ngModel)]="groupName" />
-<button (click)="addGroup(groupName)">Add Group</button>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h2>Link Groups Management</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <ul class="groupList">
+        <li *ngFor="let group of groups">
+          <a class="link" (click)="deleteGroup(group)">❌</a> {{group.name}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <input placeholder="Group Name" [(ngModel)]="groupName" class="form-control"/>
+    </div>
+    <div class="col-lg-2">
+      <button (click)="addGroup(groupName)" class="form-control btn btn-primary col-lg-2">Add Group</button>
+    </div>
+    <div class="col-12">
+    </div>
+  </div>
+</div>
+
