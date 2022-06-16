@@ -30,6 +30,8 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
         var swarmPortalLabelGroups = swarmPortalLabels.GroupBy(l => l.Key.Substring(SwarmPortalLabelPrefix.Length).Split(".").Take(2).StringJoin("."));
         foreach (var labelGroup in swarmPortalLabelGroups)
         {
+            if (labelGroup.Key.Split(".").Count() == 2)
+            {
             var group = labelGroup.Key.Split(".").First();
             var name = labelGroup.Key.Split(".").Skip(1).First();
             var roles = new List<string>();
@@ -46,6 +48,7 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
                 }
             }
             yield return new CommonLinkItem(name, group, url, roles);
+            }
         }
     }
 }
