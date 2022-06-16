@@ -22,6 +22,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { CheckboxEditor } from './cell-editors/checkbox/checkbox.component';
 import { CheckboxRenderer } from './cell-renderers/checkbox/checkbox.component';
 import { DeleteRenderer } from './cell-renderers/delete/delete.component';
+import { NgxMasonryModule } from 'ngx-masonry';
 
 
 export function apiConfigFactory (): Configuration {
@@ -59,7 +60,8 @@ export function apiConfigFactory (): Configuration {
     HttpClientModule,
     OAuthModule.forRoot(),
     ApiModule.forRoot(apiConfigFactory),
-    AgGridModule.withComponents([CheckboxEditor])
+    AgGridModule.withComponents([CheckboxEditor]),
+    NgxMasonryModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]
