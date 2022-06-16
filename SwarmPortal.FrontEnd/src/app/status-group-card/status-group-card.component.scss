@@ -1,6 +1,8 @@
 .hostList ul {
   list-style: none;
   text-indent: 0;
+  padding: 0;
+  columns: 2;
   li span.host::before {
     font-weight: bold;
     display: inline-block;

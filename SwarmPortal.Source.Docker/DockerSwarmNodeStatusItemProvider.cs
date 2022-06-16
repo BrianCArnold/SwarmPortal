@@ -30,7 +30,10 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
 
     private async Task<IEnumerable<string>> GetNodeRoles(NodeListResponse node)
     {
-        var roles = node.Spec.Labels.Where(l => l.Key.StartsWith(SwarmPortalLabelPrefix))
+        var roles = node.Spec.Labels.Where(l => 
+        {
+            return l.Key.StartsWith(SwarmPortalLabelPrefix);
+        })
             .Select(l => l.Value);
         
         
