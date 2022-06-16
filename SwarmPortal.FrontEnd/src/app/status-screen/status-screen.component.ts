@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { NgxMasonryOptions } from 'ngx-masonry';
 import { firstValueFrom, interval, Observable, timer } from 'rxjs';
 import { ILinkItem, IStatusItem } from '../api';
 import { HttpService } from '../services/http.service';
@@ -29,7 +30,10 @@ export class StatusScreenComponent implements OnInit, OnDestroy {
 
 
   siteBackgrounds = ['primary', 'success', 'danger', 'warning'];
-
+  masonryOptions: NgxMasonryOptions = {
+    animations: {
+    }
+  }
 
   getStatuses(): Observable<{ [key: string]: Array<IStatusItem>; }> {
     return this.http.Identity != null ? this.http.Statuses.statusesAllGet() : this.http.Statuses.statusesPublicGet();
@@ -40,7 +44,7 @@ export class StatusScreenComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.loadLinks()
     await this.loadStatuses();
-    this.refreshTimer = interval(30000).subscribe(async _ => {
+    this.refreshTimer = interval(60000).subscribe(async _ => {
       await this.loadLinks();
       await this.loadStatuses();
     });
