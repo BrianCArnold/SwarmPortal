@@ -4,6 +4,19 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
 {
     private const string StackNameLabel = "com.docker.stack.namespace";
 
+    private string _stackNameLabelPrefix = null;
+    private string SwarmPortalRoleLabelPrefix 
+    { 
+        get 
+        {
+            if (_stackNameLabelPrefix == null)
+            {
+                _stackNameLabelPrefix = (base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".") + "role";
+            }
+            return _stackNameLabelPrefix;
+        }
+    }
+
     public DockerSwarmServiceStatusItemProvider(ILogger<DockerSwarmServiceStatusItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
     {
         
@@ -11,6 +24,7 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
 
     public override async IAsyncEnumerable<IStatusItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
     {
+        var activeNodes = (await client.Swarm.ListNodesAsync(ct)).Select(n => n.Status.State == "ready" && n.Spec.Availability == "active").Count();
         Dictionary<string, Dictionary<TaskState, int>> taskDictionary = await GetTaskDictionary();
         taskDictionary.ToString();
         logger.LogTrace("Retrieving list of Docker Swarm Services from Docker Socket Client");
@@ -20,13 +34,20 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         foreach (var service in services)
         {
             logger.LogTrace("Getting Stack and Service Name");
-            var (stack, serviceName) = await GetStackAndServiceName(service);
-
             Dictionary<TaskState, int> taskStates = taskDictionary[service.ID] ?? new();
-            Status status = await GetStatus(service, taskStates);
-            yield return new CommonStatusItem(serviceName, stack, status, Enumerable.Empty<string>());
+            var stackAndServiceNameTask = GetStackAndServiceName(service);
+            var statusTask = GetStatus(activeNodes, service, taskStates);
+            var rolesTask = GetRoles(service);
+
+            Status status = await statusTask;
+            var (stack, serviceName) = await stackAndServiceNameTask;
+            var roles = await rolesTask;
+            yield return new CommonStatusItem(serviceName, stack, status, roles);
         }
     }
+
+    private async Task<IEnumerable<string>> GetRoles(SwarmService service) 
+     => service.Spec.Labels.Where(l => l.Key == SwarmPortalRoleLabelPrefix).Select(l => l.Value);
 
     private async Task<Dictionary<string, Dictionary<TaskState, int>>> GetTaskDictionary()
     {
@@ -36,39 +57,56 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         return taskDictionary;
     }
 
-    private async Task<Status> GetStatus(SwarmService service, Dictionary<TaskState, int> states)
+    private async Task<Status> GetStatus(int activeNodes, SwarmService service, Dictionary<TaskState, int> states)
     {
-        Status status;
-        if (!states.Any())
+        try 
         {
-            status = Status.Unknown;
-        }
-        else 
-        {
-        // // Console.WriteLine(JsonConvert.SerializeObject(inspectData));
-            logger.LogTrace("Getting number of running Service Tasks");
-            ulong running = states.ContainsKey(TaskState.Running) ? (ulong)states[TaskState.Running] : 0UL;
-            logger.LogTrace("Getting number of desired Service Tasks");
-            ulong desired = service.Spec.Mode.Replicated.Replicas ?? 0;
-
-            
-            logger.LogTrace("Determining Service Status");
-            status = desired switch {
-                0x0ul => Status.Offline,
-                _ => running switch {
-                    0x0ul => Status.Offline,
-                    _ when running < desired => Status.Degraded,
-                    _ when running == desired => Status.Online,
-                    _ when running > desired => Status.Unknown,
-                    //This shouldn't even happen, but the compiler
-                    // seems to think that there's a case that's not handled?
-                    // Just in case I've missed something, I'll return Unknown.
-                    _ => Status.Unknown
+            Status status;
+            if (!states.Any())
+            {
+                status = Status.Unknown;
+            }
+            else 
+            {
+            // // Console.WriteLine(JsonConvert.SerializeObject(inspectData));
+                logger.LogTrace("Getting number of running Service Tasks");
+                ulong running = states.ContainsKey(TaskState.Running) ? (ulong)states[TaskState.Running] : 0UL;
+                logger.LogTrace("Getting number of desired Service Tasks");
+                ulong desired;
+                if (service.Spec.Mode.Replicated != null)
+                {
+                    desired = service.Spec.Mode.Replicated.Replicas ?? 0;
+                    logger.LogTrace("Getting number of desired Service Tasks");
                 }
-            };
+                else
+                {
+                    desired = (ulong)activeNodes;
+                }
+
+                
+                logger.LogTrace("Determining Service Status");
+                status = desired switch {
+                    0x0ul => Status.Offline,
+                    _ => running switch {
+                        0x0ul => Status.Offline,
+                        _ when running < desired => Status.Degraded,
+                        _ when running == desired => Status.Online,
+                        _ when running > desired => Status.Unknown,
+                        //This shouldn't even happen, but the compiler
+                        // seems to think that there's a case that's not handled?
+                        // Just in case I've missed something, I'll return Unknown.
+                        _ => Status.Unknown
+                    }
+                };
+            }
+            logger.LogInformation("Retrieved Status", new { Status = status });
+            return status;
         }
-        logger.LogInformation("Retrieved Status", new { Status = status });
-        return status;
+        catch(Exception e)
+        {
+            logger.LogError(e, "Error getting status");
+            return Status.Unknown;
+        }
     }
 
     private Task<(string stack, string service)>  GetStackAndServiceName(SwarmService swarmService)

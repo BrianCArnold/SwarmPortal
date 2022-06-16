@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using SwarmPortal.Common;
 
 var builder = WebApplication.CreateBuilder(args);
+Directory.CreateDirectory("persist");
 if (!File.Exists("persist/settings.json"))
 {
     File.Copy("ExampleFiles/settings.json", "persist/settings.json");
