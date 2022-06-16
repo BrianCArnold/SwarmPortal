@@ -23,7 +23,7 @@
     </div>
   </div>
   <form class="container-fluid justify-content-end">
-    <button *ngIf="isLoggedIn" class="btn disabled btn-sm btn-outline-secondary me-2" type="button">Welcome {{Identity?.given_name}}</button>
+    <button *ngIf="isLoggedIn" class="btn disabled btn-sm me-2" type="button">Welcome {{Identity?.given_name}}</button>
     <button *ngIf="isLoggedIn" class="btn btn-outline-success me-2" type="button" (click)="logout()">Logout</button>
     <button *ngIf="!isLoggedIn" class="btn btn-outline-success me-2" type="button" (click)="login()">Login</button>
   </form>
