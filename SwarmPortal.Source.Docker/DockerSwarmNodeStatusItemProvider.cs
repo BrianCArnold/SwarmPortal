@@ -1,6 +1,9 @@
 namespace SwarmPortal.Source.Docker;
 public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
+    private string SwarmPortalLabelPrefix
+     => (base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".") + "role";
+
     public DockerSwarmNodeStatusItemProvider(ILogger<DockerSwarmNodeStatusItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
     {
     }
@@ -18,11 +21,21 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
             string name = await GetNodeName(node);
             logger.LogTrace("Getting Node Name");
             Status status = await GetStatus(node);
+            logger.LogTrace("Getting Node Roles");
+            var roles = await GetNodeRoles(node);
             logger.LogInformation("Node Status: ", new { Name = name, Status = status });
-            yield return new CommonStatusItem(name, group, status, Enumerable.Empty<string>());
+            yield return new CommonStatusItem(name, group, status, roles);
         }
     }
 
+    private async Task<IEnumerable<string>> GetNodeRoles(NodeListResponse node)
+    {
+        var roles = node.Spec.Labels.Where(l => l.Key.StartsWith(SwarmPortalLabelPrefix))
+            .Select(l => l.Value);
+        
+        
+        return roles;
+    }
     private async Task<string> GetNodeName(NodeListResponse node)
     {
         logger.LogTrace("Getting Node name from Description.Hostname");
