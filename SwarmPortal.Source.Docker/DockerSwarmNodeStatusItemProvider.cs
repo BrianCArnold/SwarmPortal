@@ -12,7 +12,7 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
     {
         logger.LogTrace("Retrieving list of Docker Swarm Nodes from Docker Socket Client");
         var nodes = await client.Swarm.ListNodesAsync();
-        const string group = "Nodes";
+        const string group = "Docker Nodes";
         logger.LogTrace("Iterating over Docker Swarm Nodes to construct Docker Node Statuses");
         foreach (var node in nodes)
         {

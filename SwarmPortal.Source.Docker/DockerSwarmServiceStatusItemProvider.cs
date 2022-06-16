@@ -146,6 +146,6 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
             StackName = stack,
             ServiceName = service
         });
-        return Task.FromResult((stack, service));
+        return Task.FromResult(("Stack: " + stack, service));
     }
 }
