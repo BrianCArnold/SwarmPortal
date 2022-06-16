@@ -9,9 +9,10 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
     { 
         get 
         {
+            
             if (_stackNameLabelPrefix == null)
             {
-                _stackNameLabelPrefix = (base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".") + "role";
+                _stackNameLabelPrefix = base.configuration.SwarmPortalLabelPrefix.Split('.', StringSplitOptions.RemoveEmptyEntries).StringJoin(".") + ".role";
             }
             return _stackNameLabelPrefix;
         }
@@ -26,7 +27,6 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
     {
         var activeNodes = (await client.Swarm.ListNodesAsync(ct)).Select(n => n.Status.State == "ready" && n.Spec.Availability == "active").Count();
         Dictionary<string, Dictionary<TaskState, int>> taskDictionary = await GetTaskDictionary();
-        taskDictionary.ToString();
         logger.LogTrace("Retrieving list of Docker Swarm Services from Docker Socket Client");
         var servicesTask = client.Swarm.ListServicesAsync(null, ct);
         var services = await servicesTask;
