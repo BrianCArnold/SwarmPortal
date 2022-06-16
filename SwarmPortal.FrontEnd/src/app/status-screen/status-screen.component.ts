@@ -40,10 +40,10 @@ export class StatusScreenComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.loadLinks()
     await this.loadStatuses();
-    this.refreshTimer = interval(5000).subscribe(async _ => {
-      await this.loadLinks();
-      await this.loadStatuses();
-    });
+    // this.refreshTimer = interval(5000).subscribe(async _ => {
+    //   await this.loadLinks();
+    //   await this.loadStatuses();
+    // });
   }
   async loadLinks(): Promise<void> {
     const linkDict = await firstValueFrom(this.getLinks());

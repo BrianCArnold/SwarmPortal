@@ -1,51 +1,55 @@
 ﻿namespace SwarmPortal.Source.Docker;
+
 public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
     private const string StackNameLabel = "com.docker.stack.namespace";
 
     public DockerSwarmServiceStatusItemProvider(ILogger<DockerSwarmServiceStatusItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
     {
+        
     }
 
     public override async IAsyncEnumerable<IStatusItem> GetItemsAsync([EnumeratorCancellation] CancellationToken ct)
     {
+        Dictionary<string, Dictionary<TaskState, int>> taskDictionary = await GetTaskDictionary();
+        taskDictionary.ToString();
         logger.LogTrace("Retrieving list of Docker Swarm Services from Docker Socket Client");
-        var services = await client.Swarm.ListServicesAsync();
+        var servicesTask = client.Swarm.ListServicesAsync(null, ct);
+        var services = await servicesTask;
         logger.LogTrace("Iterating over Docker Swarm Services to construct Docker Service Statuses");
         foreach (var service in services)
         {
             logger.LogTrace("Getting Stack and Service Name");
             var (stack, serviceName) = await GetStackAndServiceName(service);
-            
-            Status status = await GetStatus(service);
+
+            Dictionary<TaskState, int> taskStates = taskDictionary[service.ID] ?? new();
+            Status status = await GetStatus(service, taskStates);
             yield return new CommonStatusItem(serviceName, stack, status, Enumerable.Empty<string>());
         }
     }
 
-    private async Task<Status> GetStatus(SwarmService service)
+    private async Task<Dictionary<string, Dictionary<TaskState, int>>> GetTaskDictionary()
+    {
+        var serviceTasks = await client.Tasks.ListAsync();
+        var taskDictionary = serviceTasks.GroupBy(t => t.ServiceID)
+            .ToDictionary(g => g.Key, g => g.GroupBy(t => t.Status.State).ToDictionary(t => t.Key, t => t.Count()));
+        return taskDictionary;
+    }
+
+    private async Task<Status> GetStatus(SwarmService service, Dictionary<TaskState, int> states)
     {
         Status status;
-        
-        logger.LogTrace("Checking to make sure SwarmService has the required information.");
-        SwarmService filledOutService;
-        if (service.ServiceStatus == null)
+        if (!states.Any())
         {
-            logger.LogInformation("Retrieving SwarmService information from Docker");
-            filledOutService = await client.Swarm.InspectServiceAsync(service.ID);
+            status = Status.Unknown;
         }
         else 
         {
-            logger.LogTrace("Using existing data, appears to be correct");
-            filledOutService = service;
-        }
-        
-        if (filledOutService.ServiceStatus != null)
-        {
         // // Console.WriteLine(JsonConvert.SerializeObject(inspectData));
             logger.LogTrace("Getting number of running Service Tasks");
-            ulong running = filledOutService.ServiceStatus.RunningTasks;
+            ulong running = states.ContainsKey(TaskState.Running) ? (ulong)states[TaskState.Running] : 0UL;
             logger.LogTrace("Getting number of desired Service Tasks");
-            ulong desired = filledOutService.ServiceStatus.DesiredTasks;
+            ulong desired = service.Spec.Mode.Replicated.Replicas ?? 0;
 
             
             logger.LogTrace("Determining Service Status");
@@ -62,17 +66,6 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
                     _ => Status.Unknown
                 }
             };
-        }
-        else
-        {
-            /* 
-                It looks like for whatever reason, this is getting back null for the service status.
-                My guess is that it's out of date from the current version of Docker running locally in Dev.
-                Need to spin up some VMs with older versions of Docker to confirm.
-                For now, just returning a status of "Unknown".
-            */
-            logger.LogWarning("All Service Statuses are set to 'Unknown' due to bug in DotNet.Docker.");
-            status = Status.Unknown;
         }
         logger.LogInformation("Retrieved Status", new { Status = status });
         return status;
