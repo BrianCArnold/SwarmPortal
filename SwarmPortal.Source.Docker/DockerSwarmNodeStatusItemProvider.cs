@@ -17,10 +17,10 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
         foreach (var node in nodes)
         {
             logger.LogTrace("Converting Labels to Hierarchy");
-            LabelHierarchy hierarchy = LabelHierarchy.ConvertToHierarchy(node.Spec.Labels);
+            HierarchichalDictionary<string> hierarchy = HierarchichalDictionary<string>.ConvertToHierarchy(node.Spec.Labels);
         
             logger.LogTrace("Navigating to relevant labels");
-            LabelHierarchy? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
+            HierarchichalDictionary<string>? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
 
             var name = await GetNodeName(node);
             var status = await GetStatus(node);
@@ -35,7 +35,7 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
         logger.LogTrace("Getting Node name from Description.Hostname");
         return node.Description.Hostname;
     }
-    private async Task<IEnumerable<string>> GetRoles(LabelHierarchy? labelRoot)
+    private async Task<IEnumerable<string>> GetRoles(HierarchichalDictionary<string>? labelRoot)
     {
         logger.LogTrace("Getting Node Roles from Labels");
         if (labelRoot == null)

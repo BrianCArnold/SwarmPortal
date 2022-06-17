@@ -29,9 +29,9 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
         var swarmPortalLabels = service.Spec.Labels;
 
         // O(n) (where `n` is the number of period separated label words in all labels)
-        LabelHierarchy hierarchy = LabelHierarchy.ConvertToHierarchy(service.Spec.Labels);
+        HierarchichalDictionary<string> hierarchy = HierarchichalDictionary<string>.ConvertToHierarchy(service.Spec.Labels);
         
-        LabelHierarchy? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
+        HierarchichalDictionary<string>? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
         
         if (portalLabelRoot == null)
         {

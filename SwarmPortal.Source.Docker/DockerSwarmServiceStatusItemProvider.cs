@@ -32,9 +32,9 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
             Dictionary<TaskState, int> taskStates = taskDictionary[service.ID] ?? new();
 
             // O(n) (where `n` is the number of period separated label words in all labels)
-            LabelHierarchy hierarchy = LabelHierarchy.ConvertToHierarchy(service.Spec.Labels);
+            HierarchichalDictionary<string> hierarchy = HierarchichalDictionary<string>.ConvertToHierarchy(service.Spec.Labels);
             
-            LabelHierarchy? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
+            HierarchichalDictionary<string>? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
 
             var stackAndServiceNameTask = GetStackAndServiceName(service);
             var statusTask = GetStatus(activeNodes, service, taskStates);
@@ -47,7 +47,7 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         }
     }
 
-    private async Task<IEnumerable<string>> GetRoles(LabelHierarchy? labelRoot)
+    private async Task<IEnumerable<string>> GetRoles(HierarchichalDictionary<string>? labelRoot)
     {
         logger.LogTrace("Getting Node Roles from Labels");
         if (labelRoot == null)
