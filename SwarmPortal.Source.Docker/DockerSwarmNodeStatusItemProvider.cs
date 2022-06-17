@@ -42,7 +42,7 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
         {
             return Enumerable.Empty<string>();
         }
-        return labelRoot.ContainsChild("Roles") ? labelRoot["Roles"].Values : Enumerable.Empty<string>();
+        return labelRoot.ContainsChild("roles") ? labelRoot["roles"].Values : Enumerable.Empty<string>();
     }
 
     private async Task<Status> GetStatus(NodeListResponse node)

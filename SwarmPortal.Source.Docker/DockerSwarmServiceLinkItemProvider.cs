@@ -49,8 +49,8 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
                 if (item.ContainsChild("Url"))
                 {
                     var url = item["Url"].Values.Single();
-                    var role = item.ContainsChild("Roles") ? item["Roles"].Values : Enumerable.Empty<string>();
-                    yield return new CommonLinkItem(groupName, itemName, url, role );
+                    var role = item.ContainsChild("roles") ? item["roles"].Values : Enumerable.Empty<string>();
+                    yield return new CommonLinkItem(itemName, groupName, url, role );
                 }
             }
         }
