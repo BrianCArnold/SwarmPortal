@@ -2,8 +2,7 @@ namespace SwarmPortal.Source.Docker;
 
 public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkItem>
 {
-    private string SwarmPortalLabelPrefix
-     => base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".";
+    private IEnumerable<string> SwarmPortalLabelPrefix => base.configuration.SwarmPortalLabelPrefix;
 
     public DockerSwarmServiceLinkItemProvider(ILogger<DockerSwarmServiceLinkItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
     {
@@ -26,36 +25,34 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
     private async IAsyncEnumerable<ILinkItem> GetServiceItems(SwarmService service, [EnumeratorCancellation] CancellationToken ct)
     {
         logger.LogTrace("Setting up IEnumerable to skip labels we aren't looking for.");
-        var swarmPortalLabels = service.Spec.Labels.Where(l => l.Key.StartsWith(SwarmPortalLabelPrefix));
-        //swarm.portal.GroupName.ServiceName.Url=https;(//)
-        //swarm.portal.GroupName.ServiceName.Role=admin
-        var swarmPortalLabelsForServiceInfo = swarmPortalLabels.Where(l => {
-            //GroupName.ServiceName.Url
-            var RemainderOfKey = l.Key.Substring(SwarmPortalLabelPrefix.Length);
-            //[GroupName, ServiceName, Url]
-            var splitUpRemainder = RemainderOfKey.Split('.', StringSplitOptions.RemoveEmptyEntries);
-            return splitUpRemainder.Length == 3;
-        });
-        var swarmPortalLabelsForServiceInfoGrouped = swarmPortalLabelsForServiceInfo
-            .GroupBy(l => l.Key.Split('.', StringSplitOptions.RemoveEmptyEntries).Take(2));
-        foreach (var labelGroup in swarmPortalLabelsForServiceInfoGrouped)
+        var swarmPortalLabels = service.Spec.Labels;
+
+        // O(n) (where `n` is the number of period separated label words in all labels)
+        LabelHierarchy hierarchy = LabelHierarchy.ConvertToHierarchy(service.Spec.Labels);
+        
+        LabelHierarchy? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
+        
+        if (portalLabelRoot == null)
         {
-                var group = labelGroup.Key.First();
-                var name = labelGroup.Key.Skip(1).First();
-                var roles = new List<string>();
-                string url = string.Empty;
-                foreach (var label in labelGroup)
+            yield break;
+        }
+
+        // O(n) (where `n` is the number of period separated label words in all labels)
+        foreach (var portalGroup in portalLabelRoot.Keys)
+        {
+            var groupName = portalGroup;
+            var group = portalLabelRoot[groupName];
+            foreach(var portalItem in group.Keys)
+            {
+                var itemName = portalItem;
+                var item = group[itemName];
+                if (item.ContainsChild("Url"))
                 {
-                    if (label.Key.Split('.').Skip(2).First().Equals("Role", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        roles.Add(label.Value);
-                    }
-                    else if (label.Key.Split('.').Skip(2).First().Equals("Url", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        url = label.Value;
-                    }
+                    var url = item["Url"].Values.Single();
+                    var role = item.ContainsChild("Roles") ? item["Roles"].Values : Enumerable.Empty<string>();
+                    yield return new CommonLinkItem(groupName, itemName, url, role );
                 }
-                yield return new CommonLinkItem(name, group, url, roles);
+            }
         }
     }
 }

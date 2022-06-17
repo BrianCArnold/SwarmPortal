@@ -1,10 +1,10 @@
 namespace SwarmPortal.Source.Docker;
 public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
-    private string SwarmPortalLabelPrefix
-     => (base.configuration.SwarmPortalLabelPrefix.EndsWith('.') ? base.configuration.SwarmPortalLabelPrefix : base.configuration.SwarmPortalLabelPrefix + ".") + "role";
+    private IEnumerable<string> SwarmPortalLabelPrefix => base.configuration.SwarmPortalLabelPrefix;
 
-    public DockerSwarmNodeStatusItemProvider(ILogger<DockerSwarmNodeStatusItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
+    public DockerSwarmNodeStatusItemProvider(ILogger<DockerSwarmNodeStatusItemProvider> logger, IDockerSourceConfiguration configuration)
+     : base(logger, configuration)
     {
     }
 
@@ -16,33 +16,33 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
         logger.LogTrace("Iterating over Docker Swarm Nodes to construct Docker Node Statuses");
         foreach (var node in nodes)
         {
-            logger.LogTrace("Processing node...");
-            logger.LogTrace("Getting Node Name");
-            string name = await GetNodeName(node);
-            logger.LogTrace("Getting Node Name");
-            Status status = await GetStatus(node);
-            logger.LogTrace("Getting Node Roles");
-            var roles = await GetNodeRoles(node);
-            logger.LogInformation("Node Status: ", new { Name = name, Status = status });
+            logger.LogTrace("Converting Labels to Hierarchy");
+            LabelHierarchy hierarchy = LabelHierarchy.ConvertToHierarchy(node.Spec.Labels);
+        
+            logger.LogTrace("Navigating to relevant labels");
+            LabelHierarchy? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
+
+            var name = await GetNodeName(node);
+            var status = await GetStatus(node);
+            var roles = await GetRoles(portalLabelRoot);
+
             yield return new CommonStatusItem(name, group, status, roles);
         }
     }
 
-    private async Task<IEnumerable<string>> GetNodeRoles(NodeListResponse node)
-    {
-        var roles = node.Spec.Labels.Where(l => 
-        {
-            return l.Key.StartsWith(SwarmPortalLabelPrefix);
-        })
-            .Select(l => l.Value);
-        
-        
-        return roles;
-    }
     private async Task<string> GetNodeName(NodeListResponse node)
     {
         logger.LogTrace("Getting Node name from Description.Hostname");
         return node.Description.Hostname;
+    }
+    private async Task<IEnumerable<string>> GetRoles(LabelHierarchy? labelRoot)
+    {
+        logger.LogTrace("Getting Node Roles from Labels");
+        if (labelRoot == null)
+        {
+            return Enumerable.Empty<string>();
+        }
+        return labelRoot.ContainsChild("Roles") ? labelRoot["Roles"].Values : Enumerable.Empty<string>();
     }
 
     private async Task<Status> GetStatus(NodeListResponse node)

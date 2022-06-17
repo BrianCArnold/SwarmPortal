@@ -14,6 +14,8 @@ public class DockerSourceConfiguration : IDockerSourceConfiguration
     {
     }
     public string DockerSocketUri { get; set; } = "unix:///var/run/docker.sock";
-    public string SwarmPortalLabelPrefix { get; set; } = "swarm.portal";
+    public List<string> SwarmPortalLabelPrefix { get; set; } = new List<string>{ "swarm","portal" };
     public string NodeRole { get; set; } = "swarm.portal.node.role";
+    IEnumerable<string> IDockerSourceConfiguration.SwarmPortalLabelPrefix => SwarmPortalLabelPrefix;
+
 }
