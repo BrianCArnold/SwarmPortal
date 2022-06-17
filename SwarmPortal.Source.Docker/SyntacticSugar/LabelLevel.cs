@@ -28,7 +28,7 @@ public sealed class LabelHierarchy : IDictionary<string, LabelHierarchy>
     }
 
     private Dictionary<string, LabelHierarchy> Children { get; set; } = new Dictionary<string, LabelHierarchy>();
-    public ICollection<string> Values { get; set; } = new List<string>();
+    public string Value { get; set; } = string.Empty;
     public bool ContainsChild(string key) => Children.ContainsKey(key);
     public ICollection<string> Keys => Children.Keys;
 
@@ -61,7 +61,7 @@ public sealed class LabelHierarchy : IDictionary<string, LabelHierarchy>
                     currentLevel = currentLevel.Children[part];
                 }
             }
-            currentLevel.Values.Add(label.Value);
+            currentLevel.Value.Add(label.Value);
             currentLevel = rootLevel;
         }
         return rootLevel;

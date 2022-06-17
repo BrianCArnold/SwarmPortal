@@ -2,6 +2,7 @@ namespace SwarmPortal.Source.Docker;
 
 public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkItem>
 {
+
     private IEnumerable<string> SwarmPortalLabelPrefix => base.configuration.SwarmPortalLabelPrefix;
 
     public DockerSwarmServiceLinkItemProvider(ILogger<DockerSwarmServiceLinkItemProvider> logger, IDockerSourceConfiguration configuration) : base(logger, configuration)
@@ -46,10 +47,10 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
             {
                 var itemName = portalItem;
                 var item = group[itemName];
-                if (item.ContainsChild("Url"))
+                if (item.ContainsChild(urlKey))
                 {
-                    var url = item["Url"].Values.Single();
-                    var role = item.ContainsChild("roles") ? item["roles"].Values : Enumerable.Empty<string>();
+                    var url = item[urlKey].Value;
+                    var role = item.ContainsChild(rolesKey) ? item[rolesKey].Value.Split(',') : Enumerable.Empty<string>();
                     yield return new CommonLinkItem(itemName, groupName, url, role );
                 }
             }
