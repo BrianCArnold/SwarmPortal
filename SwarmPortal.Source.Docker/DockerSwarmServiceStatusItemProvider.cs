@@ -54,7 +54,10 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         {
             return Enumerable.Empty<string>();
         }
-        return labelRoot.ContainsChild(rolesKey) ? labelRoot[rolesKey].Value.Split(',') : Enumerable.Empty<string>();
+        else
+        {
+            return labelRoot.ContainsChild(rolesKey) ? labelRoot[rolesKey].Value!.Split(',') : Enumerable.Empty<string>();
+        }
     }
     
     private async Task<Dictionary<string, Dictionary<TaskState, int>>> GetTaskDictionary()
