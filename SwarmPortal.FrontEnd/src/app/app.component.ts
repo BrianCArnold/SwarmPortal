@@ -6,7 +6,7 @@ import { first, firstValueFrom, throttleTime } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthConfig, AuthService, Configuration, LinksService } from './api';
 import { HttpService } from './services/http.service';
-import { IdentityClaims } from './services/IdentityClaims';
+import { IdentityClaims } from './models/IdentityClaims';
 
 @Component({
   selector: 'app-root',
