@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpService } from '../services/http.service';
-import { IdentityClaims } from '../services/IdentityClaims';
+import { IdentityClaims } from '../models/IdentityClaims';
 
 @Component({
   selector: 'app-navigation',

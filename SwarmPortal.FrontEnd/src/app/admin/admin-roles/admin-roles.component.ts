@@ -16,9 +16,6 @@ export class AdminRolesComponent implements OnInit {
   constructor(private http: HttpService) {
   }
 
-
-
-
   async ngOnInit(): Promise<void> {
     await this.loadRoles();
   }
