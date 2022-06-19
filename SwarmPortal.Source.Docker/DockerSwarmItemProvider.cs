@@ -2,6 +2,8 @@ namespace SwarmPortal.Source.Docker;
 public abstract class DockerSwarmItemProvider<TItem> : IItemProvider<TItem>
     where TItem : IGroupableItem
 {
+    protected const string urlKey = "url";
+    protected const string rolesKey = "roles";
     protected readonly Uri dockerSocketUri;
     protected readonly DockerClientConfiguration clientConfig;
     protected readonly DockerClient client;
