@@ -23,17 +23,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    const _authConfig = await firstValueFrom(this.auth.authConfigGet());;
-    this.oauth.configure({
-      issuer: _authConfig.issuer || "",
-      clientId: _authConfig.clientId || "",
-      redirectUri: _authConfig.redirectUri + "/Login" || "",
-      scope: _authConfig.scope || "",
-      requireHttps: _authConfig.requireHttps,
-      responseType: 'code'
-    });
-    this.oauth.tokenValidationHandler = new JwksValidationHandler();
-    await this.oauth.loadDiscoveryDocumentAndTryLogin();
-    this.http.SetAuth(this.oauth.getAccessToken(), <IdentityClaims>this.oauth.getIdentityClaims());
+    await this.http.SetupAuth();
+    
   }
 }

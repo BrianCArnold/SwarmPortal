@@ -27,11 +27,24 @@ export class HttpService {
     return this.attachHeaders(this.statusesService);
   }
 
-  public SetAuth(token: string, identity: IdentityClaims) {
-    console.log(token);
-    console.log(identity);
-    this.Identity = identity;
-    this.Token = token;
+  public async SetupAuth(): Promise<void> {
+    const _authConfig = await firstValueFrom(this.auth.authConfigGet());;
+    this.oauth.configure({
+      issuer: _authConfig.issuer || "",
+      clientId: _authConfig.clientId || "",
+      redirectUri: _authConfig.redirectUri + "/Login" || "",
+      scope: _authConfig.scope || "",
+      requireHttps: _authConfig.requireHttps,
+      responseType: 'code'
+    });
+    this.oauth.tokenValidationHandler = new JwksValidationHandler();
+    await this.oauth.loadDiscoveryDocumentAndTryLogin();
+    var accToken = this.oauth.getAccessToken();
+    var claims = <IdentityClaims>this.oauth.getIdentityClaims();
+    if (accToken && claims) {
+      this.Identity = claims;
+      this.Token = accToken;
+    }
   }
 
   private attachHeaders<TService extends {defaultHeaders: HttpHeaders}>(service: TService): TService {
@@ -52,7 +65,13 @@ export class HttpService {
     localStorage.setItem('token', v || '');
   }
   public get Identity(): IdentityClaims | null {
-    return JSON.parse(localStorage.getItem('identity')||'') || null;
+    var identityJson = localStorage.getItem('identity');
+    if (identityJson) {
+      return JSON.parse(identityJson);
+    }
+    else {
+      return null;
+    }
   }
   public set Identity(v: IdentityClaims | null) {
     localStorage.setItem('identity', JSON.stringify(v));
