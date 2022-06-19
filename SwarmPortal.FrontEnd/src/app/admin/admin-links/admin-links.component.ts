@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { HttpService } from '../services/http.service';
 import { GridApi, CellClickedEvent, ColDef, GridReadyEvent, ValueSetterParams, ValueGetterParams } from 'ag-grid-community';
 import { GridLinkItem } from './GridLinkItem';
-import { CheckboxEditor } from '../cell-editors/checkbox/checkbox.component';
+import { ILink, IRole, IGroup } from 'src/app/api';
+import { CheckboxEditor } from '../checkbox/checkbox.component';
 import { CheckboxRenderer } from '../cell-renderers/checkbox/checkbox.component';
-import { IRole } from '../api/model/iRole';
-import { IGroup } from '../api/model/iGroup';
-import { ILink } from '../api/model/iLink';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-admin-links',
@@ -97,7 +95,7 @@ export class AdminLinksComponent implements OnInit {
       firstValueFrom(this.http.Admin.adminRolesGet()),
       firstValueFrom(this.http.Admin.adminGroupsGet())
     ]);
-    if (this.linkGroup == null) {
+    if (this.linkGroup == null && this.allGroups.length > 0) {
       this.linkGroup = this.allGroups[0].name||'';
     }
     this.rowData = this.allLinks.map(link => ({

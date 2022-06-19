@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { IRole } from '../api/model/iRole';
-import { HttpService } from '../services/http.service';
+import { IRole } from 'src/app/api';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-admin-roles',

@@ -25,6 +25,7 @@ export class NavigationComponent implements OnInit {
   ngOnInit(): void {
   }
   login() {
+    this.oauth.loadDiscoveryDocumentAndTryLogin()
     this.oauth.initCodeFlow();
 
   }

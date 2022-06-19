@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    await this.http.SetupAuth();
     
   }
 }

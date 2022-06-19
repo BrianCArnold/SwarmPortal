@@ -1,5 +1,5 @@
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
@@ -12,17 +12,11 @@ import { StatusScreenComponent } from './status-screen/status-screen.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
 import { CookieService } from 'ngx-cookie-service';
-import { AdminLinksComponent } from './admin-links/admin-links.component';
-import { AdminRolesComponent } from './admin-roles/admin-roles.component';
-import { AdminGroupsComponent } from './admin-groups/admin-groups.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { FormsModule } from '@angular/forms';
-import { AgGridModule } from 'ag-grid-angular';
-import { CheckboxEditor } from './cell-editors/checkbox/checkbox.component';
-import { CheckboxRenderer } from './cell-renderers/checkbox/checkbox.component';
-import { DeleteRenderer } from './cell-renderers/delete/delete.component';
 import { NgxMasonryModule } from 'ngx-masonry';
+import { HttpService } from './services/http.service';
 
 
 export function apiConfigFactory (): Configuration {
@@ -43,14 +37,8 @@ export function apiConfigFactory (): Configuration {
     StatusGroupCardComponent,
     LinkGroupCardComponent,
     StatusScreenComponent,
-    AdminLinksComponent,
-    AdminRolesComponent,
-    AdminGroupsComponent,
     NavigationComponent,
-    LoginCompleteComponent,
-    CheckboxEditor,
-    CheckboxRenderer,
-    DeleteRenderer
+    LoginCompleteComponent
   ],
   imports: [
     FormsModule,
@@ -60,10 +48,17 @@ export function apiConfigFactory (): Configuration {
     HttpClientModule,
     OAuthModule.forRoot(),
     ApiModule.forRoot(apiConfigFactory),
-    AgGridModule.withComponents([CheckboxEditor]),
     NgxMasonryModule
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+    {  
+      provide: APP_INITIALIZER,
+      useFactory: (http: HttpService) => () => http.SetupAuth(),
+      deps: [HttpService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
