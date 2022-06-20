@@ -2,7 +2,7 @@
 
 public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<IStatusItem>
 {
-    private const string StackNameLabel = "com.docker.stack.namespace";
+    private static readonly string[] StackNameLabel = new []{"com", "docker","stack","namespace"};
 
     private IEnumerable<string> SwarmPortalLabelPrefix => base.configuration.SwarmPortalLabelPrefix;
 
@@ -36,18 +36,14 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
             
             HierarchichalDictionary<string>? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
 
-            var stackAndServiceNameTask = GetStackAndServiceName(service);
-            var statusTask = GetStatus(activeNodes, service, taskStates);
-            var rolesTask = GetRoles(portalLabelRoot);
-
-            Status status = await statusTask;
-            var (stack, serviceName) = await stackAndServiceNameTask;
-            var roles = await rolesTask;
+            var (stack, serviceName)  = GetStackAndServiceName(service, hierarchy);
+            Status status = GetStatus(activeNodes, service, taskStates);
+            var roles = GetRoles(portalLabelRoot);
             yield return new CommonStatusItem(serviceName, stack, status, roles);
         }
     }
 
-    private async Task<IEnumerable<string>> GetRoles(HierarchichalDictionary<string>? labelRoot)
+    private IEnumerable<string> GetRoles(HierarchichalDictionary<string>? labelRoot)
     {
         logger.LogTrace("Getting Node Roles from Labels");
         if (labelRoot == null)
@@ -68,7 +64,7 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         return taskDictionary;
     }
 
-    private async Task<Status> GetStatus(int activeNodes, SwarmService service, Dictionary<TaskState, int> states)
+    private Status GetStatus(int activeNodes, SwarmService service, Dictionary<TaskState, int> states)
     {
         try 
         {
@@ -81,13 +77,13 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
             else 
             {
                 logger.LogTrace("Getting number of running Service Tasks");
-                ulong running = states.ContainsKey(TaskState.Running) ? (ulong)states[TaskState.Running] : 0UL;
+                ulong running = states.ContainsKey(TaskState.Running) ? (ulong)states[TaskState.Running] : 0x0UL;
                 logger.LogTrace("Getting number of desired Service Tasks");
                 ulong desired;
                 if (service.Spec.Mode.Replicated != null)
                 {
                     logger.LogTrace("Service is Replicated");
-                    desired = service.Spec.Mode.Replicated.Replicas ?? 0;
+                    desired = service.Spec.Mode.Replicated.Replicas ?? 0x0UL;
                 }
                 else
                 {
@@ -120,43 +116,32 @@ public class DockerSwarmServiceStatusItemProvider : DockerSwarmItemProvider<ISta
         }
     }
 
-    private Task<(string stack, string service)>  GetStackAndServiceName(SwarmService swarmService)
+    private (string stack, string service)  GetStackAndServiceName(SwarmService swarmService, HierarchichalDictionary<string> hierarchy)
     {
-        string stack;
+        string? stack;
         string service;
         
-        logger.LogTrace("Checking if Service has a Stack Namespace Label.");
-        if (swarmService.Spec.Labels.ContainsKey(StackNameLabel))
+        var stackNameLabel = hierarchy.NavigateTo(StackNameLabel);
+        if (stackNameLabel != null)
         {
-            
-            logger.LogInformation("Setting name of stack from Stack Namespace Label");
-            stack = swarmService.Spec.Labels[StackNameLabel];
-            
-            logger.LogTrace("Checking if Service Name matches Stack Name");
-            if (swarmService.Spec.Name.StartsWith(stack + "_"))
-            {//I think this should always be the case?
-            
-                logger.LogInformation("Setting name of service");
-                service = swarmService.Spec.Name.Substring(stack.Length + 1);
-            }
-            else
-            {
-                logger.LogInformation("Setting name of service");
-                logger.LogWarning("Setting name of service: STACK NAME MISSING.");
-                service = swarmService.Spec.Name;
-            }
+            stack = stackNameLabel.Value;    
         }
         else
         {
-            logger.LogInformation("Setting name of stack to 'None'");
-            stack = "None";
-            logger.LogInformation("Setting name of service");
+            stack = null;
+        }
+        if (stack != null) 
+        {
+            service = swarmService.Spec.Name.Substring(stack.Length + 1);
+        }
+        else 
+        {
             service = swarmService.Spec.Name;
         }
         logger.LogInformation("Found Service Status Item.", new {
             StackName = stack,
             ServiceName = service
         });
-        return Task.FromResult(("Stack: " + stack, service));
+        return ("Stack: " + stack, service);
     }
 }

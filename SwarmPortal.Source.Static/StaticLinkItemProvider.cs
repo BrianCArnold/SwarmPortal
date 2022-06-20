@@ -22,7 +22,12 @@ public class StaticFileLinkItemProvider : IItemProvider<ILinkItem>
     {
         // .NET will only create a directory if it doesn't exist.
         // This is idempodent in regards to the directory.
-        Directory.CreateDirectory(Path.GetDirectoryName(configuration.StaticLinksFileName));
+        var fileDirectory = Path.GetDirectoryName(configuration.StaticLinksFileName);
+        if (fileDirectory == null)
+        {
+            yield break;
+        }
+        Directory.CreateDirectory(fileDirectory);
         if (!File.Exists(configuration.StaticLinksFileName))
         {
             var exampleFileData = new StaticLinksFile();

@@ -14,16 +14,16 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
         logger.LogTrace("Retrieving list of Docker Swarm Services from Docker Socket Client");
         var services = await client.Swarm.ListServicesAsync();
         logger.LogTrace("Iterating over Docker Swarm Services to construct Docker Service Links");
-        var flattenedIteration = services.ToAsyncEnumerable().SelectMany(service => {
+        var flattenedIteration = services.SelectMany(service => {
             logger.LogTrace("Processing Service...");
-            return GetServiceItems(service, ct);
+            return GetServiceItems(service);
         });
-        await foreach (var item in flattenedIteration)
+        foreach (var item in flattenedIteration)
         {
             yield return item;
         }
     }
-    private async IAsyncEnumerable<ILinkItem> GetServiceItems(SwarmService service, [EnumeratorCancellation] CancellationToken ct)
+    private IEnumerable<ILinkItem> GetServiceItems(SwarmService service)
     {
         logger.LogTrace("Setting up IEnumerable to skip labels we aren't looking for.");
         var swarmPortalLabels = service.Spec.Labels;
@@ -49,8 +49,8 @@ public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkI
                 var item = group[itemName];
                 if (item.ContainsChild(urlKey))
                 {
-                    var url = item[urlKey].Value;
-                    var role = item.ContainsChild(rolesKey) ? item[rolesKey].Value.Split(',') : Enumerable.Empty<string>();
+                    var url = item[urlKey].Value!;
+                    var role = item.ContainsChild(rolesKey) ? item[rolesKey].Value!.Split(',') : Enumerable.Empty<string>();
                     yield return new CommonLinkItem(itemName, groupName, url, role );
                 }
             }

@@ -20,8 +20,8 @@ public class AuthController : ControllerBase
 
 
     [HttpGet("Config")]
-    public async Task<ActionResult<AuthConfig>> Get(CancellationToken ct)
+    public Task<ActionResult<IAuthConfig>> Get(CancellationToken ct)
     {
-        return Ok(_authConfig);
+        return Task.FromResult(_authConfig.Ok());
     }
 }
