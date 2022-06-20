@@ -43,9 +43,16 @@ public class RoleAccessor : IRoleAccessor
 
     public async Task DisableRole(ulong roleId, CancellationToken ct = default)
     {
-        var role = await _context.Roles.SingleAsync(r => r.Id == roleId);
-        role.Enabled = false;
-        await _context.SaveChangesAsync();
+        if (await _context.Links.AnyAsync(l => l.Roles.Any(r => r.Id == roleId), ct))
+        {
+            throw new InvalidOperationException("Role has links, please delete them first");
+        }
+        else 
+        {
+            var role = await _context.Roles.SingleAsync(r => r.Id == roleId);
+            role.Enabled = false;
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task EnableRole(ulong roleId, CancellationToken ct = default)
