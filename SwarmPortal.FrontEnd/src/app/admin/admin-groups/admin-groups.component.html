@@ -5,10 +5,25 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12">
+    <div class="col-6">
+      <h4>Existing Groups</h4>
+    </div>
+    <div class="col-6">
+      <h4>Disabled/Detected Groups</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
       <ul class="groupList">
-        <li *ngFor="let group of groups">
-          <a class="link" (click)="deleteGroup(group)">❌</a> {{group.name}}
+        <li *ngFor="let group of enabledGroups">
+          <a class="link" (click)="disableGroup(group)">❌</a> {{group.name}}
+        </li>
+      </ul>
+    </div>
+    <div class="col-6">
+      <ul class="groupList">
+        <li *ngFor="let group of disabledGroups">
+          <a class="link" (click)="enableGroup(group)">➕</a> {{group.name}}
         </li>
       </ul>
     </div>

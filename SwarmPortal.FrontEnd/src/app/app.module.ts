@@ -48,9 +48,9 @@ export function apiConfigFactory (): Configuration {
   ],
   providers: [
     CookieService,
-    {  
+    {
       provide: APP_INITIALIZER,
-      useFactory: (http: HttpService) => () => http.SetupAuth(),
+      useFactory: (http: HttpService) => async () => await http.SetupAuth(),
       deps: [HttpService],
       multi: true
     }

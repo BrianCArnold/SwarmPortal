@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 import { IRole } from 'src/app/api';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -9,9 +9,11 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./admin-roles.component.scss']
 })
 export class AdminRolesComponent implements OnInit {
-  roles: IRole[] = [];
   roleName: string = "";
   detectedRoles!: string[];
+  allRoles!: IRole[];
+  enabledRoles!: IRole[];
+  disabledRoles!: IRole[];
 
   constructor(private http: HttpService) {
   }
@@ -20,14 +22,19 @@ export class AdminRolesComponent implements OnInit {
     await this.loadRoles();
   }
   private async loadRoles() {
-    this.roles = await firstValueFrom(this.http.Admin.adminRolesGet());
-    const existingRoles = this.roles.map(ro => ro.name);
+    this.allRoles = await firstValueFrom(this.http.Admin.adminRolesGet());
+    this.enabledRoles = await firstValueFrom(this.http.Admin.adminEnabledRolesWithNoLinksGet());
+    this.disabledRoles = await firstValueFrom(this.http.Admin.adminDisabledRolesGet());
+    const existingRoles = this.allRoles.map(ro => ro.name);
     this.detectedRoles = (this.http.Identity?.roles || []).filter(r => !existingRoles.includes(r));
   }
 
-  async deleteRole(role: IRole) {
-    this.roleName = role.name || '';
-    await firstValueFrom(this.http.Admin.adminDeleteRoleRoleIdDelete(role.id || -1));
+  async disableRole(role: IRole) {
+    await firstValueFrom(this.http.Admin.adminDisableRoleRoleIdDelete(role.id || -1));
+    await this.loadRoles();
+  }
+  async enableRole(role:IRole) {
+    await firstValueFrom(this.http.Admin.adminEnableRoleRoleIdPut(role.id || -1));
     await this.loadRoles();
   }
   async addRole(role: string) {

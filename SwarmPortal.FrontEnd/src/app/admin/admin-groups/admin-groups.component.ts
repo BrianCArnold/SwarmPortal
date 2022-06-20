@@ -9,23 +9,32 @@ import { HttpService } from '../../services/http.service';
   styleUrls: ['./admin-groups.component.scss']
 })
 export class AdminGroupsComponent implements OnInit {
-  groups: IGroup[] = [];
+  enabledGroups!: IGroup[];
   groupName: string = "";
+  disabledGroups!: IGroup[];
 
   constructor(private http: HttpService) { }
 
   async ngOnInit(): Promise<void> {
-    this.groups = await firstValueFrom(this.http.Admin.adminGroupsGet())
+    await this.loadGroups();
   }
-  async deleteGroup(group: IGroup) {
-    this.groupName = group.name || '';
-    await firstValueFrom(this.http.Admin.adminDeleteGroupGroupIdDelete(group.id || -1));
-    this.groups = await firstValueFrom(this.http.Admin.adminGroupsGet())
+  private async loadGroups() {
+    this.enabledGroups = await firstValueFrom(this.http.Admin.adminEnabledGroupsWithNoLinksGet());
+    this.disabledGroups = await firstValueFrom(this.http.Admin.adminDisabledGroupsGet());
+  }
+
+  async disableGroup(group: IGroup) {
+    await firstValueFrom(this.http.Admin.adminDisableGroupGroupIdDelete(group.id || -1));
+    await this.loadGroups();
+  }
+  async enableGroup(group: IGroup) {
+    await firstValueFrom(this.http.Admin.adminEnableGroupGroupIdPut(group.id || -1));
+    await this.loadGroups();
   }
   async addGroup(group: string) {
     await firstValueFrom(this.http.Admin.adminAddGroupGroupPost(group));
     this.groupName = '';
-    this.groups = await firstValueFrom(this.http.Admin.adminGroupsGet())
+    await this.loadGroups();
   }
 
 }

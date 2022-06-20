@@ -16,11 +16,11 @@ export class HttpService {
   }
   public get Status(): StatusesService{
     return this.attachHeaders(this.statusesService);
-  } 
+  }
   public get Link(): LinksService{
     return this.attachHeaders(this.linksService);
   }
-  
+
   public GetStatuses(): Observable<{ [key: string]: IStatusItem[]; }> {
     return this.Identity != null ? this.Status.statusesAllGet() : this.Status.statusesPublicGet();
   }
@@ -44,6 +44,9 @@ export class HttpService {
       this.oauth.tokenValidationHandler = new JwksValidationHandler();
       await this.oauth.loadDiscoveryDocumentAndTryLogin();
     }
+  }
+  public async processLogin(): Promise<void> {
+    firstValueFrom(this.attachHeaders(this.auth).authProcessLoginGet());
   }
 
   private attachHeaders<TService extends {defaultHeaders: HttpHeaders}>(service: TService): TService {
@@ -71,7 +74,7 @@ export class HttpService {
     return this._token;
   }
 
-  
+
   private _isIdentityLoadAttempted = false;
   private _identity: IdentityClaims | null = null;
   public get Identity(): IdentityClaims | null {
