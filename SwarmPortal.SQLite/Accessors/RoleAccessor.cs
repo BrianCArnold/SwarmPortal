@@ -59,7 +59,13 @@ public class RoleAccessor : IRoleAccessor
     {
         return await _context.Roles.ToListAsync(ct);
     }
-
-
+    public async Task<IEnumerable<IRole>> GetEnabledRolesWithNoLinks(CancellationToken ct = default)
+    {
+        return await _context.Roles.Where(r => !r.Links.Any() && r.Enabled).ToListAsync(ct);
+    }
+    public async Task<IEnumerable<IRole>> GetDisabledRoles(CancellationToken ct = default)
+    {
+        return await _context.Roles.Where(r => !r.Enabled).ToListAsync(ct);
+    }
 
 }

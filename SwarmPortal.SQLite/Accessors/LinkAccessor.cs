@@ -64,6 +64,22 @@ public class LinkAccessor : ILinkAccessor
             .Include(l => l.Roles)
             .ToListAsync(ct);
     }
+    public async Task<IEnumerable<ILink>> GetEnabledLinks(CancellationToken ct = default)
+    {
+        return await _context.Links
+            .Include(l => l.Group)
+            .Include(l => l.Roles)
+            .Where(l => l.Enabled == true)
+            .ToListAsync(ct);
+    }
+    public async Task<IEnumerable<ILink>> GetDisabledLinks(CancellationToken ct = default)
+    {
+        return await _context.Links
+            .Include(l => l.Group)
+            .Include(l => l.Roles)
+            .Where(l => l.Enabled == false)
+            .ToListAsync(ct);
+    }
 
     public async Task<IEnumerable<ILink>> GetLinksForGroup(string group, CancellationToken ct = default)
     {

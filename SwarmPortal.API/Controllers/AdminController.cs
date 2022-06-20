@@ -36,6 +36,19 @@ public class AdminController : ControllerBase
         
         return await linkAccessor.GetLinks(ct).OkAsync();
     }
+    [HttpGet("All/EnabledLinks/")]
+    public async Task<ActionResult<IEnumerable<ILink>>> GetEnabledDatabaseLinks(CancellationToken ct)
+    {
+        
+        return await linkAccessor.GetEnabledLinks(ct).OkAsync();
+    }
+    [HttpGet("All/DisabledLinks/")]
+    public async Task<ActionResult<IEnumerable<ILink>>> GetDisabledDatabaseLinks(CancellationToken ct)
+    {
+        
+        return await linkAccessor.GetDisabledLinks(ct).OkAsync();
+    }
+
     [HttpGet("{group}/Links")]
     public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinksInGroup(string group, CancellationToken ct)
     {
@@ -57,6 +70,16 @@ public class AdminController : ControllerBase
     {
         return await roleAccessor.GetRoles(ct).OkAsync();
     }
+    [HttpGet("EnabledRolesWithNoLinks")]
+    public async Task<ActionResult<IEnumerable<IRole>>> GetDatabaseEnabledRoles(CancellationToken ct)
+    {
+        return await roleAccessor.GetEnabledRolesWithNoLinks(ct).OkAsync();
+    }
+    [HttpGet("DisabledRoles")]
+    public async Task<ActionResult<IEnumerable<IRole>>> GetDatabaseDisabledRoles(CancellationToken ct)
+    {
+        return await roleAccessor.GetDisabledRoles(ct).OkAsync();
+    }
     [HttpPost("AddRole/{role}")]
     public async Task<ActionResult<string>> AddRole([FromRoute] string role, CancellationToken ct)
     {
@@ -70,7 +93,7 @@ public class AdminController : ControllerBase
         await roleAccessor.DisableRole(roleId, ct);
         return Ok();
     }
-    [HttpPut("EnableRole/{role}")]
+    [HttpPut("EnableRole/{roleId}")]
     public async Task<ActionResult<string>> EnableRole([FromRoute] ulong roleId, CancellationToken ct)
     {
         await roleAccessor.EnableRole(roleId, ct);
@@ -81,6 +104,16 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<IEnumerable<IGroup>>> GetDatabaseGroups(CancellationToken ct)
     {
         return await groupAccessor.GetGroups(ct).OkAsync();
+    }
+    [HttpGet("DisabledGroups")]
+    public async Task<ActionResult<IEnumerable<IGroup>>> GetDisabledDatabaseGroups(CancellationToken ct)
+    {
+        return await groupAccessor.GetDisabledGroups(ct).OkAsync();
+    }
+    [HttpGet("EnabledGroupsWithNoLinks")]
+    public async Task<ActionResult<IEnumerable<IGroup>>> GetEnabledDatabaseGroupsWithNoLinks(CancellationToken ct)
+    {
+        return await groupAccessor.GetEnabledGroupsWithNoLinks(ct).OkAsync();
     }
     [HttpPost("AddGroup/{group}")]
     public async Task<ActionResult<string>> AddGroup([FromRoute] string group, CancellationToken ct)
@@ -105,7 +138,8 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<ILinkItem>> AddLink([FromBody] CommonLinkItem link, CancellationToken ct)
     {
         ILinkItem item = link;
-        await linkAccessor.AddLink(item);
+        var newLink = await linkAccessor.AddLink(item);
+        await linkAccessor.EnableLink(newLink.Id);
         return item.Ok();
     }
     [HttpPost("AddLinkRole/{linkId}/{role}")]

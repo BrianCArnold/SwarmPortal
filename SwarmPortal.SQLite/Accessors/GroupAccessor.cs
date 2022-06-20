@@ -62,5 +62,13 @@ public class GroupAccessor : IGroupAccessor
     {
         return await _context.Groups.ToListAsync(ct);
     }
+    public async Task<IEnumerable<IGroup>> GetEnabledGroupsWithNoLinks(CancellationToken ct = default)
+    {
+        return await _context.Groups.Where(r => !r.Links.Any() && r.Enabled).ToListAsync(ct);
+    }
+    public async Task<IEnumerable<IGroup>> GetDisabledGroups(CancellationToken ct = default)
+    {
+        return await _context.Groups.Where(r => !r.Enabled).ToListAsync(ct);
+    }
 
 }
