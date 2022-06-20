@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,11 +21,7 @@ import { HttpService } from './services/http.service';
 
 export function apiConfigFactory (): Configuration {
   const params: ConfigurationParameters = {
-    basePath: environment.apiRoot,
-    // withCredentials: true,
-    // credentials: {
-    //   accessToken: () => localStorage.getItem('access_token') || ''
-    // }
+    basePath: environment.apiRoot
   }
   return new Configuration({...params});
 }

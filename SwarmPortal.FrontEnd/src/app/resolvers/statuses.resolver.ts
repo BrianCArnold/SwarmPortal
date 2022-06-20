@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-  Router, Resolve,
+  Resolve,
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IStatusItem } from '../api';
 import { HttpService } from '../services/http.service';
 
@@ -13,7 +13,7 @@ import { HttpService } from '../services/http.service';
 })
 export class StatusesResolver implements Resolve<{ [key: string]: IStatusItem[]; }> {
   constructor(private http: HttpService) { }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{ [key: string]: IStatusItem[]; }> {
+  resolve(_: ActivatedRouteSnapshot, __: RouterStateSnapshot): Observable<{ [key: string]: IStatusItem[]; }> {
     return this.http.GetStatuses();
   }
 }

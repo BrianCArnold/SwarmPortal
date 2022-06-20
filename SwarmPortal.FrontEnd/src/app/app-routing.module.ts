@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminGuard } from './guards/admin.guard';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { LinksResolver } from './resolvers/links.resolver';
 import { StatusesResolver } from './resolvers/statuses.resolver';

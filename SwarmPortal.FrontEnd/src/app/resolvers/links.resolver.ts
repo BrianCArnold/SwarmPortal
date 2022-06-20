@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  Router, Resolve,
+  Resolve,
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { ILinkItem, IStatusItem } from '../api';
+import { Observable } from 'rxjs';
+import { ILinkItem } from '../api';
 import { HttpService } from '../services/http.service';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { HttpService } from '../services/http.service';
 })
 export class LinksResolver implements Resolve<{ [key: string]: ILinkItem[]; }> {
   constructor(private http: HttpService) { }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{ [key: string]: ILinkItem[]; }> {
+  resolve(_: ActivatedRouteSnapshot, __: RouterStateSnapshot): Observable<{ [key: string]: ILinkItem[]; }> {
     return this.http.GetLinks();
   }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { firstValueFrom, Observable } from 'rxjs';
-import { AdminService, AuthConfig, AuthService, ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
+import { AdminService, AuthService, ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
 import { IdentityClaims } from '../models/IdentityClaims';
 
 @Injectable({
