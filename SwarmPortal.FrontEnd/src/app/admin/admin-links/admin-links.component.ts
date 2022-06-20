@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom, map } from 'rxjs';
 import { GridApi, CellClickedEvent, ColDef, GridReadyEvent, ValueSetterParams, ValueGetterParams } from 'ag-grid-community';
 import { GridLinkItem } from './GridLinkItem';
 import { ILink, IRole, IGroup } from 'src/app/api';
@@ -66,7 +66,10 @@ export class AdminLinksComponent implements OnInit {
     ))
   }
   private staticColumnDefs: ColDef[] = [
-    { valueGetter: _ => '❌', width: 60, sortable: true, filter: true, onCellClicked: (event: CellClickedEvent) => { this.deleteLink(event.data) } },
+    { valueGetter: p => {
+      console.log(p);
+      if (p.data.enabled) return '❌'; else return '➕';
+    }, width: 60, sortable: true, filter: true, onCellClicked: (event: CellClickedEvent) => { if (event.data.enabled) this.disableLink(event.data); else this.enableLink(event.data) } },
     { field: 'group', sortable: true, filter: true },
     { field: 'name', sortable: true, filter: true },
     { field: 'url', sortable: true, filter: true },
@@ -92,8 +95,8 @@ export class AdminLinksComponent implements OnInit {
   private async loadData() {
     [this.allLinks, this.allRoles, this.allGroups] = await Promise.all([
       firstValueFrom(this.http.Admin.adminAllLinksGet()),
-      firstValueFrom(this.http.Admin.adminRolesGet()),
-      firstValueFrom(this.http.Admin.adminGroupsGet())
+      firstValueFrom(this.http.Admin.adminRolesGet().pipe(map(r => r.filter(r => r.enabled)))),
+      firstValueFrom(this.http.Admin.adminGroupsGet().pipe(map(r => r.filter(r => r.enabled))))
     ]);
     if (this.linkGroup == null && this.allGroups.length > 0) {
       this.linkGroup = this.allGroups[0].name||'';
@@ -104,6 +107,7 @@ export class AdminLinksComponent implements OnInit {
       name: link.name || '',
       roles: this.createRoleDictionaryForLink(link.roles?.map(r => r.name || '') || []),
       group: link.group?.name || '',
+      enabled: link.enabled!
     }));
     this.gridColumns = this.generateColumnDefs();
     setTimeout(() => this.gridApi.sizeColumnsToFit(), 10);
@@ -121,11 +125,12 @@ export class AdminLinksComponent implements OnInit {
     this.linkUrl = '';
     await this.loadData();
   }
-  async deleteLink(link: ILink) {
-    this.linkGroup = link.group?.name || '';
-    this.linkName = link.name || '';
-    this.linkUrl = link.url || '';
-    await firstValueFrom(this.http.Admin.adminDeleteLinkLinkIdDelete(link.id||-1));
+  async disableLink(link: ILink) {
+    await firstValueFrom(this.http.Admin.adminDisableLinkLinkIdDelete(link.id||-1));
+    await this.loadData();
+  }
+  async enableLink(link: ILink) {
+    await firstValueFrom(this.http.Admin.adminEnableLinkLinkIdPut(link.id||-1));
     await this.loadData();
   }
 }

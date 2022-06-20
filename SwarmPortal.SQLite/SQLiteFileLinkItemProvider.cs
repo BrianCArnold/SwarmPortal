@@ -25,6 +25,7 @@ public class SQLiteFileLinkItemProvider : IItemProvider<ILinkItem>
      => context.Links
         .Include(l => l.Group)
         .Include(l => l.Roles)
+        .Where(l => l.Enabled && l.Group.Enabled)
         .AsAsyncEnumerable()
-        .Select(l => new CommonLinkItem(l.Name, l.Group.Name, l.Url, l.Roles.Select(r => r.Name)));
+        .Select(l => new CommonLinkItem(l.Name, l.Group.Name, l.Url, l.Roles.Where(r => r.Enabled).Select(r => r.Name)));
 }

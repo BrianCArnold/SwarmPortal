@@ -15,6 +15,7 @@ import { Link } from './link';
 export interface Group { 
     id?: number;
     name?: string | null;
+    enabled?: boolean;
     links?: Array<Link> | null;
 }
 
