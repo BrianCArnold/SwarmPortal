@@ -1,8 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import * as URLParse from 'url-parse';
-import { LinksService } from '../api';
-// import { ILinkItem } from '../api-client';
 
 @Component({
   selector: 'app-link-group-card',
@@ -11,7 +7,7 @@ import { LinksService } from '../api';
 })
 export class LinkGroupCardComponent implements OnInit {
 
-  constructor(private links: LinksService) { }
+  constructor() { }
 
   async ngOnInit(): Promise<void> {
 

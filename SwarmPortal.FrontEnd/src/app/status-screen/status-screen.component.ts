@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { NgxMasonryOptions } from 'ngx-masonry';
-import { firstValueFrom, interval, Observable, timer } from 'rxjs';
 import { ILinkItem, IStatusItem } from '../api';
-import { HttpService } from '../services/http.service';
 
 @Component({
   selector: 'app-status-screen',
@@ -20,42 +17,21 @@ export class StatusScreenComponent implements OnInit, OnDestroy {
   }
   linkGroups: { name: string; values: ILinkItem[]; }[] = [];
   statusGroups: { name: string; values: IStatusItem[]; }[] = [];
-  constructor(
-    private http: HttpService,
-    private oauth: OAuthService) {
+  constructor(private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.data.subscribe(data => {
+      this.linkGroups = this.dictionaryToEnumerable(data['links']);
+      this.statusGroups = this.dictionaryToEnumerable(data['statuses']);
+    })
   }
   ngOnDestroy(): void {
-    this.refreshTimer.unsubscribe();
   }
 
 
   siteBackgrounds = ['primary', 'success', 'danger', 'warning'];
   masonryOptions: NgxMasonryOptions = {
-    animations: {
-    }
   }
 
-  getStatuses(): Observable<{ [key: string]: Array<IStatusItem>; }> {
-    return this.http.Identity != null ? this.http.Statuses.statusesAllGet() : this.http.Statuses.statusesPublicGet();
-  }
-  getLinks(): Observable<{ [key: string]: Array<IStatusItem>; }> {
-    return this.http.Identity != null ? this.http.Links.linksAllGet() : this.http.Links.linksPublicGet();
-  }
   async ngOnInit(): Promise<void> {
-    await this.loadLinks()
-    await this.loadStatuses();
-    this.refreshTimer = interval(60000).subscribe(async _ => {
-      await this.loadLinks();
-      await this.loadStatuses();
-    });
-  }
-  async loadLinks(): Promise<void> {
-    const linkDict = await firstValueFrom(this.getLinks());
-    this.linkGroups = this.dictionaryToEnumerable(linkDict);
-  }
-  async loadStatuses(): Promise<void> {
-    const statusDict = await firstValueFrom(this.getStatuses());
-    this.statusGroups = this.dictionaryToEnumerable(statusDict);
   }
   async delay(delayInms: number): Promise<void> {
     return new Promise(resolve  => {

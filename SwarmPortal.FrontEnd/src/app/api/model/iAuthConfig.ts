@@ -9,13 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Link } from './link';
 
 
-export interface IGroup { 
-    id?: number;
-    name?: string | null;
-    readonly enabled?: boolean;
-    links?: Array<Link> | null;
+export interface IAuthConfig { 
+    authority?: string | null;
+    audience?: string | null;
+    issuer?: string | null;
+    clientId?: string | null;
+    redirectUri?: string | null;
+    scope?: string | null;
+    requireHttps?: boolean;
 }
 

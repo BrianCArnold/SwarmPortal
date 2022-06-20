@@ -18,6 +18,7 @@ export interface ILink {
     readonly name?: string | null;
     readonly url?: string | null;
     group?: Group;
+    readonly enabled?: boolean;
     readonly roles?: Array<IRole> | null;
 }
 

@@ -1,6 +1,6 @@
-export * from './authConfig';
 export * from './commonLinkItem';
 export * from './group';
+export * from './iAuthConfig';
 export * from './iGroup';
 export * from './iLink';
 export * from './iLinkItem';

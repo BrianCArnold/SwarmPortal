@@ -29,6 +29,7 @@ public sealed class HierarchichalDictionary<TValue> : IDictionary<string, Hierar
 
     private Dictionary<string, HierarchichalDictionary<TValue>> Children { get; set; } = new Dictionary<string, HierarchichalDictionary<TValue>>();
     public TValue? Value { get; set; } = default(TValue);
+    public bool HasValue => Value != null;
     public bool ContainsChild(string key) => Children.ContainsKey(key);
     public ICollection<string> Keys => Children.Keys;
 
@@ -84,7 +85,7 @@ public sealed class HierarchichalDictionary<TValue> : IDictionary<string, Hierar
 
     bool IDictionary<string, HierarchichalDictionary<TValue>>.TryGetValue(string key, out HierarchichalDictionary<TValue> value)
     {
-        return Children.TryGetValue(key, out value);
+        return Children.TryGetValue(key, out value!);
     }
 
     void ICollection<KeyValuePair<string, HierarchichalDictionary<TValue>>>.Add(KeyValuePair<string, HierarchichalDictionary<TValue>> item)
