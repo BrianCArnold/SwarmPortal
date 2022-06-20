@@ -10,19 +10,21 @@ public class GroupAccessor : IGroupAccessor
     {
         _context = context;
     }
-    public async Task AddGroup(string groupName, CancellationToken ct = default)
+    public async Task<IGroup> AddGroup(string groupName, CancellationToken ct = default)
     {
         if (await _context.Groups.AnyAsync(r => r.Name == groupName, ct))
         {
             throw new InvalidOperationException("Group already exists");
         }
         else {
-            _context.Groups.Add(new Group{ Name = groupName });
+            var group = new Group{ Name = groupName };
+            _context.Groups.Add(group);
             await _context.SaveChangesAsync(ct);
+            return group;
         }
     }
 
-    public async Task DeleteGroup(ulong groupId, CancellationToken ct = default)
+    public async Task DisableGroup(ulong groupId, CancellationToken ct = default)
     {
         if (await _context.Links.AnyAsync(l => l.Group.Id == groupId, ct))
         {
@@ -33,7 +35,24 @@ public class GroupAccessor : IGroupAccessor
             var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Id == groupId, ct);
             if (dbGroup != null)
             {
-                _context.Groups.Remove(dbGroup);
+                dbGroup.Enabled = false;
+                await _context.SaveChangesAsync(ct);
+            }
+        }
+    }
+
+    public async Task EnableGroup(ulong groupId, CancellationToken ct = default)
+    {
+        if (await _context.Links.AnyAsync(l => l.Group.Id == groupId, ct))
+        {
+            throw new InvalidOperationException("Group has links, please delete them first");
+        }
+        else 
+        {
+            var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Id == groupId, ct);
+            if (dbGroup != null)
+            {
+                dbGroup.Enabled = true;
                 await _context.SaveChangesAsync(ct);
             }
         }

@@ -18,6 +18,7 @@ export interface Link {
     name?: string | null;
     url?: string | null;
     group?: Group;
+    enabled?: boolean;
     roles?: Array<Role> | null;
 }
 

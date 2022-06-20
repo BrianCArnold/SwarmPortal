@@ -10,9 +10,9 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
-model/authConfig.ts
 model/commonLinkItem.ts
 model/group.ts
+model/iAuthConfig.ts
 model/iGroup.ts
 model/iLink.ts
 model/iLinkItem.ts

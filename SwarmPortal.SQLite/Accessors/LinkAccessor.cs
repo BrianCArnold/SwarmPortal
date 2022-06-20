@@ -11,7 +11,7 @@ public class LinkAccessor : ILinkAccessor
     {
         _context = context;
     }
-    public async Task AddLink(ILinkItem link, CancellationToken ct = default)
+    public async Task<ILink> AddLink(ILinkItem link, CancellationToken ct = default)
     {
         var group = await _context.Groups.SingleOrDefaultAsync(g => g.Name == link.Group, ct) ?? new Group{ Name = link.Group };
         var allRoles = await _context.Roles.ToDictionaryAsync(r => r.Name, ct);
@@ -24,14 +24,22 @@ public class LinkAccessor : ILinkAccessor
         };
         _context.Links.Add(dbLink);
         await _context.SaveChangesAsync(ct);
+        return dbLink;
     }
 
-    public async Task DeleteLink(ulong linkId, CancellationToken ct = default)
+    public async Task DisableLink(ulong linkId, CancellationToken ct = default)
     {
         var dblink = await _context.Links.SingleAsync(l => l.Id == linkId, ct);
-        _context.Links.Remove(dblink);
+        dblink.Enabled = false;
+        await _context.SaveChangesAsync(ct);
+    }  
+    public async Task EnableLink(ulong linkId, CancellationToken ct = default)
+    {
+        var dblink = await _context.Links.SingleAsync(l => l.Id == linkId, ct);
+        dblink.Enabled = true;
         await _context.SaveChangesAsync(ct);
     }
+
     public async Task AddLinkRole(ulong linkId, string linkRole, CancellationToken ct = default)
     {
         var dblink = await _context.Links.Include(l => l.Roles).SingleAsync(l => l.Id == linkId, ct);

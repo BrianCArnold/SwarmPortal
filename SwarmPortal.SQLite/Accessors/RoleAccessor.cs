@@ -10,15 +10,17 @@ public class RoleAccessor : IRoleAccessor
     {
         _context = context;
     }
-    public async Task AddRole(string role, CancellationToken ct = default)
+    public async Task<IRole> AddRole(string role, CancellationToken ct = default)
     {
         if (await _context.Roles.AnyAsync(r => r.Name == role, ct))
         {
             throw new InvalidOperationException("Role already exists");
         }
         else {
-            _context.Roles.Add(new Role{ Name = role });
+            var roleObj = new Role{ Name = role };
+            _context.Roles.Add(roleObj);
             await _context.SaveChangesAsync(ct);
+            return roleObj;
         }
     }
 
@@ -37,6 +39,20 @@ public class RoleAccessor : IRoleAccessor
                 await _context.SaveChangesAsync(ct);
             }
         }
+    }
+
+    public async Task DisableRole(ulong roleId, CancellationToken ct = default)
+    {
+        var role = await _context.Roles.SingleAsync(r => r.Id == roleId);
+        role.Enabled = false;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task EnableRole(ulong roleId, CancellationToken ct = default)
+    {
+        var role = await _context.Roles.SingleAsync(r => r.Id == roleId);
+        role.Enabled = true;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<IRole>> GetRoles(CancellationToken ct = default)

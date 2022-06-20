@@ -60,15 +60,23 @@ public class AdminController : ControllerBase
     [HttpPost("AddRole/{role}")]
     public async Task<ActionResult<string>> AddRole([FromRoute] string role, CancellationToken ct)
     {
-        await roleAccessor.AddRole(role, ct);
+        var roleObj = await roleAccessor.AddRole(role, ct);
+        await roleAccessor.EnableRole(roleObj.Id, ct);
         return role.Ok();
     }
-    [HttpDelete("DeleteRole/{roleId}")]
-    public async Task<ActionResult> DeleteRole([FromRoute] ulong roleId, CancellationToken ct)
+    [HttpDelete("DisableRole/{roleId}")]
+    public async Task<ActionResult> DisableRole([FromRoute] ulong roleId, CancellationToken ct)
     {
-        await roleAccessor.DeleteRole(roleId, ct);
+        await roleAccessor.DisableRole(roleId, ct);
         return Ok();
     }
+    [HttpPut("EnableRole/{role}")]
+    public async Task<ActionResult<string>> EnableRole([FromRoute] ulong roleId, CancellationToken ct)
+    {
+        await roleAccessor.EnableRole(roleId, ct);
+        return Ok();
+    }
+
     [HttpGet("Groups")]
     public async Task<ActionResult<IEnumerable<IGroup>>> GetDatabaseGroups(CancellationToken ct)
     {
@@ -77,13 +85,20 @@ public class AdminController : ControllerBase
     [HttpPost("AddGroup/{group}")]
     public async Task<ActionResult<string>> AddGroup([FromRoute] string group, CancellationToken ct)
     {
-        await groupAccessor.AddGroup(group);
+        var groupObj = await groupAccessor.AddGroup(group);
+        await groupAccessor.EnableGroup(groupObj.Id, ct);
         return group.Ok();
     }
-    [HttpDelete("DeleteGroup/{groupId}")]
-    public async Task<ActionResult> DeleteGroup([FromRoute] ulong groupId, CancellationToken ct)
+    [HttpDelete("DisableGroup/{groupId}")]
+    public async Task<ActionResult> DisableGroup([FromRoute] ulong groupId, CancellationToken ct)
     {
-        await groupAccessor.DeleteGroup(groupId);
+        await groupAccessor.DisableGroup(groupId);
+        return Ok();
+    }
+    [HttpPut("EnableGroup/{groupId}")]
+    public async Task<ActionResult> EnableGroup([FromRoute] ulong groupId, CancellationToken ct)
+    {
+        await groupAccessor.EnableGroup(groupId);
         return Ok();
     }
     [HttpPost("AddLink")]
@@ -99,10 +114,16 @@ public class AdminController : ControllerBase
         await linkAccessor.AddLinkRole(linkId, role);
         return role.Ok();
     }
-    [HttpDelete("DeleteLink/{linkId}")]
-    public async Task<ActionResult> DeleteLink(ulong linkId, CancellationToken ct)
+    [HttpDelete("DisableLink/{linkId}")]
+    public async Task<ActionResult> DisableLink(ulong linkId, CancellationToken ct)
     {
-        await linkAccessor.DeleteLink(linkId);
+        await linkAccessor.DisableLink(linkId);
+        return Ok();
+    }
+    [HttpPut("EnableLink/{linkId}")]
+    public async Task<ActionResult> EnableLink(ulong linkId, CancellationToken ct)
+    {
+        await linkAccessor.EnableLink(linkId);
         return Ok();
     }
     [HttpDelete("DeleteLinkRole/{linkId}/{role}")]
