@@ -22,31 +22,38 @@ public class DockerSwarmNodeStatusItemProvider : DockerSwarmItemProvider<IStatus
             logger.LogTrace("Navigating to relevant labels");
             HierarchichalDictionary<string>? portalLabelRoot = hierarchy.NavigateTo(SwarmPortalLabelPrefix);
 
-            var name = await GetNodeName(node);
-            var status = await GetStatus(node);
-            var roles = await GetRoles(portalLabelRoot);
+            var name = GetNodeName(node);
+            var status = GetStatus(node);
+            var roles = GetRoles(portalLabelRoot);
 
             yield return new CommonStatusItem(name, group, status, roles);
         }
     }
 
-    private async Task<string> GetNodeName(NodeListResponse node)
+    private string GetNodeName(NodeListResponse node)
     {
         logger.LogTrace("Getting Node name from Description.Hostname");
         return node.Description.Hostname;
     }
-    private async Task<IEnumerable<string>> GetRoles(HierarchichalDictionary<string>? labelRoot)
+    private IEnumerable<string> GetRoles(HierarchichalDictionary<string>? labelRoot)
     {
         logger.LogTrace("Getting Node Roles from Labels");
         if (labelRoot == null)
         {
             return Enumerable.Empty<string>();
         }
-
-        return labelRoot.ContainsChild(rolesKey) ? labelRoot[rolesKey].Value.Split(',') : Enumerable.Empty<string>();
+        else if (labelRoot.ContainsChild(rolesKey))
+        {
+            if (labelRoot[rolesKey].HasValue) 
+            {
+                var roles = labelRoot![rolesKey]!.Value!.Split(',').AsEnumerable();
+                return roles;
+            }
+        }
+        return Enumerable.Empty<string>();
     }
 
-    private async Task<Status> GetStatus(NodeListResponse node)
+    private Status GetStatus(NodeListResponse node)
     {
         logger.LogTrace("Getting Node Status from Status.State and Spec.Availability.");
         return node.Status.State switch

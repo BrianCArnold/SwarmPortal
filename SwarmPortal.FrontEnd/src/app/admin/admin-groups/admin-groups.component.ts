@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { IGroup } from '../api/model/iGroup';
-import { HttpService } from '../services/http.service';
+import { IGroup } from '../../api/model/iGroup';
+import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-admin-groups',
