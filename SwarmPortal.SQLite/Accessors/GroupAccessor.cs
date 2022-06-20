@@ -32,30 +32,17 @@ public class GroupAccessor : IGroupAccessor
         }
         else 
         {
-            var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Id == groupId, ct);
-            if (dbGroup != null)
-            {
-                dbGroup.Enabled = false;
-                await _context.SaveChangesAsync(ct);
-            }
+            var dbGroup = await _context.Groups.SingleAsync(r => r.Id == groupId, ct);
+            dbGroup.Enabled = false;
+            await _context.SaveChangesAsync(ct);
         }
     }
 
     public async Task EnableGroup(ulong groupId, CancellationToken ct = default)
     {
-        if (await _context.Links.AnyAsync(l => l.Group.Id == groupId, ct))
-        {
-            throw new InvalidOperationException("Group has links, please delete them first");
-        }
-        else 
-        {
-            var dbGroup = await _context.Groups.SingleOrDefaultAsync(r => r.Id == groupId, ct);
-            if (dbGroup != null)
-            {
-                dbGroup.Enabled = true;
-                await _context.SaveChangesAsync(ct);
-            }
-        }
+        var dbGroup = await _context.Groups.SingleAsync(r => r.Id == groupId, ct);
+        dbGroup.Enabled = true;
+        await _context.SaveChangesAsync(ct);
     }
 
     public async Task<IEnumerable<IGroup>> GetGroups(CancellationToken ct = default)
