@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SwarmPortal.API;
 using SwarmPortal.Common;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,9 +77,8 @@ builder.Services
     .AddAPIConfiguration()
     .AddDockerConfiguration()
     .AddStaticFileConfiguration()
-    .AddSwarmPortalSQLiteContext(builder.Configuration)
-    .AddSQLiteFileConfiguration()
-    .AddSQLiteAccessors();
+    .AddSQLiteAccessors()
+    .AddSwarmPortalContext(builder.Configuration);
 
 
 if (apiConfig.EnableStaticFileLinks)
