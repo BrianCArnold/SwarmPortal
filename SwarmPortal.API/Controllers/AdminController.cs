@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwarmPortal.Common;
-using SwarmPortal.SQLite;
+using SwarmPortal.Context;
 
 namespace SwarmPortal.API.Controllers;
 
@@ -33,7 +33,6 @@ public class AdminController : ControllerBase
     [HttpGet("All/Links")]
     public async Task<ActionResult<IEnumerable<ILink>>> GetDatabaseLinks(CancellationToken ct)
     {
-        
         return await linkAccessor.GetLinks(ct).OkAsync();
     }
     [HttpGet("All/EnabledLinks/")]

@@ -9,8 +9,12 @@
       "RequireHttps": false
     },
     "CORSUrl": "http://localhost:4200",
-    "SQLiteFileDirectory": "persist",
-    "EnableDockerServiceStatus": false,
+    "DatabaseType": "SQLite",
+    "ConnectionStrings": {
+      "SQLite": "DataSource=persist/swarmportal.db;Cache=Shared",
+      "SQLServer": "Server=127.0.0.1;Database=swarmportal;User Id=swarmportal;Password=swarmportal;"
+    },
+    "EnableDockerServiceStatus": true,
     "EnableStaticFileLinks": true,
     "EnableDockerNodeStatus": true,
     "EnableDockerServiceLinks": true,
