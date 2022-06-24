@@ -1,7 +1,7 @@
 namespace SwarmPortal.Common;
 
 internal class ItemDictionaryGeneratorProvider<TGroupableItem> : IItemDictionaryGeneratorProvider<TGroupableItem>
-    where TGroupableItem : class, IGroupableItem, INamedItem
+    where TGroupableItem : class, IGroupableItem, INamedItem, IHasRoles
 {
     private readonly IEnumerable<IItemProvider<TGroupableItem>> sources;
 

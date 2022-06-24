@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace SwarmPortal.Common;
 
 public class DictionaryGenerator<TGroupedItem>
-    where TGroupedItem: INamedItem
+    where TGroupedItem: INamedItem, IHasRoles
 {
     private readonly IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> wrapped;
 
@@ -32,6 +32,6 @@ public class DictionaryGenerator<TGroupedItem>
 public static class GroupedItemsExtensions
 {
     public static DictionaryGenerator<TGroupedItem> ToDictionaryGenerator<TGroupedItem>(this IAsyncEnumerable<IAsyncGrouping<string, TGroupedItem>> groups)
-        where TGroupedItem : INamedItem 
+        where TGroupedItem : INamedItem, IHasRoles
             => new DictionaryGenerator<TGroupedItem>(groups);
 }
