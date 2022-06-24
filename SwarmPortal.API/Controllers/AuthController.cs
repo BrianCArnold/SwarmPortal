@@ -10,20 +10,30 @@ namespace SwarmPortal.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
-    private readonly IItemDictionaryGeneratorProvider<ILinkItem> _hostLinkProvider;
+    private readonly IItemDictionaryProvider<ILinkItem> _dictionaryProvider;
+    private readonly IItemOrderingProvider<ILinkItem> _orderingProvider;
+    private readonly IItemRoleFilteringProvider<ILinkItem> _roleFilteringProvider;
+    private readonly ICoalescedItemProvider<ILinkItem> _coalescedItemProvider;
+
     private readonly IAuthConfig _authConfig;
     private readonly IRoleAccessor _roleAccessor;
     private readonly IGroupAccessor _groupAccessor;
 
     public AuthController(
-        ILogger<AuthController> logger, 
-        IItemDictionaryGeneratorProvider<ILinkItem> hostLinkProvider, 
+        ILogger<AuthController> logger,  
+        IItemDictionaryProvider<ILinkItem> dictionaryProvider,
+        IItemOrderingProvider<ILinkItem> orderingProvider,
+        IItemRoleFilteringProvider<ILinkItem> roleFilteringProvider,
+        ICoalescedItemProvider<ILinkItem> coalescedItemProvider, 
         IAuthConfig authConfig,
         IRoleAccessor roleAccessor, 
         IGroupAccessor groupAccessor)
     {
         _logger = logger;
-        _hostLinkProvider = hostLinkProvider;
+        _dictionaryProvider = dictionaryProvider;
+        _orderingProvider = orderingProvider;
+        _roleFilteringProvider = roleFilteringProvider;
+        _coalescedItemProvider = coalescedItemProvider;
         _authConfig = authConfig;
         _roleAccessor = roleAccessor;
         _groupAccessor = groupAccessor;
@@ -58,10 +68,11 @@ public class AuthController : ControllerBase
     }
     private async Task AddDetectedGroups(CancellationToken ct)
     {
-        var currentGroups = await _groupAccessor.GetGroups();
-        var currentGroupSet = currentGroups.Select(g => g.Name).ToHashSet();
-        var dictionaryGenerator = _hostLinkProvider.GetDictionaryGeneratorAsync(ct);
-        var dictionary = await dictionaryGenerator.GetDictionaryWithRoles(ct, User.Claims.GetRoles());
+        var currentGroup = await _groupAccessor.GetGroups();
+        var currentGroupSet = currentGroup.Select(g => g.Name).ToHashSet();
+        var links = _coalescedItemProvider.GetItems(ct);
+
+        var dictionary = await _dictionaryProvider.GetDictionaryAsync(links, ct);
         foreach (var group in dictionary.Keys)
         {
             if (!currentGroupSet.Contains(group))

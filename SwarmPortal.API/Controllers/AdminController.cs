@@ -11,14 +11,14 @@ namespace SwarmPortal.API.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly ILogger<AdminController> _logger;
-    private readonly IItemDictionaryGeneratorProvider<ILinkItem> _hostLinkProvider;
+    private readonly IItemDictionaryProvider<ILinkItem> _hostLinkProvider;
     private readonly ILinkAccessor linkAccessor;
     private readonly IRoleAccessor roleAccessor;
     private readonly IGroupAccessor groupAccessor;
 
     public AdminController(
         ILogger<AdminController> logger, 
-        IItemDictionaryGeneratorProvider<ILinkItem> hostLinkProvider,
+        IItemDictionaryProvider<ILinkItem> hostLinkProvider,
         ILinkAccessor linkAccessor,
         IRoleAccessor roleAccessor,
         IGroupAccessor groupAccessor
