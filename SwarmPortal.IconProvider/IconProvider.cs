@@ -4,6 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using SwarmPortal.Common;
 using SwarmPortal.Context;
 public class IconProvider : IIconProvider
@@ -43,9 +44,9 @@ public class IconProvider : IIconProvider
         {
             try 
             {
-                var authHeader = _httpContextAccessor.HttpContext!.Request.Headers.Authorization;
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authHeader);
-                Console.WriteLine(authHeader);
+                var Headers = _httpContextAccessor.HttpContext!.Request.Headers;
+                // _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authHeader);
+                Console.WriteLine(Headers);
                 var iconStream = await _httpClient.GetStreamAsync(uriIcon.Icon, ct);
                 var fileStream = File.Create(filePath);
                 await iconStream.CopyToAsync(fileStream, ct);
@@ -70,12 +71,12 @@ public class IconProvider : IIconProvider
         {
             return _uriCache[uri];
         }
-        else if (await _uriIconAccessor.ContainsUriIcon(uri, ct))
-        {
-            var uriIcon = await _uriIconAccessor.GetUriIcon(uri, ct);
-            _uriCache[uri] = uriIcon;
-            return uriIcon;
-        }
+        // else if (await _uriIconAccessor.ContainsUriIcon(uri, ct))
+        // {
+        //     var uriIcon = await _uriIconAccessor.GetUriIcon(uri, ct);
+        //     _uriCache[uri] = uriIcon;
+        //     return uriIcon;
+        // }
         else 
         {
             var iconUri = await DetermineUriIcon(uri, ct);
@@ -87,27 +88,34 @@ public class IconProvider : IIconProvider
     }
     private async Task<Uri> DetermineUriIcon(Uri uri, CancellationToken ct)
     {
-        HttpClient cli = new HttpClient();
+        HttpClient cli = new HttpClient(new HttpClientHandler
+        {
+            AllowAutoRedirect = true,
+            MaxAutomaticRedirections = 10
+        });
         
         
         string favPath;
         
-        var html = await cli.GetStringAsync(uri);
+        
+        var response = await cli.GetAsync(uri);
+        var html = await response.Content.ReadAsStringAsync();
+        
         string[] matchers = new[]
         {
-            "<link[^>]+rel=['\"]icon['\"][^>]+href=['\"]([^'\"]+)['\"][^>]*>",
-            "<link[^>]+href=['\"]([^'\"]+)['\"][^>]+rel=['\"]icon['\"][^>]*>"
+            "<link[^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]+href=['\"]([^'\"]+)['\"][^>]*>",
+            "<link[^>]+href=['\"]([^'\"]+)['\"][^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]*>"
         };
-        var favPathMatch = matchers.Select(m => Regex.Match(html, m)).FirstOrDefault(m => m.Success);
-        if (favPathMatch != null)
+        var favPathMatches = matchers.SelectMany(m => Regex.Matches(html, m)).ToList();
+        if (favPathMatches.Any(m => m.Success))
         {
-            favPath = favPathMatch.Groups[1].Value;
+            favPath = favPathMatches.First(m => m.Success).Groups[1].Value;
         }
-        else 
+        else
         {
             favPath = "/favicon.ico";
         }
         
-	    return new Uri(uri, favPath);
+	    return new Uri(response.RequestMessage!.RequestUri!, favPath);
     }
 }
