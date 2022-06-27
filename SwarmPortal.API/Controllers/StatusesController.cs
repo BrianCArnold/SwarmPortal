@@ -9,12 +9,22 @@ namespace SwarmPortal.API.Controllers;
 public class StatusesController : ControllerBase
 {
     private readonly ILogger<StatusesController> _logger;
-    private readonly IItemDictionaryGeneratorProvider<IStatusItem> _hostGroupProvider;
+    private readonly IItemDictionaryProvider<IStatusItem> _dictionaryProvider;
+    private readonly IItemOrderingProvider<IStatusItem> _orderingProvider;
+    private readonly IItemRoleFilteringProvider<IStatusItem> _roleFilteringProvider;
+    private readonly ICoalescedItemProvider<IStatusItem> _coalescedItemProvider;
 
-    public StatusesController(ILogger<StatusesController> logger, IItemDictionaryGeneratorProvider<IStatusItem> hostGroupProvider)
+    public StatusesController(ILogger<StatusesController> logger, 
+        IItemDictionaryProvider<IStatusItem> dictionaryProvider,
+        IItemOrderingProvider<IStatusItem> orderingProvider,
+        IItemRoleFilteringProvider<IStatusItem> roleFilteringProvider,
+        ICoalescedItemProvider<IStatusItem> coalescedItemProvider)
     {
         _logger = logger;
-        _hostGroupProvider = hostGroupProvider;
+        _dictionaryProvider = dictionaryProvider;
+        _orderingProvider = orderingProvider;
+        _roleFilteringProvider = roleFilteringProvider;
+        _coalescedItemProvider = coalescedItemProvider;
     }
 
     
@@ -29,11 +39,10 @@ public class StatusesController : ControllerBase
     private async Task<Dictionary<string, IEnumerable<IStatusItem>>> GetStatusesInternal(CancellationToken ct)
     {
         var userRoles = User.Claims.GetRoles();
-        var dictionaryGenerator = _hostGroupProvider.GetDictionaryGeneratorAsync(ct);
-        var dictionary = await dictionaryGenerator.GetDictionaryWithRoles(ct, userRoles);
-
-
-        // Console.WriteLine(userRoles.StringJoin(","));
+        var items = _coalescedItemProvider.GetItems(ct);
+        var filteredItems = _roleFilteringProvider.FilterItemsByRoles(items, userRoles, ct);
+        var orderedItems = _orderingProvider.OrderItems(filteredItems);
+        var dictionary = await _dictionaryProvider.GetDictionaryAsync(orderedItems, ct);
         return await Task.FromResult(dictionary);
     }
     
