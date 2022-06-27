@@ -1,0 +1,24 @@
+{
+    "Jwt": {
+      "Authority": "http://keys.swarmportal.com/auth/realms/master",
+      "Audience": "account",
+      "Issuer": "http://keys.swarmportal.com/auth/realms/master",
+      "ClientId": "SwarmPortal",
+      "RedirectUri": "http://home.swarmportal.com/",
+      "Scope": "openid profile email",
+      "RequireHttps": false
+    },
+    "CORSUrl": "http://home.swarmportal.com",
+    "DatabaseType": "SQLServer",
+    "ConnectionStrings": {
+      "SQLServer": "Server=swarmportal_db;Database=swarmportal;User Id=sa;Password=Sw4rmP0rt4l;"
+    },
+    "EnableDockerServiceStatus": true,
+    "EnableStaticFileLinks": true,
+    "EnableDockerNodeStatus": true,
+    "EnableDockerServiceLinks": true,
+    "EnableSQLiteLinks": true,
+    "DockerSocketUri": "unix:///var/run/docker.sock",
+    "SwarmPortalLabelPrefix": "swarm.portal",
+    "StaticLinksFileName": "persist/links.json"
+}
