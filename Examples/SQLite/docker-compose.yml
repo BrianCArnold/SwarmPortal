@@ -1,0 +1,84 @@
+version: "3.7"
+
+services:
+  traefik:
+    image: "traefik"
+    ports:
+      - "80:80"
+    deploy:
+      placement:
+        constraints:
+         - node.role==manager
+      labels:
+        - "swarm.portal.roles=Status"
+        - "traefik.enable=true"
+        - 'traefik.http.routers.Traefik.rule=Host(`traefik.swarmportal.com`)'
+        - "traefik.http.routers.Traefik.entrypoints=web"
+        - "traefik.http.routers.Traefik.service=Traefik"
+        - "traefik.http.services.Traefik.loadBalancer.server.port=8080"
+        - "swarm.portal.Infrastructure.Traefik.url=http://traefik.swarmportal.com"
+        - "swarm.portal.Infrastructure.Traefik.roles=Infrastructure"
+      replicas: 1
+    volumes:
+      # sudo mkdir -p /var/opt/traefik
+      # sudo chown 1000:0 /var/opt/traefik
+      - "/var/opt/traefik:/etc/traefik"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - "webhosts"
+  
+  keycloak:
+    image: jboss/keycloak:14.0.0
+    environment:
+      - KEYCLOAK_HOSTNAME=keys.swarmportal.com
+      - PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=h2
+    volumes:
+      # sudo mkdir -p /var/opt/keycloak/db
+      # sudo chown 1000:0 /var/opt/keycloak/db
+      - "/var/opt/keycloak/db:/opt/jboss/keycloak/standalone/data/"
+    networks:
+      - "keys"
+      - "webhosts"
+    deploy:
+      placement:
+        constraints:
+          - "node.platform.arch==x86_64"
+      labels:
+        - "swarm.portal.roles=Status"
+        - "traefik.enable=true"
+        - 'traefik.http.routers.KeyCloak.rule=Host(`keys.swarmportal.com`)'
+        - "traefik.http.routers.KeyCloak.entrypoints=web"
+        - "traefik.http.routers.KeyCloak.service=KeyCloak"
+        - "traefik.http.services.KeyCloak.loadBalancer.server.port=8080"
+        - "swarm.portal.Infrastructure.Keys.url=http://keys.swarmportal.com"
+        - "swarm.portal.Infrastructure.Keys.roles=Infrastructure"
+
+  swarmportal_client:
+    image: swarmportal
+    deploy:
+      labels:
+        - "swarm.portal.roles=Status"
+        - "traefik.enable=true"
+        - 'traefik.http.routers.SwarmPortal.rule=Host(`home.swarmportal.com`)'
+        - "traefik.http.routers.SwarmPortal.entrypoints=web"
+        - "traefik.http.routers.SwarmPortal.service=SwarmPortal"
+        - "traefik.http.services.SwarmPortal.loadBalancer.server.port=80"
+      replicas: 1
+      placement:
+        constraints:
+         - node.role==manager
+    volumes:
+      # sudo mkdir -p /var/opt/swarmportal/persist
+      # sudo chown 1000:0 /var/opt/swarmportal/persist
+      - /var/opt/swarmportal/persist:/app/persist
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - "webhosts"
+
+networks:
+  keys:
+  webhosts:
+    external: true
