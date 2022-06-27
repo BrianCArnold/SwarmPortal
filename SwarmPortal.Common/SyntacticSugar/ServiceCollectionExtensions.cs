@@ -25,4 +25,12 @@ public static class SwarmPortalCommonServiceExtensions
      => serviceCollection.AddScoped<IItemRoleFilteringProvider<IStatusItem>, ItemRoleFilteringProvider<IStatusItem>>();
     public static IServiceCollection AddLinkRoleFilteringProvider(this IServiceCollection serviceCollection)
      => serviceCollection.AddScoped<IItemRoleFilteringProvider<ILinkItem>, ItemRoleFilteringProvider<ILinkItem>>();
+
+    public static IServiceCollection AddConfigBinding<TConfigModel>(this IServiceCollection serviceCollection)
+        where TConfigModel : class, new()
+    {
+        var configModel = new TConfigModel();
+
+        return serviceCollection;
+    }
 }

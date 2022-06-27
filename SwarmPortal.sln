@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.MySqlMigrations
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.IconProvider", "SwarmPortal.IconProvider\SwarmPortal.IconProvider.csproj", "{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.ForwardAuth", "SwarmPortal.ForwardAuth\SwarmPortal.ForwardAuth.csproj", "{DB891DE2-105B-48D0-9A39-3BEDF12B7B1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +68,9 @@ Global
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB891DE2-105B-48D0-9A39-3BEDF12B7B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB891DE2-105B-48D0-9A39-3BEDF12B7B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB891DE2-105B-48D0-9A39-3BEDF12B7B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB891DE2-105B-48D0-9A39-3BEDF12B7B1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
