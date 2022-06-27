@@ -127,6 +127,27 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("UriIcon", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Uri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Icons");
+                });
+
             modelBuilder.Entity("LinkRole", b =>
                 {
                     b.HasOne("SwarmPortal.Context.Link", null)

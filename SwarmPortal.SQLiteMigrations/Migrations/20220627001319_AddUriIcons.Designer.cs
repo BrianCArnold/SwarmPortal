@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwarmPortal.Context;
 
@@ -10,9 +11,10 @@ using SwarmPortal.Context;
 namespace SwarmPortal.SQLiteMigrations.Migrations
 {
     [DbContext(typeof(SourceContext))]
-    partial class SourceContextModelSnapshot : ModelSnapshot
+    [Migration("20220627001319_AddUriIcons")]
+    partial class AddUriIcons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
