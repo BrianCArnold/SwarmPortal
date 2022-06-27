@@ -1,6 +1,6 @@
-using System.Runtime.CompilerServices;
-
 namespace SwarmPortal.Common;
+
+using System.Runtime.CompilerServices;
 
 internal class CoalescedItemProvider<TItem> : ICoalescedItemProvider<TItem> 
     where TItem: INamedItem, IGroupableItem, IHasRoles

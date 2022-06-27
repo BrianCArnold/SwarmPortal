@@ -2,7 +2,8 @@ namespace SwarmPortal.Context;
 
 public interface IUriIcon
 {
-    public ulong Id { get; set; }
-    public Uri Uri { get; set; }
-    public string Icon { get; set; }
+    ulong Id { get; set; }
+    Uri Uri { get; set; }
+    Uri Icon { get; set; }
+    DateTime RetrievedDate { get; set; }
 }

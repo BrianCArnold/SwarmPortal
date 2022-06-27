@@ -30,6 +30,7 @@
     <ProjectReference Include="..\SwarmPortal.SqlServerMigrations\SwarmPortal.SqlServerMigrations.csproj" />
     <ProjectReference Include="..\SwarmPortal.SQLiteMigrations\SwarmPortal.SQLiteMigrations.csproj" />
     <ProjectReference Include="..\SwarmPortal.MySqlMigrations\SwarmPortal.MySqlMigrations.csproj" />
+    <ProjectReference Include="..\SwarmPortal.IconProvider\SwarmPortal.IconProvider.csproj" />
   </ItemGroup>
 
 </Project>
