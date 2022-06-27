@@ -115,7 +115,7 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UriIcon", b =>
+            modelBuilder.Entity("SwarmPortal.Context.UriIcon", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,13 +125,16 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("RetrievedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Uri")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Icons");
+                    b.ToTable("UriIcons");
                 });
 
             modelBuilder.Entity("LinkRole", b =>

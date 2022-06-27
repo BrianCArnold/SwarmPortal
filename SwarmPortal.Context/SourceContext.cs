@@ -8,7 +8,7 @@ public class SourceContext : DbContext, ISourceContext
     public DbSet<Group> Groups { get; set; } = null!;
     public DbSet<Link> Links { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
-    public DbSet<UriIcon> Icons { get; set; } = null!;
+    public DbSet<UriIcon> UriIcons { get; set; } = null!;
 
 
     public SourceContext(DbContextOptions<SourceContext> options): base(options) {
