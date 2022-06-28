@@ -33,13 +33,19 @@ public class UriIconAccessor : IUriIconAccessor
 
     public async Task<IUriIcon> UpsertUriIcon(Uri uri, Uri icon, CancellationToken ct = default)
     {
+        var oldIconTask = _context.UriIcons.SingleOrDefaultAsync(x => x.Uri == uri, ct);
         var uriIcon = new UriIcon()
         {
             Uri = uri,
             Icon = icon,
             RetrievedDate = DateTime.UtcNow
         };
+        var oldIcon = await oldIconTask;
         _context.UriIcons.Add(uriIcon);
+        if (oldIcon is not null)
+        {
+            _context.UriIcons.Remove(oldIcon);
+        }
         await _context.SaveChangesAsync(ct);
         return uriIcon;
     }
