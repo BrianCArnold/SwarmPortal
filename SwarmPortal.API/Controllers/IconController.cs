@@ -15,8 +15,9 @@ public class IconController : ControllerBase
         this.iconProvider = iconProvider;
     }
 
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 300)]
     [HttpGet("{uri}")]
-    public async Task<ActionResult<FileStream?>> Get(string uri, CancellationToken ct = default)
+    public async Task<ActionResult<Stream?>> Get(string uri, CancellationToken ct = default)
     {
         var decodedUriString = HttpUtility.UrlDecode(uri);
         var decodedUri = new Uri(decodedUriString);
