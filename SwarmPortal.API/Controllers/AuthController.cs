@@ -49,9 +49,25 @@ public class AuthController : ControllerBase
     [HttpGet("ProcessLogin")]
     public async Task<IActionResult> ProcessLogin(CancellationToken ct)
     {
-        await Task.WhenAll(AddDetectedGroups(ct), AddDetectedRoles(ct));
+        await Task.WhenAll(AddDetectedGroups(ct), AddDetectedRoles(ct), AddTokenToCookies(ct));
         return this.Ok();
     }
+
+    private Task AddTokenToCookies(CancellationToken ct)
+    {
+        this.Response.Cookies.Append("bearerToken", Request.Headers.Authorization.First(), new Microsoft.AspNetCore.Http.CookieOptions()
+        {
+            Expires = DateTime.Now.AddDays(1),
+            Domain = Request.Host.Host,
+            SameSite = SameSiteMode.Strict,
+            HttpOnly = true,
+            IsEssential = true,
+            MaxAge = TimeSpan.FromSeconds(60)
+
+        });
+        return Task.CompletedTask;
+    }
+
     private async Task AddDetectedRoles(CancellationToken ct)
     {
         var currentRoles = await _roleAccessor.GetRoles(ct);
