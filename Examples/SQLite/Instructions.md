@@ -11,13 +11,11 @@ These instructions are for a Docker Swarm environment.
 1. Create directories, set permissions, and copy traefik.yml and settings.json
     - sudo mkdir -p /var/opt/keycloak/db
     - sudo mkdir -p /var/opt/swarmportal/persist
-    - sudo mkdir -p /var/opt/swarmportal/db
     - sudo mkdir -p /var/opt/traefik
     - sudo cp var/opt/swarmportal/persist/settings.json /var/opt/swarmportal/persist/settings.json
     - sudo cp var/opt/traefik/traefik.yml /var/opt/traefik/traefik.yml
     - sudo chown 1000:0 -R /var/opt/keycloak/db
     - sudo chown 1000:0 -R /var/opt/swarmportal/persist
-    - sudo chown 10001:0 -R /var/opt/swarmportal/db
     - sudo chown 1000:0 -R /var/opt/traefik
 2. Start Stack
     - docker stack deploy -c docker-compose.yml traefik
