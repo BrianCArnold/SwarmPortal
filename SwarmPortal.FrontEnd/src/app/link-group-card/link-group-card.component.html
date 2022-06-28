@@ -6,7 +6,7 @@
 
 
     <a [title]="link.url" *ngFor="let link of groupLinks" class="m-2 my-1 btn btn-sm text-dark" [ngClass]="'btn-outline-' + groupColorName"  [href]="link.url" target="_blank">
-      <img style="width: 24px; height: 24px;" [src]="uriIconUrl(link.url)" />
+      <img style="width: 24px; height: 24px;" [src]="uriIconUrl(link.url) | secure | async" />
       {{link.name}}
     </a>
     <!-- <ul class="list-group list-group-flush">
