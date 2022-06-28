@@ -34,22 +34,34 @@ public class UriIconAccessor : IUriIconAccessor
         return await _context.UriIcons.ToListAsync(ct);
     }
 
+
     public async Task<IUriIcon> UpsertUriIcon(Uri uri, Uri icon, CancellationToken ct = default)
     {
         var cleanUri = CleanUri(uri);
-        var oldIconTask = _context.UriIcons.SingleOrDefaultAsync(x => x.Uri == cleanUri, ct);
-        var uriIcon = new UriIcon()
-        {
-            Uri = cleanUri,
-            Icon = icon,
-            RetrievedDate = DateTime.UtcNow
-        };
-        var oldIcon = await oldIconTask;
-        _context.UriIcons.Add(uriIcon);
-        if (oldIcon is not null)
-        {
-            _context.UriIcons.Remove(oldIcon);
-        }
+        var uriIcon = await _context.UriIcons.RemoveExtrasAsync(
+            x => x.Uri == cleanUri, 
+            i => { i.Icon = icon; i.RetrievedDate = DateTime.UtcNow; }, 
+            () => new UriIcon { Uri = cleanUri, Icon = icon, RetrievedDate = DateTime.UtcNow }, 
+            ct);
+        // {
+        //     0 => 
+        //         //add
+        //         var uriIcon = new UriIcon()
+        //         {
+        //             Uri = cleanUri,
+        //             Icon = icon,
+        //             RetrievedDate = DateTime.UtcNow
+        //         };
+        //         _context.UriIcons.Add(uriIcon);
+        //         break;
+        //     1 => 
+        //         var oldIconTask = _context.UriIcons.SingleAsync(x => x.Uri == cleanUri, ct);
+        //         var oldIcon = await oldIconTask;
+        //         oldIcon.Icon = icon;
+        //         break;
+        //     _ => throw new Exception("Multiple UriIcons with the same Uri");
+
+        // };
         await _context.SaveChangesAsync(ct);
         return uriIcon;
     }
