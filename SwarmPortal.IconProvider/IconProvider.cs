@@ -13,13 +13,12 @@ public class IconProvider : IIconProvider
     private readonly IHttpContextAccessor _httpContextAccessor;
     private HttpClient _httpClient;
     private readonly DirectoryInfo _iconCacheDirectory;
-    private Dictionary<Uri, IUriIcon> _uriCache;
+    private static Dictionary<Uri, IUriIcon> _uriCache= new Dictionary<Uri, IUriIcon>();
 
     public IconProvider(IUriIconAccessor uriIconAccessor, IHttpContextAccessor httpContextAccessor)
     {
         Directory.CreateDirectory("persist");
         _iconCacheDirectory = Directory.CreateDirectory("persist/iconCache");
-        _uriCache = new Dictionary<Uri, IUriIcon>();
         _uriIconAccessor = uriIconAccessor;
         _httpContextAccessor = httpContextAccessor;
         _httpClient = new HttpClient();
@@ -71,12 +70,12 @@ public class IconProvider : IIconProvider
         {
             return _uriCache[uri];
         }
-        // else if (await _uriIconAccessor.ContainsUriIcon(uri, ct))
-        // {
-        //     var uriIcon = await _uriIconAccessor.GetUriIcon(uri, ct);
-        //     _uriCache[uri] = uriIcon;
-        //     return uriIcon;
-        // }
+        else if (await _uriIconAccessor.ContainsUriIcon(uri, ct))
+        {
+            var uriIcon = await _uriIconAccessor.GetUriIcon(uri, ct);
+            _uriCache[uri] = uriIcon;
+            return uriIcon;
+        }
         else 
         {
             var iconUri = await DetermineUriIcon(uri, ct);
