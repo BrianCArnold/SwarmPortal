@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
-builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -85,7 +85,6 @@ builder.Services
     .AddDockerConfiguration()
     .AddStaticFileConfiguration()
     .AddSQLiteAccessors()
-    .AddIconProvider()
     .AddSwarmPortalContext(builder.Configuration);
 
 

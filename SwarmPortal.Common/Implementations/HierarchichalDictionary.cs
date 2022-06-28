@@ -1,6 +1,7 @@
-namespace SwarmPortal.Common;
-
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+namespace SwarmPortal.Common;
 
 public sealed class HierarchichalDictionary<TValue> : IDictionary<string, HierarchichalDictionary<TValue>>
 {  

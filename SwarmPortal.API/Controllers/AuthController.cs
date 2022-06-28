@@ -52,7 +52,6 @@ public class AuthController : ControllerBase
         await Task.WhenAll(AddDetectedGroups(ct), AddDetectedRoles(ct));
         return this.Ok();
     }
-
     private async Task AddDetectedRoles(CancellationToken ct)
     {
         var currentRoles = await _roleAccessor.GetRoles(ct);

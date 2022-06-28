@@ -1,4 +1,3 @@
-namespace SwarmPortal.Common;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

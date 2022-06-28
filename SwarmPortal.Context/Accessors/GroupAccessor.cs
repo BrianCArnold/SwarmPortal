@@ -12,13 +12,16 @@ public class GroupAccessor : IGroupAccessor
     }
     public async Task<IGroup> AddGroup(string groupName, CancellationToken ct = default)
     {
-        var group = await _context.Groups.RemoveExtrasAsync(
-            x => x.Name == groupName, 
-            l => { l.Enabled = true; }, 
-            () => new Group{ Name = groupName },
-            ct);
-        await _context.SaveChangesAsync(ct);
-        return group;
+        if (await _context.Groups.AnyAsync(r => r.Name == groupName, ct))
+        {
+            throw new InvalidOperationException("Group already exists");
+        }
+        else {
+            var group = new Group{ Name = groupName };
+            _context.Groups.Add(group);
+            await _context.SaveChangesAsync(ct);
+            return group;
+        }
     }
 
     public async Task DisableGroup(ulong groupId, CancellationToken ct = default)

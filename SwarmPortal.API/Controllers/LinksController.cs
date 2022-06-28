@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SwarmPortal.Common;
 
 namespace SwarmPortal.API.Controllers;
+
 [ApiController]
 [Route("[controller]")]
 public class LinksController : ControllerBase

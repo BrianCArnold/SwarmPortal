@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-link-group-card',
@@ -12,10 +11,6 @@ export class LinkGroupCardComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-  }
-
-  uriIconUrl(uri: string): string {
-    return environment.apiRoot + "/Icon/" + encodeURIComponent(uri);
   }
 
   @Input()
