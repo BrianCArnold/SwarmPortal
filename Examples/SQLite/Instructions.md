@@ -2,11 +2,11 @@ These instructions are for a Docker Swarm environment.
 
 0. Make sure your Docker Swarm environment is active
     - docker node ls
-    This should show you at least one node. If it says it's not part of a swarm, initialize the swarm
+      - This should show you at least one node. If it says it's not part of a swarm, initialize the swarm
     - docker swarm init
-    Now create a webhosts network for all applications to communicate on:
+      - Now create a webhosts network for all applications to communicate on:
     - docker network create -d overlay webhosts
-    This is necessary for traefik to communicate with other containers from other nodes and stacks.
+      - This is necessary for traefik to communicate with other containers from other nodes and stacks.
 
 1. Create directories, set permissions, and copy traefik.yml and settings.json
     - sudo mkdir -p /var/opt/keycloak/db
