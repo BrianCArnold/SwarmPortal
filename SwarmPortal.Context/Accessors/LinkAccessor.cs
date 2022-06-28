@@ -11,25 +11,20 @@ public class LinkAccessor : ILinkAccessor
     {
         _context = context;
     }
-    public async Task<ILink> AddLink(string name, string group, string url, CancellationToken ct = default)
+    public async Task<ILink> AddLink(ILinkItem link, CancellationToken ct = default)
     {
-        var link = await _context.Links.RemoveExtrasAsync(
-            x => x.Name == name && x.Group.Name == group, 
-            l => { l.Url = url; l.Enabled = true; }, 
-            () => new Link { Name = name, Enabled = true, Group = _context.Groups.Single(g => g.Name == group), Url = url },
-            ct);
-        // var group = await _context.Groups.SingleOrDefaultAsync(g => g.Name == link.Group, ct) ?? new Group{ Name = link.Group };
-        // var allRoles = await _context.Roles.ToDictionaryAsync(r => r.Name, ct);
-        // var rolesForLink = link.Roles.Select(r => allRoles.ContainsKey(r) ? allRoles[r]: new Role{ Name = r }).ToList();
-        // var dbLink = new Link{
-        //     Name = link.Name,
-        //     Group = group,
-        //     Url = link.Url,
-        //     Roles = rolesForLink
-        // };
-        // _context.Links.Add(dbLink);
+        var group = await _context.Groups.SingleOrDefaultAsync(g => g.Name == link.Group, ct) ?? new Group{ Name = link.Group };
+        var allRoles = await _context.Roles.ToDictionaryAsync(r => r.Name, ct);
+        var rolesForLink = link.Roles.Select(r => allRoles.ContainsKey(r) ? allRoles[r]: new Role{ Name = r }).ToList();
+        var dbLink = new Link{
+            Name = link.Name,
+            Group = group,
+            Url = link.Url,
+            Roles = rolesForLink
+        };
+        _context.Links.Add(dbLink);
         await _context.SaveChangesAsync(ct);
-        return link;
+        return dbLink;
     }
 
     public async Task DisableLink(ulong linkId, CancellationToken ct = default)

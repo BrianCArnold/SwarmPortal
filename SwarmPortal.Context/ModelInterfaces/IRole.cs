@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 
 namespace SwarmPortal.Context;
+
 public interface IRole
 {
     ulong Id { get; set; }

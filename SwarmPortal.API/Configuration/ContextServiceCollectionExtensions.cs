@@ -36,6 +36,5 @@ public static class SwarmPortalStaticServiceExtensions
     public static IServiceCollection AddSQLiteAccessors(this IServiceCollection serviceCollection)
      => serviceCollection.AddScoped<IGroupAccessor, GroupAccessor>()
                          .AddScoped<ILinkAccessor, LinkAccessor>()
-                         .AddScoped<IRoleAccessor, RoleAccessor>()
-                         .AddScoped<IUriIconAccessor, UriIconAccessor>();
+                         .AddScoped<IRoleAccessor, RoleAccessor>();
 }

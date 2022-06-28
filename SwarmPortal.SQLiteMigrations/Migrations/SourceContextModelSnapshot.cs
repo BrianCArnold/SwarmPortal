@@ -47,9 +47,6 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Groups");
                 });
 
@@ -80,9 +77,6 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("SwarmPortalUserId");
 
                     b.ToTable("Links");
@@ -103,9 +97,6 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Roles");
                 });
 
@@ -122,31 +113,6 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("SwarmPortal.Context.UriIcon", b =>
-                {
-                    b.Property<ulong>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("RetrievedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Uri")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Uri")
-                        .IsUnique();
-
-                    b.ToTable("UriIcons");
                 });
 
             modelBuilder.Entity("LinkRole", b =>
