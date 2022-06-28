@@ -15,8 +15,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { FormsModule } from '@angular/forms';
-import { NgxMasonryModule } from 'ngx-masonry';
 import { HttpService } from './services/http.service';
+import { SecurePipe } from './pipes/secure.pipe';
 
 
 export function apiConfigFactory (): Configuration {
@@ -34,7 +34,8 @@ export function apiConfigFactory (): Configuration {
     LinkGroupCardComponent,
     StatusScreenComponent,
     NavigationComponent,
-    LoginCompleteComponent
+    LoginCompleteComponent,
+    SecurePipe
   ],
   imports: [
     FormsModule,
@@ -43,8 +44,7 @@ export function apiConfigFactory (): Configuration {
     AppRoutingModule,
     HttpClientModule,
     OAuthModule.forRoot(),
-    ApiModule.forRoot(apiConfigFactory),
-    NgxMasonryModule
+    ApiModule.forRoot(apiConfigFactory)
   ],
   providers: [
     CookieService,
