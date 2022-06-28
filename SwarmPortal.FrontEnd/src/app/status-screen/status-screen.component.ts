@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgxMasonryOptions } from 'ngx-masonry';
 import { ILinkItem, IStatusItem } from '../api';
 
 @Component({
@@ -28,8 +27,6 @@ export class StatusScreenComponent implements OnInit, OnDestroy {
 
 
   siteBackgrounds = ['primary', 'success', 'danger', 'warning'];
-  masonryOptions: NgxMasonryOptions = {
-  }
 
   async ngOnInit(): Promise<void> {
   }
