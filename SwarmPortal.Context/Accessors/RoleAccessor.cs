@@ -12,35 +12,15 @@ public class RoleAccessor : IRoleAccessor
     }
     public async Task<IRole> AddRole(string role, CancellationToken ct = default)
     {
-        if (await _context.Roles.AnyAsync(r => r.Name == role, ct))
-        {
-            throw new InvalidOperationException("Role already exists");
-        }
-        else {
-            var roleObj = new Role{ Name = role };
-            _context.Roles.Add(roleObj);
-            await _context.SaveChangesAsync(ct);
-            return roleObj;
-        }
+        var outRole = await _context.Roles.RemoveExtrasAsync(
+            x => x.Name == role, 
+            r => r.Enabled = true, 
+            () => new Role { Name = role, Enabled = true },
+            ct);
+        await _context.SaveChangesAsync(ct);
+        return outRole;
     }
-
-    public async Task DeleteRole(ulong roleId, CancellationToken ct = default)
-    {
-        if (await _context.Links.AnyAsync(l => l.Roles.Any(r => r.Id == roleId), ct))
-        {
-            throw new InvalidOperationException("Role has links, please delete them first");
-        }
-        else 
-        {
-            var dbRole = await _context.Roles.SingleOrDefaultAsync(r => r.Id == roleId, ct);
-            if (dbRole != null)
-            {
-                _context.Roles.Remove(dbRole);
-                await _context.SaveChangesAsync(ct);
-            }
-        }
-    }
-
+    
     public async Task DisableRole(ulong roleId, CancellationToken ct = default)
     {
         if (await _context.Links.AnyAsync(l => l.Roles.Any(r => r.Id == roleId), ct))

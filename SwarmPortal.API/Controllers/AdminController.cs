@@ -83,7 +83,6 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<string>> AddRole([FromRoute] string role, CancellationToken ct)
     {
         var roleObj = await roleAccessor.AddRole(role, ct);
-        await roleAccessor.EnableRole(roleObj.Id, ct);
         return role.Ok();
     }
     [HttpDelete("DisableRole/{roleId}")]
@@ -118,7 +117,6 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<string>> AddGroup([FromRoute] string group, CancellationToken ct)
     {
         var groupObj = await groupAccessor.AddGroup(group);
-        await groupAccessor.EnableGroup(groupObj.Id, ct);
         return group.Ok();
     }
     [HttpDelete("DisableGroup/{groupId}")]
@@ -137,8 +135,7 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<ILinkItem>> AddLink([FromBody] CommonLinkItem link, CancellationToken ct)
     {
         ILinkItem item = link;
-        var newLink = await linkAccessor.AddLink(item);
-        await linkAccessor.EnableLink(newLink.Id);
+        var newLink = await linkAccessor.AddLink(link.Name, link.Group, link.Url, ct);
         return item.Ok();
     }
     [HttpPost("AddLinkRole/{linkId}/{role}")]

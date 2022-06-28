@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwarmPortal.Context;
 
@@ -11,9 +12,10 @@ using SwarmPortal.Context;
 namespace SwarmPortal.SqlServerMigrations.Migrations
 {
     [DbContext(typeof(SourceContext))]
-    partial class SourceContextModelSnapshot : ModelSnapshot
+    [Migration("20220627052536_UpdateUriIconTable")]
+    partial class UpdateUriIconTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,12 +52,9 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Groups");
                 });
@@ -76,7 +75,7 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("SwarmPortalUserId")
                         .HasColumnType("decimal(20,0)");
@@ -88,9 +87,6 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("SwarmPortalUserId");
 
@@ -110,12 +106,9 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -154,12 +147,9 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
                     b.Property<string>("Uri")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Uri")
-                        .IsUnique();
 
                     b.ToTable("UriIcons");
                 });

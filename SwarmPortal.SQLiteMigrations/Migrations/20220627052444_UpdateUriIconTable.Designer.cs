@@ -2,33 +2,30 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwarmPortal.Context;
 
 #nullable disable
 
-namespace SwarmPortal.SqlServerMigrations.Migrations
+namespace SwarmPortal.SQLiteMigrations.Migrations
 {
     [DbContext(typeof(SourceContext))]
-    partial class SourceContextModelSnapshot : ModelSnapshot
+    [Migration("20220627052444_UpdateUriIconTable")]
+    partial class UpdateUriIconTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
             modelBuilder.Entity("LinkRole", b =>
                 {
-                    b.Property<decimal>("LinksId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("LinksId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("RolesId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("RolesId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("LinksId", "RolesId");
 
@@ -39,58 +36,48 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
             modelBuilder.Entity("SwarmPortal.Context.Group", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("SwarmPortal.Context.Link", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("GroupId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("GroupId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
-                    b.Property<decimal?>("SwarmPortalUserId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong?>("SwarmPortalUserId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("SwarmPortalUserId");
 
@@ -99,38 +86,31 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
             modelBuilder.Entity("SwarmPortal.Context.Role", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("SwarmPortal.Context.SwarmPortalUser", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("OIDCUserKey")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -139,27 +119,22 @@ namespace SwarmPortal.SqlServerMigrations.Migrations
 
             modelBuilder.Entity("SwarmPortal.Context.UriIcon", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Icon")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("RetrievedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Uri")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Uri")
-                        .IsUnique();
 
                     b.ToTable("UriIcons");
                 });
