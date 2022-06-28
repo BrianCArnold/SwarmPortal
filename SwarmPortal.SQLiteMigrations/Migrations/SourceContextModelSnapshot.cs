@@ -47,6 +47,9 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Groups");
                 });
 
@@ -77,6 +80,9 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("SwarmPortalUserId");
 
                     b.ToTable("Links");
@@ -96,6 +102,9 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -133,6 +142,9 @@ namespace SwarmPortal.SQLiteMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Uri")
+                        .IsUnique();
 
                     b.ToTable("UriIcons");
                 });

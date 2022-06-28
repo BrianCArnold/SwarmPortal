@@ -1,7 +1,9 @@
 namespace SwarmPortal.Context;
 
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
+[Index(nameof(Uri), IsUnique = true)]
 public class UriIcon : IUriIcon
 {
     [NotNull]
@@ -10,5 +12,6 @@ public class UriIcon : IUriIcon
     public Uri Uri { get; set; } = null!;
     [NotNull]
     public Uri Icon { get; set; } = null!;
-    public DateTime RetrievedDate { get; set; }
+    [NotNull]
+    public DateTime RetrievedDate { get; set; } = DateTime.UtcNow;
 }
