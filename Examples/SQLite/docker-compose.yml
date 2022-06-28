@@ -57,7 +57,7 @@ services:
         - "swarm.portal.Infrastructure.Keys.roles=Infrastructure"
 
   swarmportal_client:
-    image: swarmportal
+    image: briancarnold/swarmportal
     deploy:
       labels:
         - "swarm.portal.roles=Status"
