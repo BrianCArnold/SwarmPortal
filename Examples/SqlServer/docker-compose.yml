@@ -73,7 +73,7 @@ services:
       - "swarmportal"
 
   swarmportal_client:
-    image: swarmportal
+    image: briancarnold/swarmportal
     deploy:
       labels:
         - "swarm.portal.roles=Status"
