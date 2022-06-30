@@ -68,9 +68,7 @@ public class IconProvider : IIconProvider
             {
                 _httpClient.DefaultRequestHeaders.Add(h.Key, h.Value.AsEnumerable());
             }
-
         }
-        Console.WriteLine(JsonConvert.SerializeObject(Headers));
         var iconStream = await _httpClient.GetStreamAsync(uriIcon.Icon, ct);
         return iconStream;
     }
@@ -105,13 +103,22 @@ public class IconProvider : IIconProvider
         }
         
     }
-    private static async Task<Uri?> DetermineUriIcon(Uri uri, CancellationToken ct)
+    private async Task<Uri?> DetermineUriIcon(Uri uri, CancellationToken ct)
     {
         HttpClient cli = new HttpClient(new HttpClientHandler
         {
             AllowAutoRedirect = true,
             MaxAutomaticRedirections = 10
         });
+        var Headers = _httpContextAccessor.HttpContext!.Request.Headers;
+        
+        foreach (var h in Headers)
+        {
+            if (h.Key == "Cookie")
+            {
+                cli.DefaultRequestHeaders.Add(h.Key, h.Value.AsEnumerable());
+            }
+        }
         
         
         
