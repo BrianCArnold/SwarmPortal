@@ -56,8 +56,37 @@ services:
         - "swarm.portal.Infrastructure.Keys.url=http://keys.swarmportal.com"
         - "swarm.portal.Infrastructure.Keys.roles=Infrastructure"
 
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth
+    environment:
+      DEFAULT_PROVIDER: "oidc"
+      PROVIDERS_OIDC_CLIENT_ID: "traefik_auth"
+      PROVIDERS_OIDC_CLIENT_SECRET: "00000000-0000-0000-0000-000000000000" #Get this from setting up a client in SwarmPortal.
+      PROVIDERS_OIDC_ISSUER_URL: "http://keys.swarmportal.com/auth/realms/master"
+      SECRET: "S0m3S3cr3t"
+      AUTH_HOST: "auth.swarmportal.com"
+      INSECURE_COOKIE: "true"
+      COOKIE_DOMAIN: "swarmportal.com"
+      LOG_LEVEL: trace
+    networks:
+      - webhosts
+    deploy:
+      placement:
+       constraints:
+         - "node.platform.arch==x86_64"
+      labels:
+        - "swarm.portal.roles=admin"
+        - "traefik.enable=true"
+        - 'traefik.http.routers.Hide-Auth.rule=Host(`auth.swarmportal.com`)'
+        - "traefik.http.routers.Hide-Auth.entrypoints=web"
+        - "traefik.http.routers.Hide-Auth.service=Hide-Auth"
+        - "traefik.http.services.Hide-Auth.loadBalancer.server.port=4181"
+        - "traefik.http.middlewares.auth-mw.forwardauth.address=http://traefik-forward-auth:4181"
+        - "traefik.http.middlewares.auth-mw.forwardauth.trustForwardHeader=true"
+        - 'traefik.http.middlewares.auth-mw.forwardauth.authResponseHeadersRegex=^X-Forwarded-User'
+
   swarmportal_client:
-    image: briancarnold/swarmportal
+    image: swarmportal
     deploy:
       labels:
         - "swarm.portal.roles=Status"
@@ -75,6 +104,30 @@ services:
       # sudo chown 1000:0 /var/opt/swarmportal/persist
       - /var/opt/swarmportal/persist:/app/persist
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - "webhosts"
+
+  swarm-viz:
+    image: dockersamples/visualizer
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      HOST: "localhost"
+    deploy:
+      placement:
+        constraints:
+          - "node.platform.arch==x86_64"
+          - "node.role==manager"
+      labels:
+        - "swarm.portal.roles=admin"
+        - "traefik.enable=true"
+        - 'traefik.http.routers.Status-Visualizer.rule=Host(`visualizer.swarmportal.com`)'
+        - "traefik.http.routers.Status-Visualizer.entrypoints=web"
+        - "traefik.http.routers.Status-Visualizer.service=Status-Visualizer"
+        - "traefik.http.routers.Status-Visualizer.middlewares=auth-mw"
+        - "traefik.http.services.Status-Visualizer.loadBalancer.server.port=8080"
+        - "swarm.portal.Support.Visualizer.url=http://visualizer.swarmportal.com"
+        - "swarm.portal.Support.Visualizer.roles=Infrastructure"
     networks:
       - "webhosts"
 

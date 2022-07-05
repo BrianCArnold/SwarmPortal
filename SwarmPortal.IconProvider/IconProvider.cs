@@ -1,6 +1,7 @@
 ﻿namespace SwarmPortal.IconProvider;
 
 using System;
+using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ public class IconProvider : IIconProvider
     private readonly HttpClient _httpClient;
     private readonly ILogger<IconProvider> _logger;
     private readonly DirectoryInfo _iconCacheDirectory;
-    private static readonly Dictionary<Uri, IUriIcon> _uriCache= new Dictionary<Uri, IUriIcon>();
+    private static readonly ConcurrentDictionary<Uri, IUriIcon> _uriCache= new ConcurrentDictionary<Uri, IUriIcon>();
 
     public IconProvider(IUriIconAccessor uriIconAccessor, IHttpContextAccessor httpContextAccessor, ILogger<IconProvider> logger)
     {
@@ -40,17 +41,15 @@ public class IconProvider : IIconProvider
         var filePath = Path.Combine(_iconCacheDirectory.FullName, fileName);
         if (!File.Exists(filePath))
         {
-            try 
+            try
             {
-                var Headers = _httpContextAccessor.HttpContext!.Request.Headers;
-                Console.WriteLine(Headers);
-                var iconStream = await _httpClient.GetStreamAsync(uriIcon.Icon, ct);
+                Stream iconStream = await RetrieveIconFromService(uriIcon, ct);
                 var fileStream = File.Create(filePath);
                 await iconStream.CopyToAsync(fileStream, ct);
                 fileStream.Close();
                 return IconSuccess.Success(File.OpenRead(filePath));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("Icon not found for uri {uri}, providing default.", uri, ex.Message, ex.StackTrace);
                 return IconSuccess.Failure;
@@ -59,10 +58,26 @@ public class IconProvider : IIconProvider
         return IconSuccess.Success(File.OpenRead(filePath));
     }
 
-    
+    private async Task<Stream> RetrieveIconFromService(IUriIcon? uriIcon, CancellationToken ct)
+    {
+        var Headers = _httpContextAccessor.HttpContext!.Request.Headers;
+        
+        foreach (var h in Headers)
+        {
+            if (h.Key == "Cookie")
+            {
+                _httpClient.DefaultRequestHeaders.Add(h.Key, h.Value.AsEnumerable());
+            }
+
+        }
+        Console.WriteLine(JsonConvert.SerializeObject(Headers));
+        var iconStream = await _httpClient.GetStreamAsync(uriIcon.Icon, ct);
+        return iconStream;
+    }
+
     private async Task EjectUriIcon(Uri uri, CancellationToken ct)
     {
-        _uriCache.Remove(uri);
+        _uriCache.TryRemove(uri, out var _);
         await _uriIconAccessor.DeleteUriIcon(uri, ct);
     }
     private async Task<IUriIcon?> GetUriIcon(Uri uri, CancellationToken ct)
@@ -74,7 +89,7 @@ public class IconProvider : IIconProvider
         else if (await _uriIconAccessor.ContainsUriIcon(uri, ct))
         {
             var uriIcon = await _uriIconAccessor.GetUriIcon(uri, ct);
-            _uriCache[uri] = uriIcon;
+            _uriCache.AddOrUpdate(uri, uriIcon, (_,_) => uriIcon);
             return uriIcon;
         }
         else 
@@ -85,7 +100,7 @@ public class IconProvider : IIconProvider
                 return null;
             }
             var uriIcon = await _uriIconAccessor.UpsertUriIcon(uri, iconUri, ct);
-            _uriCache[uri] = uriIcon;
+            _uriCache.AddOrUpdate(uri, uriIcon, (_,_) => uriIcon);
             return uriIcon;
         }
         
