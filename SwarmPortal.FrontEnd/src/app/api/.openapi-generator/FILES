@@ -4,6 +4,7 @@ api.module.ts
 api/admin.service.ts
 api/api.ts
 api/auth.service.ts
+api/icon.service.ts
 api/links.service.ts
 api/statuses.service.ts
 configuration.ts
@@ -22,4 +23,5 @@ model/link.ts
 model/models.ts
 model/role.ts
 model/status.ts
+model/stream.ts
 variables.ts

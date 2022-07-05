@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 Directory.CreateDirectory("persist");
 if (!File.Exists("persist/settings.json"))
 {
-    File.Copy("ExampleFiles/settings.json", "persist/settings.json");
+    File.Copy("StaticFiles/settings.json", "persist/settings.json");
 }
 builder.Configuration.AddJsonFile("persist/settings.json", false);
 

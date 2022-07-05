@@ -15,7 +15,7 @@ import { Status } from './status';
 export interface IStatusItem { 
     status?: Status;
     readonly name?: string | null;
-    readonly roles?: Array<string> | null;
     readonly group?: string | null;
+    readonly roles?: Array<string> | null;
 }
 

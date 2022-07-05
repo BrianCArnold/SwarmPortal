@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { AdminService } from './api/admin.service';
 import { AuthService } from './api/auth.service';
+import { IconService } from './api/icon.service';
 import { LinksService } from './api/links.service';
 import { StatusesService } from './api/statuses.service';
 
