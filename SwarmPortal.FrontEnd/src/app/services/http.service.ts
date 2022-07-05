@@ -1,15 +1,46 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { firstValueFrom, Observable } from 'rxjs';
-import { AdminService, AuthService, ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
+import { AdminService, AuthService, IconService, ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
 import { IdentityClaims } from '../models/IdentityClaims';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
+
+  private get _noIconDefault(): string | null {
+    return localStorage.getItem('noIconDefault');
+  }
+  private set _noIconDefault(v: string | null) {
+    if (v == null) {
+      localStorage.removeItem('noIconDefault');
+    } else {
+      localStorage.setItem('noIconDefault', v);
+    }
+  }
+  public GetNoIconDefault(): Observable<string> {
+    return new Observable<string>((observer) => {
+      if (this._noIconDefault == null) {
+        const reader = new FileReader();
+        reader.onloadend = _ => {
+          let res = reader.result;
+          if (typeof(res) === 'string') {
+            this._noIconDefault = res;
+            observer.next(res);
+          }
+        };
+        this.http
+          .get(this.linksService.configuration.basePath + "/Icon/Failure", { responseType: 'blob' })
+          .subscribe(response => reader.readAsDataURL(response));
+      }
+      else {
+        observer.next(this._noIconDefault);
+      }
+    });
+  }
 
   public get Admin(): AdminService {
     return this.attachHeaders(this.admin);
@@ -19,6 +50,9 @@ export class HttpService {
   }
   public get Link(): LinksService{
     return this.attachHeaders(this.linksService);
+  }
+  public get Icon(): IconService{
+    return this.attachHeaders(this.iconService);
   }
 
   public GetStatuses(): Observable<{ [key: string]: IStatusItem[]; }> {
@@ -58,7 +92,9 @@ export class HttpService {
     private auth: AuthService,
     private linksService: LinksService,
     private statusesService: StatusesService,
-    private admin: AdminService) { }
+    private iconService: IconService,
+    private admin: AdminService,
+    private http: HttpClient) { }
 
   private _isTokenLoadAttempted = false;
   private _token: string | null = null;

@@ -11,10 +11,14 @@
  */
 
 
-export interface ILinkItem { 
-    readonly url?: string | null;
-    readonly name?: string | null;
-    readonly group?: string | null;
-    readonly roles?: Array<string> | null;
+export interface Stream { 
+    readonly canRead?: boolean;
+    readonly canWrite?: boolean;
+    readonly canSeek?: boolean;
+    readonly canTimeout?: boolean;
+    readonly length?: number;
+    position?: number;
+    readTimeout?: number;
+    writeTimeout?: number;
 }
 

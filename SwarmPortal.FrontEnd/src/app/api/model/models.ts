@@ -9,3 +9,4 @@ export * from './iStatusItem';
 export * from './link';
 export * from './role';
 export * from './status';
+export * from './stream';
