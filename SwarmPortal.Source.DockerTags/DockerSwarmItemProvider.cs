@@ -1,4 +1,4 @@
-namespace SwarmPortal.Source.Docker;
+namespace SwarmPortal.Source.DockerTags;
 public abstract class DockerSwarmItemProvider<TItem> : IItemProvider<TItem>
     where TItem : IGroupableItem
 {

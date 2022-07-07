@@ -1,4 +1,4 @@
-namespace SwarmPortal.Source;
+namespace SwarmPortal.Source.DockerTags;
 
 public interface IDockerSourceConfiguration
 {

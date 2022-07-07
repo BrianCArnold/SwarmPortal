@@ -1,4 +1,4 @@
-namespace SwarmPortal.Source.Docker;
+namespace SwarmPortal.Source.DockerTags;
 
 public class DockerSwarmServiceLinkItemProvider : DockerSwarmItemProvider<ILinkItem>
 {

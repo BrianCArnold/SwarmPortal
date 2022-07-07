@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace SwarmPortal.Source;
+namespace SwarmPortal.Source.DockerTags;
 
 public class DockerSourceConfiguration : IDockerSourceConfiguration
 {

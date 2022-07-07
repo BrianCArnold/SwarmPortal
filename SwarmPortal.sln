@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.Static",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.API", "SwarmPortal.API\SwarmPortal.API.csproj", "{DB8471E9-5456-4626-87B2-A20B3F37336F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.Docker", "SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj", "{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Context", "SwarmPortal.Context\SwarmPortal.Context.csproj", "{F121432A-4C88-494C-B475-503BBE6E22A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.SqlServerMigrations", "SwarmPortal.SqlServerMigrations\SwarmPortal.SqlServerMigrations.csproj", "{5AD8A866-C43F-4F87-84B1-A5E34E52790C}"
@@ -20,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.MySqlMigrations", "SwarmPortal.MySqlMigrations\SwarmPortal.MySqlMigrations.csproj", "{E08A141A-8213-40E6-A4D2-B77AAA3B85A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.IconProvider", "SwarmPortal.IconProvider\SwarmPortal.IconProvider.csproj", "{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwarmPortal.Source.DockerTags", "SwarmPortal.Source.DockerTags\SwarmPortal.Source.DockerTags.csproj", "{36A27DC6-805D-4EBF-9ABF-6CBF929689AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +42,6 @@ Global
 		{DB8471E9-5456-4626-87B2-A20B3F37336F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB8471E9-5456-4626-87B2-A20B3F37336F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB8471E9-5456-4626-87B2-A20B3F37336F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA6FB5D1-DF58-47C2-A094-5DBCCD6366E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F121432A-4C88-494C-B475-503BBE6E22A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F121432A-4C88-494C-B475-503BBE6E22A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F121432A-4C88-494C-B475-503BBE6E22A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,5 +62,9 @@ Global
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9C7DDD4-E66F-4197-96FE-C64BDBE8C466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A27DC6-805D-4EBF-9ABF-6CBF929689AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A27DC6-805D-4EBF-9ABF-6CBF929689AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A27DC6-805D-4EBF-9ABF-6CBF929689AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A27DC6-805D-4EBF-9ABF-6CBF929689AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

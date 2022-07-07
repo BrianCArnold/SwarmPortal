@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SwarmPortal.Common\SwarmPortal.Common.csproj" />
     <ProjectReference Include="..\SwarmPortal.Source.Static\SwarmPortal.Source.Static.csproj" />
-    <ProjectReference Include="..\SwarmPortal.Source.Docker\SwarmPortal.Source.Docker.csproj" />
+    <ProjectReference Include="..\SwarmPortal.Source.DockerTags\SwarmPortal.Source.DockerTags.csproj" />
     <ProjectReference Include="..\SwarmPortal.Context\SwarmPortal.Context.csproj" />
     <ProjectReference Include="..\SwarmPortal.SqlServerMigrations\SwarmPortal.SqlServerMigrations.csproj" />
     <ProjectReference Include="..\SwarmPortal.SQLiteMigrations\SwarmPortal.SQLiteMigrations.csproj" />

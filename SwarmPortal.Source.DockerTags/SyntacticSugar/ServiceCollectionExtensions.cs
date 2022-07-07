@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SwarmPortal.Source;
-using SwarmPortal.Source.Docker;
+using SwarmPortal.Source.DockerTags;
 
 namespace SwarmPortal.Common;
 public static class SwarmPortalDockerServiceExtensions
