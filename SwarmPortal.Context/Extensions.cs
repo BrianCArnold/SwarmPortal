@@ -63,38 +63,22 @@ public static class DbSetExtensions
         }
     }
 
-    [Obsolete("This is to make sure we don't have extra items with the same unique identifier. Should be taken care of by the database.", false)]
-    public static async Task<T> RemoveExtrasAsync<T>(this DbSet<T> dbSet, Expression<Func<T, bool>> predicate, Action<T> update, Func<T> getSingle, CancellationToken ct = default)
+
+    
+    public static async Task<T> AddOrUpdateAsync<T>(this DbSet<T> dbSet, Expression<Func<T, bool>> predicate, Action<T> update, Func<T> getSingle, CancellationToken ct = default)
         where T : class
     {
-        var range = dbSet.Where(predicate).AsAsyncEnumerable();
-        var asyncEnumerator = range.GetAsyncEnumerator(ct);
-        T result;
-        try
+        var existing = await dbSet.SingleOrDefaultAsync(predicate);
+        if (existing == null)
         {
-            if (await asyncEnumerator.MoveNextAsync(ct))
-            {
-                result = asyncEnumerator.Current;
-                update(asyncEnumerator.Current);
-
-                while (await asyncEnumerator.MoveNextAsync(ct)) 
-                {
-                    dbSet.Remove(asyncEnumerator.Current);
-                }
-            }
-            else 
-            {
-                result = getSingle();
-                await dbSet.AddAsync(result);
-            }
+            var dbItem = getSingle();
+            await dbSet.AddAsync(dbItem, ct);
+            return dbItem;
         }
-        finally
-        { 
-            if (asyncEnumerator != null) 
-            {
-                await asyncEnumerator.DisposeAsync();
-            }
+        else
+        {
+            update(existing);
+            return existing;
         }
-        return result;
     }
 }

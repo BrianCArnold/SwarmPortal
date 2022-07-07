@@ -12,11 +12,7 @@ public class GroupAccessor : IGroupAccessor
     }
     public async Task<IGroup> AddGroup(string groupName, CancellationToken ct = default)
     {
-        var group = await _context.Groups.RemoveExtrasAsync(
-            x => x.Name == groupName, 
-            l => { l.Enabled = true; }, 
-            () => new Group{ Name = groupName },
-            ct);
+        var group = await _context.Groups.AddOrUpdateAsync(x => x.Name == groupName, l => { l.Enabled = true; }, () => new Group{ Name = groupName }, ct);
         await _context.SaveChangesAsync(ct);
         return group;
     }

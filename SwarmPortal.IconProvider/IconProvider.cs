@@ -51,14 +51,14 @@ public class IconProvider : IIconProvider
             }
             catch (Exception ex)
             {
-                _logger.LogError("Icon not found for uri {uri}, providing default.", uri, ex.Message, ex.StackTrace);
+                _logger.LogError("Icon not found for uri {uri}, providing default. {message}, {stacktrace}", uri, ex.Message, ex.StackTrace);
                 return IconSuccess.Failure;
             }
         }
         return IconSuccess.Success(File.OpenRead(filePath));
     }
 
-    private async Task<Stream> RetrieveIconFromService(IUriIcon? uriIcon, CancellationToken ct)
+    private async Task<Stream> RetrieveIconFromService(IUriIcon uriIcon, CancellationToken ct)
     {
         var Headers = _httpContextAccessor.HttpContext!.Request.Headers;
         

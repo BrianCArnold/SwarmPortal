@@ -13,7 +13,7 @@ public class LinkAccessor : ILinkAccessor
     }
     public async Task<ILink> AddLink(string name, string group, string url, CancellationToken ct = default)
     {
-        var link = await _context.Links.RemoveExtrasAsync(
+        var link = await _context.Links.AddOrUpdateAsync(
             x => x.Name == name && x.Group.Name == group, 
             l => { l.Url = url; l.Enabled = true; }, 
             () => new Link { Name = name, Enabled = true, Group = _context.Groups.Single(g => g.Name == group), Url = url },

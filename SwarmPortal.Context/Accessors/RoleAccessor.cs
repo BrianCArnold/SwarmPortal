@@ -12,7 +12,7 @@ public class RoleAccessor : IRoleAccessor
     }
     public async Task<IRole> AddRole(string role, CancellationToken ct = default)
     {
-        var outRole = await _context.Roles.RemoveExtrasAsync(
+        var outRole = await _context.Roles.AddOrUpdateAsync(
             x => x.Name == role, 
             r => r.Enabled = true, 
             () => new Role { Name = role, Enabled = true },
