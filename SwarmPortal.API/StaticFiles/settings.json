@@ -1,8 +1,8 @@
 {
     "Jwt": {
-      "Authority": "https://KeyCloak.local/auth/realms/master",
+      "Authority": "https://keys.brian-arnold.dev/auth/realms/master",
       "Audience": "account",
-      "Issuer": "https://KeyCloak.local/auth/realms/master",
+      "Issuer": "https://keys.brian-arnold.dev/auth/realms/master",
       "ClientId": "SwarmPortal",
       "RedirectUri": "http://localhost:4200",
       "Scope": "openid profile email",
