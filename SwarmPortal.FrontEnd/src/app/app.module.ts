@@ -9,13 +9,14 @@ import { AppComponent } from './app.component';
 import { StatusGroupCardComponent } from './status-group-card/status-group-card.component';
 import { LinkGroupCardComponent } from './link-group-card/link-group-card.component';
 import { StatusScreenComponent } from './status-screen/status-screen.component';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
 import { CookieService } from 'ngx-cookie-service';
 import { NavigationComponent } from './navigation/navigation.component';
 import { LoginCompleteComponent } from './login-complete/login-complete.component';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from './services/http.service';
+import { SwarmStorage } from "./services/SwarmStorage";
 import { SecurePipe } from './pipes/secure.pipe';
 
 
@@ -48,6 +49,14 @@ export function apiConfigFactory (): Configuration {
   ],
   providers: [
     CookieService,
+    {
+      provide: OAuthStorage,
+      useValue: new SwarmStorage("swarm-portal-auth")
+    },
+    {
+      provide: SwarmStorage,
+      useValue: new SwarmStorage("swarm-portal")
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: (http: HttpService) => async () => await http.SetupAuth(),

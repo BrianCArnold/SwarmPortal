@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, OAuthStorage } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc-jwks';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AdminService, AuthService, IconService, ILinkItem, IStatusItem, LinksService, StatusesService } from '../api';
 import { IdentityClaims } from '../models/IdentityClaims';
+import { SwarmStorage } from './SwarmStorage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,13 @@ import { IdentityClaims } from '../models/IdentityClaims';
 export class HttpService {
 
   private get _noIconDefault(): string | null {
-    return localStorage.getItem('noIconDefault');
+    return this.storage.getItem('noIconDefault');
   }
   private set _noIconDefault(v: string | null) {
     if (v == null) {
-      localStorage.removeItem('noIconDefault');
+      this.storage.removeItem('noIconDefault');
     } else {
-      localStorage.setItem('noIconDefault', v);
+      this.storage.setItem('noIconDefault', v);
     }
   }
   public GetNoIconDefault(): Observable<string> {
@@ -94,7 +95,8 @@ export class HttpService {
     private statusesService: StatusesService,
     private iconService: IconService,
     private admin: AdminService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private storage: SwarmStorage) { }
 
   private _isTokenLoadAttempted = false;
   private _token: string | null = null;
@@ -102,7 +104,7 @@ export class HttpService {
     if (!this._isTokenLoadAttempted) {
       var accToken = this.oauth.getAccessToken();
       if (accToken) {
-        localStorage.setItem('token', accToken);
+        this.storage.setItem('token', accToken);
       }
       this._token = accToken;
       this._isTokenLoadAttempted = true;
@@ -117,7 +119,7 @@ export class HttpService {
     if (!this._isIdentityLoadAttempted) {
       var claims = <IdentityClaims>this.oauth.getIdentityClaims();
       if (claims) {
-        localStorage.setItem('identity', JSON.stringify(claims));
+        this.storage.setItem('identity', JSON.stringify(claims));
       }
       this._identity = claims;
       this._isIdentityLoadAttempted = true;
