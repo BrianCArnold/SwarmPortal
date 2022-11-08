@@ -69,23 +69,32 @@ public static class DbSetExtensions
     {
         var range = dbSet.Where(predicate).AsAsyncEnumerable();
         var asyncEnumerator = range.GetAsyncEnumerator(ct);
-        T result;
+        
+        Func<T> onComplete;
         try
         {
             if (await asyncEnumerator.MoveNextAsync(ct))
             {
-                result = asyncEnumerator.Current;
-                update(asyncEnumerator.Current);
+                T result = asyncEnumerator.Current;
 
                 while (await asyncEnumerator.MoveNextAsync(ct)) 
                 {
                     dbSet.Remove(asyncEnumerator.Current);
                 }
+                
+                onComplete = () => {
+                    update(result);
+                    return result;
+                };
             }
             else 
             {
-                result = getSingle();
-                await dbSet.AddAsync(result);
+                
+                onComplete = () => {
+                    T result = getSingle();
+                    dbSet.Add(result);
+                    return result;
+                };
             }
         }
         finally
@@ -95,6 +104,6 @@ public static class DbSetExtensions
                 await asyncEnumerator.DisposeAsync();
             }
         }
-        return result;
+        return onComplete();
     }
 }
