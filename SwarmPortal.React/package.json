@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,6 +12,9 @@
     "@types/react-dom": "^18.0.8",
     "bootstrap": "^5.2.2",
     "flow-bin": "^0.192.0",
+    "jwt-decode": "^3.1.2",
+    "openapi-typescript": "^5.4.1",
+    "openapi-typescript-codegen": "^0.23.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -25,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "flow": "flow",
-    "generate-client-sdk": "mkdir -p src/app/api && openapi-generator-cli generate -i http://localhost:5109/swagger/v1/swagger.json -g typescript-axios -o src/api"
+    "updateapi": "openapi -i http://127.0.0.1:5109/swagger/v1/swagger.json -o src/services/openapi --name internalClient"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.56.0"
   }
 }

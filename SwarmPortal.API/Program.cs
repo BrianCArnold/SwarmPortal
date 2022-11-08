@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: debugCorsOriginName,
                       policy  =>
                       {
-                          policy.WithOrigins(builder.Configuration["CORSUrl"])
+                          policy.WithOrigins(builder.Configuration.GetSection("CORSUrl").Get<string[]>())
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
