@@ -2,6 +2,10 @@ import React from 'react';
 
 import './App.css';
 import './styles.scss'
+
+
+import 'ag-grid-community/styles/ag-grid.css'; 
+import 'ag-grid-community/styles/ag-theme-alpine.css'; 
 import { ApiClient } from './services/apiClient';
 import { ILinkItem } from './services/openapi';
 import Navigation from './Navigation';
@@ -12,6 +16,7 @@ import Home from './Home/Home';
 import Logout from './Auth/Logout';
 import AdminLinkGroups from './Admin/LinkGroups';
 import AdminLinkRoles from './Admin/LinkRoles';
+import AdminLinks from './Admin/Links';
 
 class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
   client: ApiClient;
@@ -40,6 +45,7 @@ class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
           <Route path="Logout" element={<Logout client={this.client} />} />
           <Route path="Admin/Groups" element={<AdminLinkGroups client={this.client} />} />
           <Route path="Admin/Roles" element={<AdminLinkRoles client={this.client} />} />
+          <Route path="Admin/Links" element={<AdminLinks client={this.client} />} />
         </Routes>
       </Router>
       </div>
