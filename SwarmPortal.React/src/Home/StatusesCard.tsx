@@ -7,7 +7,7 @@ class StatusesCard extends React.Component<{header: string, links: IStatusItem[]
   statuses(): React.ReactNode[] {
     return this.props.links.map(l => (
       <li key={l.name}>
-        <span title={l.name||""} className={"m-2 my-1 btn btn-sm text-dark border-0 border-bottom btn-outline-"+this.props.color+" border-"+this.props.color} >
+        <span title={l.name||""} className={"m-2 my-1 btn btn-sm text-dark border-0 border-bottom btn-outline-"+this.props.color+" border-"+this.props.color+ " "+ l.status?.toLowerCase()} >
           {l.name}
         </span>
       </li>
@@ -20,7 +20,7 @@ class StatusesCard extends React.Component<{header: string, links: IStatusItem[]
         <div className={"card-header border-"+this.props.color+" text-muted"} >
           {this.props.header}
         </div>
-        <div className="card-body">
+        <div className="d-grid d-md-block my-1">
           <ul>
             {this.statuses()}
           </ul>

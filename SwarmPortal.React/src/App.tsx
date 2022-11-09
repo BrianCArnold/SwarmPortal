@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './Auth/Login';
 import Home from './Home/Home';
 import Logout from './Auth/Logout';
+import AdminLinkGroups from './Admin/LinkGroups';
+import AdminLinkRoles from './Admin/LinkRoles';
 
 class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
   client: ApiClient;
@@ -36,7 +38,8 @@ class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
           <Route path="/" element={<Home client={this.client} />} />
           <Route path="Login" element={<Login client={this.client} />} />
           <Route path="Logout" element={<Logout client={this.client} />} />
-
+          <Route path="Admin/Groups" element={<AdminLinkGroups client={this.client} />} />
+          <Route path="Admin/Roles" element={<AdminLinkRoles client={this.client} />} />
         </Routes>
       </Router>
       </div>

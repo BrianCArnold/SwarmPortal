@@ -119,26 +119,30 @@ public class IconProvider : IIconProvider
                 cli.DefaultRequestHeaders.Add(h.Key, h.Value.AsEnumerable());
             }
         }
-        
-        
-        
-        
-        var response = await cli.GetAsync(uri);
-        //If it's going strictly more or strictly less precise than the original uri, we'll use it.
-        //If it's like "app.domain.com" to "login.domain.com", we don't use it.
-        if (!response!.RequestMessage!.RequestUri!.Host.Contains(uri.Host) && !uri.Host.Contains(response.RequestMessage.RequestUri.Host))
+        try 
         {
+            var response = await cli.GetAsync(uri);
+            //If it's going strictly more or strictly less precise than the original uri, we'll use it.
+            //If it's like "app.domain.com" to "login.domain.com", we don't use it.
+            if (!response!.RequestMessage!.RequestUri!.Host.Contains(uri.Host) && !uri.Host.Contains(response.RequestMessage.RequestUri.Host))
+            {
+                return null;
+            }
+            var html = await response.Content.ReadAsStringAsync();
+            
+            string[] matchers = new[]
+            {
+                "<link[^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]+href=['\"]([^'\"]+)['\"][^>]*>",
+                "<link[^>]+href=['\"]([^'\"]+)['\"][^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]*>"
+            };
+            var favPathMatches = matchers.SelectMany(m => Regex.Matches(html, m)).ToList();
+            string favPath = favPathMatches.Any(m => m.Success) ? favPathMatches.First(m => m.Success).Groups[1].Value : "/favicon.ico";
+            return new Uri(response.RequestMessage!.RequestUri!, favPath);
+        }
+        catch(HttpRequestException ex)
+        {
+            _logger.LogError("Error retrieving icon for uri {uri}", uri, ex.Message, ex.StackTrace);
             return null;
         }
-        var html = await response.Content.ReadAsStringAsync();
-        
-        string[] matchers = new[]
-        {
-            "<link[^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]+href=['\"]([^'\"]+)['\"][^>]*>",
-            "<link[^>]+href=['\"]([^'\"]+)['\"][^>]+rel=['\"][^'\"]*icon[^'\"]*['\"][^>]*>"
-        };
-        var favPathMatches = matchers.SelectMany(m => Regex.Matches(html, m)).ToList();
-        string favPath = favPathMatches.Any(m => m.Success) ? favPathMatches.First(m => m.Success).Groups[1].Value : "/favicon.ico";
-	    return new Uri(response.RequestMessage!.RequestUri!, favPath);
     }
 }

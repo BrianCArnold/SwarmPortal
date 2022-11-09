@@ -44,8 +44,8 @@ class Navigation extends React.Component<{client: ApiClient}, { }> {
             </div>
             <form className="container-fluid justify-content-end">
                 {this.client.isLoggedIn && <button className="btn btn-sm me-2" type="button">Welcome {this.client.token.given_name}</button>}
-                {this.client.isLoggedIn && <button className="btn btn-primary btn-sm me-2" type="button" onClick={() => this.logOut()}>Logout</button>}
-                {!this.client.isLoggedIn && <button className="btn btn-primary btn-sm me-2" type="button" onClick={() => this.logIn()} >Login</button>} 
+                {this.client.isLoggedIn && <button className="btn btn-outline-success me-2" type="button" onClick={() => this.logOut()}>Logout</button>}
+                {!this.client.isLoggedIn && <button className="btn btn-outline-success me-2" type="button" onClick={() => this.logIn()} >Login</button>} 
                 
             </form>
         </nav>

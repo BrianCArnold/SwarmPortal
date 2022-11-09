@@ -37,8 +37,8 @@ public class IconController : ControllerBase
         {
             Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
             {
-                Public = false,
-                MaxAge = TimeSpan.Zero
+                Public = true,
+                MaxAge = TimeSpan.FromMinutes(10)
             };
             return Redirect("failure");
         }

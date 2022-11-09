@@ -1,16 +1,22 @@
 import React from 'react';
 import { ILinkItem } from '../services/openapi';
+import './LinksCard.scss';
 
 class LinksCard extends React.Component<{header: string, links: ILinkItem[], color: string }, {}> {
 
   links(): React.ReactNode[] {
     return this.props.links.map(l => (
       <a key={l.url} title={l.url||""} href={l.url||""} className={"m-2 my-1 btn btn-sm text-dark border-0 border-bottom btn-outline-"+this.props.color+" border-"+this.props.color} >
+        <img className='linkImage' alt={l.name||""} src={this.uriIconUrl(l.url||"")} />
         {l.name}
       </a>
     ));
   }
   
+
+  uriIconUrl(uri: string): string {
+    return "http://localhost:5109" + "/Icon/" + encodeURIComponent(uri);
+  }
 
   render(): React.ReactNode {
     return (

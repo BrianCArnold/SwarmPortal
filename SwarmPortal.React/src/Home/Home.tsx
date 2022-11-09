@@ -22,9 +22,10 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
     links(): React.ReactNode[] {
         const result: React.ReactNode[] = [];
         if (this.state?.links) {
-            var links = Object.keys(this.state.links)
-            for (var i = 0; i < links.length; i++) {
-                const l = links[i];
+            var linkKeys = Object.keys(this.state.links)
+            // linkKeys.sort((a,b) => a.localeCompare(b));
+            for (var i = 0; i < linkKeys.length; i++) {
+                const l = linkKeys[i];
                 result.push(<div key={l} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                                 <LinksCard header={l} links={this.state.links[l]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]} />
                             </div>);
@@ -36,11 +37,12 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
     statuses(): React.ReactNode[] {
         const result: React.ReactNode[] = [];
         if (this.state?.status) {
-            var statuses = Object.keys(this.state.status)
-            for (var i = 0; i < statuses.length; i++) {
-                const s = statuses[i];
+            var statusKeys = Object.keys(this.state.status);
+            statusKeys.sort((a,b) => a.localeCompare(b));
+            for (var i = 0; i < statusKeys.length; i++) {
+                const s = statusKeys[i];
                 result.push(<div key={s} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
-                                <StatusesCard header={s} links={this.state.status[s]} color="primary"></StatusesCard>
+                                <StatusesCard header={s} links={this.state.status[s]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]}></StatusesCard>
                             </div>);
             }
         }
@@ -56,7 +58,7 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
                             <h4 className="card-header bg-light text-dark">
                             Links
                             </h4>
-                            <div id="collapseLinks" className="card-body p-3">
+                            <div className="card-body p-3">
                                 <div className="row">
                                     {this.links()}
                                 </div>
