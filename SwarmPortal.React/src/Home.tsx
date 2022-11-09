@@ -1,4 +1,5 @@
 import React from 'react';
+import LinksCard from './LinksCard';
 import { ApiClient } from './services/apiClient';
 import { ILinkItem, IStatusItem } from './services/openapi';
 import StatusesCard from './StatusesCard';
@@ -17,7 +18,35 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
         status.then(result => this.setState({ status: result }));
         // this.client.links.getLinksAll
     }
-    
+    siteBackgrounds: string[] = ['primary', 'success', 'danger', 'warning'];
+    links(): React.ReactNode[] {
+        const result: React.ReactNode[] = [];
+        if (this.state?.links) {
+            var links = Object.keys(this.state.links)
+            for (var i = 0; i < links.length; i++) {
+                const l = links[i];
+                result.push(<div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                                <LinksCard header={l} links={this.state.links[l]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]} />
+                            </div>);
+            }
+        }
+        return result;
+    }
+
+    statuses(): React.ReactNode[] {
+        const result: React.ReactNode[] = [];
+        if (this.state?.status) {
+            var statuses = Object.keys(this.state.status)
+            for (var i = 0; i < statuses.length; i++) {
+                const s = statuses[i];
+                result.push(<div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                                <StatusesCard header={s} links={this.state.status[s]} color="primary"></StatusesCard>
+                            </div>);
+            }
+        }
+        return result;
+    }
+
     render(): React.ReactNode {
         return (
             <div className="container">
@@ -32,13 +61,7 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
                         <div id="collapseLinks" className="card-body p-3">
 
                         <div className="row">
-                            {this.state?.links && Object.keys(this.state.links).map(l => 
-                                <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
-                                    <div>
-                                        {l}
-                                    </div>
-                                </div>
-                            )}
+                            {this.links()}
                             {/* <div *ngFor="let group of linkGroups; let i = index" className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                             <app-link-group-card [groupName]="group.name" [groupLinks]="group.values" [groupColorName]="siteBackgrounds[i%siteBackgrounds.length]">
                             </app-link-group-card>
@@ -55,11 +78,7 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
                         </h4>
                         <div className="card-body p-3">
                         <div className="row">
-                            {this.state?.status && Object.keys(this.state.status).map(s => 
-                                <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
-                                    <StatusesCard header={s} links={this.state.status[s]}></StatusesCard>
-                                </div>   
-                            )}
+                            {this.statuses()}
                             {/* <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12" *ngFor="let group of statusGroups; let i = index">
                             <app-status-group-card [groupName]="group.name" [groupStatuses]="group.values" [groupColorName]="siteBackgrounds[i%siteBackgrounds.length]">
                             </app-status-group-card>
