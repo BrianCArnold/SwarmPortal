@@ -66,6 +66,10 @@ export class ApiClient extends internalClient {
   get token(): JwtToken {
     return jwt_decode<JwtToken>(localStorage.getItem(tokenKey) || "");
   }
+  get roles(): string[] {
+    console.log(this.token.roles);
+    return this.token.roles;
+  }
   get isLoggedIn(): boolean {
     return !!localStorage.getItem(tokenKey);
   }

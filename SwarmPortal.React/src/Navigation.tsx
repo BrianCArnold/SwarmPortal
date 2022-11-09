@@ -1,4 +1,10 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import { ApiClient } from './services/apiClient';
 
 class Navigation extends React.Component<{client: ApiClient}, { }> {
@@ -16,39 +22,30 @@ class Navigation extends React.Component<{client: ApiClient}, { }> {
     }
     render(): React.ReactNode {
         return (
-        <nav className="navbar navbar-expand-md navbar-light bg-light">
-            <div className="container-fluid justify-content-start">
-                <a className="navbar-brand" href="/">SwarmPortal</a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav me-auto mb-2 mb-md-0">
-                    <li className="nav-item">
-                    <a className="nav-link" href="/">Home</a>
-                    </li>
+            <Navbar bg="light"  >
+                <Container fluid>
+                    <Navbar.Brand href="/">Swarm Portal</Navbar.Brand>
                     
-                    {/* {this.client.isLoggedIn && this.client.
-                    <li class="nav-item dropdown" *ngIf="isLoggedIn && Roles.includes('admin')">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Admin
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" routerLink="admin/links" >Manage Links</a></li>
-                        <li><a class="dropdown-item" routerLink="admin/groups" >Manage Link Groups</a></li>
-                        <li><a class="dropdown-item" routerLink="admin/roles" >Manage Roles</a></li>
-                    </ul>
-                    </li> */}
-                </ul>
-                </div>
-            </div>
-            <form className="container-fluid justify-content-end">
-                {this.client.isLoggedIn && <button className="btn btn-sm me-2" type="button">Welcome {this.client.token.given_name}</button>}
-                {this.client.isLoggedIn && <button className="btn btn-outline-success me-2" type="button" onClick={() => this.logOut()}>Logout</button>}
-                {!this.client.isLoggedIn && <button className="btn btn-outline-success me-2" type="button" onClick={() => this.logIn()} >Login</button>} 
-                
-            </form>
-        </nav>
+                    <Nav className="me-auto">
+                        <Nav.Link className="nav-link" href="/">Home</Nav.Link>
+                        <NavDropdown title="Admin" id="admin-nav-dropdown">
+
+                        <NavDropdown.Item href="/admin/links">Links</NavDropdown.Item>
+                        <NavDropdown.Item href="/admin/groups">Groups</NavDropdown.Item>
+                        <NavDropdown.Item href="/admin/roles">Roles</NavDropdown.Item>
+                        
+                        </NavDropdown>
+                    </Nav>
+            
+                </Container>
+                <Form className="container-fluid d-flex justify-content-end">
+                {this.client.isLoggedIn && <Button variant='light' disabled >Welcome {this.client.token.given_name}</Button>}
+                {this.client.isLoggedIn && <Button variant='outline-success' onClick={() => this.logOut()}>Logout</Button>}
+                {!this.client.isLoggedIn && <Button variant="outline-success me-2" onClick={() => this.logIn()} >Login</Button>} 
+                </Form>
+
+            </Navbar>
+            
         );
 
 
