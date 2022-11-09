@@ -18,8 +18,8 @@ class StatusesCard extends React.Component<{header: string, links: IStatusItem[]
                   <span className={(l.status || Status.UNKNOWN).toLowerCase() || ''}>
                     {l.name}
                   </span>
-                </li>)}
-              
+                </li>
+              )}
             </ul>
           </div>
         </div>

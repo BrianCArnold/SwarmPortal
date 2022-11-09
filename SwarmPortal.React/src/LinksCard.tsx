@@ -1,4 +1,3 @@
-import { link } from 'fs';
 import React from 'react';
 import { ILinkItem } from './services/openapi';
 
@@ -19,11 +18,6 @@ class LinksCard extends React.Component<{header: string, links: ILinkItem[], col
                 {l.name}
               </a>
             ))}
-{/*           
-            <a title="link.url" *ngFor="let link of groupLinks" className="m-2 my-1 btn btn-sm text-dark border-0 border-bottom" [ngClass]="'btn-outline-' + groupColorName + ' border-' + groupColorName + ''"  [href]="link.url" target="_blank">
-              <img style="width: 24px; height: 24px;" [src]="uriIconUrl(link.url) | secure | async" />
-              {{link.name}}
-            </a> */}
           </div>
         </div>)
       
