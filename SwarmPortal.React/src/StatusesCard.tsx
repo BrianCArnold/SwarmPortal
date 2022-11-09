@@ -1,5 +1,5 @@
 import React from 'react';
-import { IStatusItem } from './services/openapi';
+import { IStatusItem, Status } from './services/openapi';
 import './StatusesCard.scss';
 
 class StatusesCard extends React.Component<{header: string, links: IStatusItem[] }, {}> {
@@ -15,7 +15,7 @@ class StatusesCard extends React.Component<{header: string, links: IStatusItem[]
             <ul>
               {this.props.links.map(l => 
                 <li>
-                  <span className={(l.status as unknown as string).toLowerCase() || ''}>
+                  <span className={(l.status || Status.UNKNOWN).toLowerCase() || ''}>
                     {l.name}
                   </span>
                 </li>)}

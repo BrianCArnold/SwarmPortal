@@ -73,6 +73,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
+    .AddSwaggerGenNewtonsoftSupport()
     .AddStatusGroupDictionaryProvider()
     .AddLinkGroupDictionaryProvider()
     .AddStatusCoalescedItemProvider()
