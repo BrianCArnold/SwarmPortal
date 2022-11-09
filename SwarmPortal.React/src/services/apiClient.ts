@@ -1,6 +1,7 @@
 import { BaseHttpRequest } from "./openapi/core/BaseHttpRequest";
 import type { OpenAPIConfig } from "./openapi/core/OpenAPI";
 import jwt_decode, { JwtPayload } from "jwt-decode";
+import { OidcClientSettings, OidcClient } from 'oidc-client-ts';
 import type { ApiRequestOptions } from "./openapi/core/ApiRequestOptions";
 import { CancelablePromise } from "./openapi/core/CancelablePromise";
 import { internalClient } from "./openapi";
@@ -8,11 +9,18 @@ import { request as __request } from "./openapi/core/request";
 
 export interface JwtToken extends JwtPayload {
   name: string;
+  roles: string[];
+  preferred_username: string;
+  given_name: string;
+  family_name: string;
 }
 const tokenKey = "swarmportalAuth";
 export class ApiClient extends internalClient {
 
   headers: Record<string, string>;
+  private _authConfiguredAndLoaded: boolean = false;
+  oidcConfig!: OidcClientSettings;
+  oidcClient!: OidcClient;
   constructor(config?: Partial<OpenAPIConfig>) {
     const token = localStorage.getItem(tokenKey);
     const headers: Record<string, string> = {};
@@ -25,15 +33,49 @@ export class ApiClient extends internalClient {
     super(conf, ObjectGraphReconstructingRequest);
     this.headers = headers;
   }
+
+  private async GetOidcClient(): Promise<OidcClient> {
+    if (!this._authConfiguredAndLoaded) {
+      const _authConfig = await this.auth.getAuthConfig();
+      console.log(_authConfig);
+      this.oidcConfig = {
+        authority: _authConfig.authority || "",
+        client_id: _authConfig.clientId || "",
+        redirect_uri: _authConfig.redirectUri + "/Login" || "",
+        scope: _authConfig.scope || "",
+        response_type: 'code'
+      };
+      this.oidcClient = new OidcClient(this.oidcConfig);
+      return this.oidcClient;
+    } else {
+        return this.oidcClient;
+    }
+  }
+  get token(): JwtToken {
+    return jwt_decode<JwtToken>(localStorage.getItem(tokenKey) || "");
+  }
   get isLoggedIn(): boolean {
     return !!localStorage.getItem(tokenKey);
   }
-  logIn(token: string) {
-    localStorage.setItem(tokenKey, token);
-    this.headers["Authorization"] = token;
+  async login(){
+    const client = await this.GetOidcClient();
+    const signinRequest = await client.createSigninRequest({});
+    window.location.href = signinRequest.url;
   }
-  logOut() {
-    localStorage.removeItem(tokenKey)
+  async processLogIn() {
+    const client = await this.GetOidcClient();
+    const signinResponse = await client.processSigninResponse(window.location.href);
+    localStorage.setItem(tokenKey, signinResponse.access_token);
+  }
+  async logOut() {
+    const client = await this.GetOidcClient();
+    const signoutRequest = await client.createSignoutRequest({ id_token_hint: localStorage.getItem(tokenKey) || "" });
+    window.location.href = signoutRequest.url;
+  }
+  async processLogOut() {
+    const client = await this.GetOidcClient();
+    await client.processSignoutResponse(window.location.href);
+    localStorage.removeItem(tokenKey);
   }
 
 }

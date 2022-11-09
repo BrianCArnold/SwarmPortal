@@ -1,9 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import './styles.scss'
 import { ApiClient } from './services/apiClient';
 import { ILinkItem } from './services/openapi';
+import Navigation from './Navigation';
+
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Login from './Login';
+import Home from './Home';
+import Logout from './Logout';
 
 class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
   client: ApiClient;
@@ -24,20 +30,16 @@ class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
 
   render(): React.ReactNode {
     return (
-      <div className="App">
-        <ul>
-          
-          {this.state?.links && Object.keys(this.state.links).map((key) => {
-            return (
-            <li>
-              {key}
-              <ul>
-                {this.state.links[key].map((link) => link.name)}
-              </ul>
-            </li>
-            );
-          })}
-        </ul>
+      <div>
+      <Navigation client={this.client}></Navigation>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home client={this.client} />} />
+          <Route path="Login" element={<Login client={this.client} />} />
+          <Route path="Logout" element={<Logout client={this.client} />} />
+
+        </Routes>
+      </Router>
       </div>
     );
   }
