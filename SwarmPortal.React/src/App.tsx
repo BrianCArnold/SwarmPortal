@@ -6,10 +6,10 @@ import { ApiClient } from './services/apiClient';
 import { ILinkItem } from './services/openapi';
 import Navigation from './Navigation';
 
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Login from './Login';
-import Home from './Home';
-import Logout from './Logout';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from './Auth/Login';
+import Home from './Home/Home';
+import Logout from './Auth/Logout';
 
 class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
   client: ApiClient;
@@ -17,7 +17,6 @@ class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
   links: Record<string, ILinkItem[]> = {};
   constructor(props: any) {
     super(props);
-    this.setState({ links: {"a": []} });
     this.client = new ApiClient();
   }
 

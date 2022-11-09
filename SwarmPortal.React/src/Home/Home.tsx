@@ -1,7 +1,7 @@
 import React from 'react';
 import LinksCard from './LinksCard';
-import { ApiClient } from './services/apiClient';
-import { ILinkItem, IStatusItem } from './services/openapi';
+import { ApiClient } from '../services/apiClient';
+import { ILinkItem, IStatusItem } from '../services/openapi';
 import StatusesCard from './StatusesCard';
 
 class Home extends React.Component<{client: ApiClient}, { links: Record<string, ILinkItem[]>, status: Record<string, IStatusItem[]> }> {
@@ -25,7 +25,7 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
             var links = Object.keys(this.state.links)
             for (var i = 0; i < links.length; i++) {
                 const l = links[i];
-                result.push(<div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                result.push(<div key={l} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                                 <LinksCard header={l} links={this.state.links[l]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]} />
                             </div>);
             }
@@ -39,7 +39,7 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
             var statuses = Object.keys(this.state.status)
             for (var i = 0; i < statuses.length; i++) {
                 const s = statuses[i];
-                result.push(<div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                result.push(<div key={s} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                                 <StatusesCard header={s} links={this.state.status[s]} color="primary"></StatusesCard>
                             </div>);
             }
@@ -51,45 +51,32 @@ class Home extends React.Component<{client: ApiClient}, { links: Record<string, 
         return (
             <div className="container">
                 <div className="row py-3 mr-0">
-
-                    <div className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
-
-                    <div className="card bShadow">
-                        <h4 className="card-header bg-light text-dark">
-                        Links
-                        </h4>
-                        <div id="collapseLinks" className="card-body p-3">
-
-                        <div className="row">
-                            {this.links()}
-                            {/* <div *ngFor="let group of linkGroups; let i = index" className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
-                            <app-link-group-card [groupName]="group.name" [groupLinks]="group.values" [groupColorName]="siteBackgrounds[i%siteBackgrounds.length]">
-                            </app-link-group-card>
-                            </div> */}
-                        </div>
+                    <div key="linksContainer" className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
+                        <div className="card bShadow">
+                            <h4 className="card-header bg-light text-dark">
+                            Links
+                            </h4>
+                            <div id="collapseLinks" className="card-body p-3">
+                                <div className="row">
+                                    {this.links()}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                    <div className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
-
-                    <div className="card bShadow">
-                        <h4 className="card-header bg-light text-dark">
-                        Status
-                        </h4>
-                        <div className="card-body p-3">
-                        <div className="row">
-                            {this.statuses()}
-                            {/* <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12" *ngFor="let group of statusGroups; let i = index">
-                            <app-status-group-card [groupName]="group.name" [groupStatuses]="group.values" [groupColorName]="siteBackgrounds[i%siteBackgrounds.length]">
-                            </app-status-group-card>
-                            </div> */}
+                    <div key="statusContainer" className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
+                        <div className="card bShadow">
+                            <h4 className="card-header bg-light text-dark">
+                            Status
+                            </h4>
+                            <div className="card-body p-3">
+                                <div className="row">
+                                    {this.statuses()}
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                    </div>
                     </div>
                 </div>
             </div>
-
         );
     }
 }

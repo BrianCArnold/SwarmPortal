@@ -1,4 +1,4 @@
-    import React from 'react';
+import React from 'react';
 import { ApiClient } from './services/apiClient';
 
 class Navigation extends React.Component<{client: ApiClient}, { }> {
@@ -6,7 +6,6 @@ class Navigation extends React.Component<{client: ApiClient}, { }> {
     constructor(props: {client: ApiClient}) {
         super(props);
         this.client = props.client;
-        console.log(this.client);
     }
 
     async logIn() {

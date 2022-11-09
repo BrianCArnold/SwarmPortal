@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiClient } from './services/apiClient';
+import { ApiClient } from '../services/apiClient';
 
 class Logout extends React.Component<{client: ApiClient}, { }> {
     client: ApiClient;
