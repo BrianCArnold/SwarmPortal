@@ -69,7 +69,9 @@ export class ApiClient extends internalClient {
   }
   async logOut() {
     const client = await this.GetOidcClient();
-    const signoutRequest = await client.createSignoutRequest({ id_token_hint: localStorage.getItem(tokenKey) || "" });
+    const signoutRequest = await client.createSignoutRequest({
+        post_logout_redirect_uri: "http://localhost:3000/Logout"
+    });
     window.location.href = signoutRequest.url;
   }
   async processLogOut() {

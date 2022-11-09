@@ -19,9 +19,7 @@ class Login extends React.Component<{client: ApiClient}, { }> {
     
     render(): React.ReactNode {
         return (
-            <div>
-                <button className="btn btn-sm me-2" type="button">Back Home</button>
-            </div>
+            <p>success, redirecting home...</p>
         );
     }
 }
