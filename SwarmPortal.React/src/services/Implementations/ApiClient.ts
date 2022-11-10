@@ -37,6 +37,7 @@ export class ApiClient extends internalClient implements IApiClient {
         authority: _authConfig.authority || "",
         client_id: _authConfig.clientId || "",
         redirect_uri: _authConfig.redirectUri + "/Login" || "",
+        post_logout_redirect_uri: _authConfig.redirectUri + "/Logout" || "",
         scope: _authConfig.scope || "",
         response_type: 'code'
       };
@@ -68,9 +69,7 @@ export class ApiClient extends internalClient implements IApiClient {
   }
   async logOut() {
     const client = await this.GetOidcClient();
-    const signoutRequest = await client.createSignoutRequest({
-        post_logout_redirect_uri: this.config.BASE + "/Logout"
-    });
+    const signoutRequest = await client.createSignoutRequest();
     window.location.href = signoutRequest.url;
   }
   async processLogOut() {
