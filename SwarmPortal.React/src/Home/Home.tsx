@@ -25,7 +25,7 @@ class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, sta
             // linkKeys.sort((a,b) => a.localeCompare(b));
             for (var i = 0; i < linkKeys.length; i++) {
                 const l = linkKeys[i];
-                result.push(<div key={l} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                result.push(<div key={l} className="col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                                 <LinksCard header={l} links={this.state.links[l]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]} />
                             </div>);
             }
@@ -40,7 +40,7 @@ class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, sta
             statusKeys.sort((a,b) => a.localeCompare(b));
             for (var i = 0; i < statusKeys.length; i++) {
                 const s = statusKeys[i];
-                result.push(<div key={s} className="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
+                result.push(<div key={s} className="col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12 masonry-item p-2">
                                 <StatusesCard header={s} links={this.state.status[s]} color={this.siteBackgrounds[i%this.siteBackgrounds.length]}></StatusesCard>
                             </div>);
             }
@@ -54,7 +54,7 @@ class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, sta
                 <div className="row py-3 mx-0">
                     <Carousel controls={false} wrap={false} variant="dark" interval={null}>
                         <Carousel.Item>
-                            <div key="linksContainer" className="col-12 my-xxl-0 my-3">
+                            <div key="linksContainer" className="col-12 my-3">
                                 <div className="card bShadow">
                                     <h4 className="card-header bg-light text-dark">
                                     Links
@@ -68,7 +68,7 @@ class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, sta
                             </div>
                         </Carousel.Item>    
                         <Carousel.Item>
-                            <div key="statusContainer" className="col-12 my-xxl-0 my-3">
+                            <div key="statusContainer" className="col-12 my-3">
                                 <div className="card bShadow">
                                     <h4 className="card-header bg-light text-dark">
                                     Status
