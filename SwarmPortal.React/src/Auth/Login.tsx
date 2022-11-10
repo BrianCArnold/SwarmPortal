@@ -1,13 +1,10 @@
+import { resolve } from 'inversify-react';
 import React from 'react';
-import { ApiClient } from '../services/apiClient';
+import { IApiClient } from '../services/Interfaces/IApiClient';
 
-class Login extends React.Component<{client: ApiClient}, { }> {
-    client: ApiClient;
-    constructor(props: any) {
-        super(props);
-        this.client = props.client;
-        ;
-    }
+class Login extends React.Component {
+    @resolve("apiClient") private readonly client!: IApiClient;
+
     componentDidMount() {
         this.client.processLogIn().then(r => {
             console.log(r);

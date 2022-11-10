@@ -20,7 +20,6 @@ export class internalClient {
     public readonly icon: IconService;
     public readonly links: LinksService;
     public readonly statuses: StatusesService;
-
     public readonly request: BaseHttpRequest;
 
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {

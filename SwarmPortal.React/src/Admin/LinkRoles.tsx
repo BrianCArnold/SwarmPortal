@@ -1,9 +1,11 @@
+import { resolve } from 'inversify-react';
 import React from 'react';
-import { ApiClient } from '../services/apiClient';
+import { IApiClient } from '../services/Interfaces/IApiClient';
 import { IRole } from '../services/openapi';
 
-class AdminLinkRoles extends React.Component<{client: ApiClient}, { enabledRoles: IRole[], disabledRoles: IRole[], currentRoleName: string | undefined }> {
-   
+class AdminLinkRoles extends React.Component<{}, { enabledRoles: IRole[], disabledRoles: IRole[], currentRoleName: string | undefined }> {
+    @resolve("apiClient") private readonly client!: IApiClient;
+    
     get roleName(): string {
         if (this.state && this.state.currentRoleName) {
             return this.state.currentRoleName;
@@ -15,15 +17,15 @@ class AdminLinkRoles extends React.Component<{client: ApiClient}, { enabledRoles
         this.setState({ currentRoleName: v });
     }
     async addRole() {
-        await this.props.client.admin.postAdminAddRole(this.roleName);
+        await this.client.admin.postAdminAddRole(this.roleName);
         this.loadRoles();
     }
 
     loadRoles() {
-        this.props.client.admin.getAdminDisabledRoles().then((response) => {
+        this.client.admin.getAdminDisabledRoles().then((response) => {
             this.setState({ disabledRoles: response });
         });
-        this.props.client.admin.getAdminEnabledRolesWithNoLinks().then((response) => {
+        this.client.admin.getAdminEnabledRolesWithNoLinks().then((response) => {
             this.setState({ enabledRoles: response });
         });
     }
@@ -33,12 +35,12 @@ class AdminLinkRoles extends React.Component<{client: ApiClient}, { enabledRoles
     }
 
     async enableRole(role: IRole) {
-        await this.props.client.admin.putAdminEnableRole(role.id || -1);
+        await this.client.admin.putAdminEnableRole(role.id || -1);
         this.loadRoles();
     }
 
     async disableRole(role: IRole) {
-        await this.props.client.admin.deleteAdminDisableRole(role.id || -1);
+        await this.client.admin.deleteAdminDisableRole(role.id || -1);
         this.loadRoles();
     }
 

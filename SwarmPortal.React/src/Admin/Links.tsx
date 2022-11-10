@@ -1,13 +1,15 @@
 import React from 'react';
 import './Links.scss';
-import { ApiClient } from '../services/apiClient';
-import { AgGridReact, AgGridColumn } from 'ag-grid-react';
+import { IApiClient } from '../services/Interfaces/IApiClient';
+import { AgGridReact } from 'ag-grid-react';
 import { ColDef, CellClickedEvent, ValueGetterParams, ValueSetterParams, NewValueParams } from 'ag-grid-community';
 import { IGroup, ILink, IRole } from '../services/openapi';
+import { resolve } from 'inversify-react';
 
 type linkRow = { id: number; url: string; name: string; roles: { [key: string]: boolean; }; group: string; enabled: boolean; };
 
-class AdminLinks extends React.Component<{client: ApiClient}, { linkGroup: string, linkName: string, linkUrl: string, adminLinks: ILink[], adminRoles: IRole[], adminGroups: IGroup[], rowData: linkRow[] }> {
+class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: string, linkUrl: string, adminLinks: ILink[], adminRoles: IRole[], adminGroups: IGroup[], rowData: linkRow[] }> {
+    @resolve("apiClient") private readonly client!: IApiClient;
     disableLink(data: linkRow) {
         throw new Error('Method not implemented.');
     }
@@ -84,9 +86,9 @@ class AdminLinks extends React.Component<{client: ApiClient}, { linkGroup: strin
         throw new Error('Method not implemented.');
     }
     private async loadData() {
-        const allLinks = await this.props.client.admin.getAdminAllLinks();
-        const allRoles = await this.props.client.admin.getAdminRoles().then(roles => roles.filter(r => r.enabled));
-        const allGroups = await this.props.client.admin.getAdminGroups().then(groups => groups.filter(g => g.enabled));
+        const allLinks = await this.client.admin.getAdminAllLinks();
+        const allRoles = await this.client.admin.getAdminRoles().then(roles => roles.filter(r => r.enabled));
+        const allGroups = await this.client.admin.getAdminGroups().then(groups => groups.filter(g => g.enabled));
         await this.setState({ adminLinks: allLinks, adminRoles: allRoles, adminGroups: allGroups });
         const createRoleDictionaryForLink = (linkRoles: string[]) =>  {
             return allRoles.reduce<{ [key: string]: boolean }>((result, role) => {
@@ -110,9 +112,9 @@ class AdminLinks extends React.Component<{client: ApiClient}, { linkGroup: strin
       }
     async loadData_new(){
         this.setState({ 
-            adminLinks: await this.props.client.admin.getAdminAllLinks(), 
-            adminRoles: await this.props.client.admin.getAdminRoles().then(roles => roles.filter(r => r.enabled)), 
-            adminGroups: await this.props.client.admin.getAdminGroups().then(groups => groups.filter(g => g.enabled)) 
+            adminLinks: await this.client.admin.getAdminAllLinks(), 
+            adminRoles: await this.client.admin.getAdminRoles().then(roles => roles.filter(r => r.enabled)), 
+            adminGroups: await this.client.admin.getAdminGroups().then(groups => groups.filter(g => g.enabled)) 
         });
     }
     componentDidMount() {

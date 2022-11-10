@@ -1,16 +1,13 @@
 import React from 'react';
 import LinksCard from './LinksCard';
-import { ApiClient } from '../services/apiClient';
 import { ILinkItem, IStatusItem } from '../services/openapi';
 import StatusesCard from './StatusesCard';
+import { resolve } from 'inversify-react';
+import { IApiClient } from '../services/Interfaces/IApiClient';
 
-class Home extends React.Component<{client: ApiClient}, { links: Record<string, ILinkItem[]>, status: Record<string, IStatusItem[]> }> {
-    client: ApiClient;
-    constructor(props: any) {
-        super(props);
-        this.client = props.client;
-        
-    }
+class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, status: Record<string, IStatusItem[]> }> {
+    @resolve("apiClient") private readonly client!: IApiClient;
+
     componentDidMount() {
         const links = this.client.isLoggedIn ? this.client.links.getLinksAll() : this.client.links.getLinksPublic();
         links.then(result => this.setState({ links: result }));

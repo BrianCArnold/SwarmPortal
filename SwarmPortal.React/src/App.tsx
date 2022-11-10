@@ -1,4 +1,5 @@
 import React from 'react';
+import "reflect-metadata";
 
 import './App.css';
 import './styles.scss'
@@ -6,8 +7,6 @@ import './styles.scss'
 
 import 'ag-grid-community/styles/ag-grid.css'; 
 import 'ag-grid-community/styles/ag-theme-alpine.css'; 
-import { ApiClient } from './services/apiClient';
-import { ILinkItem } from './services/openapi';
 import Navigation from './Navigation';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -17,38 +16,27 @@ import Logout from './Auth/Logout';
 import AdminLinkGroups from './Admin/LinkGroups';
 import AdminLinkRoles from './Admin/LinkRoles';
 import AdminLinks from './Admin/Links';
+import { Provider } from 'inversify-react';
+import { container } from './services/ioc';
 
-class App extends React.Component<{}, { links: Record<string, ILinkItem[]> }> {
-  client: ApiClient;
+class App extends React.Component {
   timerID!: NodeJS.Timer;
-  links: Record<string, ILinkItem[]> = {};
-  constructor(props: any) {
-    super(props);
-    this.client = new ApiClient();
-  }
-
-
-  componentDidMount() {
-    this.client.links.getLinksPublic().then((response) => {
-      this.setState({ links: response });
-    });
-  }
-
+  
   render(): React.ReactNode {
     return (
-      <div>
-      <Navigation client={this.client}></Navigation>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home client={this.client} />} />
-          <Route path="Login" element={<Login client={this.client} />} />
-          <Route path="Logout" element={<Logout client={this.client} />} />
-          <Route path="Admin/Groups" element={<AdminLinkGroups client={this.client} />} />
-          <Route path="Admin/Roles" element={<AdminLinkRoles client={this.client} />} />
-          <Route path="Admin/Links" element={<AdminLinks client={this.client} />} />
-        </Routes>
-      </Router>
-      </div>
+      <Provider container={container}>
+        <Navigation></Navigation>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home/>} />
+            <Route path="Login" element={<Login/>} />
+            <Route path="Logout" element={<Logout/>} />
+            <Route path="Admin/Groups" element={<AdminLinkGroups/>} />
+            <Route path="Admin/Roles" element={<AdminLinkRoles/>} />
+            <Route path="Admin/Links" element={<AdminLinks/>} />
+          </Routes>
+        </Router>
+      </Provider>
     );
   }
 }

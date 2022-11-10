@@ -1,38 +1,18 @@
-import type { OpenAPIConfig } from "./openapi/core/OpenAPI";
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import type { OpenAPIConfig } from "../openapi/core/OpenAPI";
+import jwt_decode from "jwt-decode";
 import { OidcClientSettings, OidcClient } from 'oidc-client-ts';
-import { internalClient } from "./openapi";
-import { ObjectGraphReconstructionRequest } from "./ObjectGraphReconstructingRequest";
+import { internalClient } from "../openapi";
+import { NewtonsoftRefReconstructingHttpRequest } from "./ObjectGraphReconstructingRequest";
+import { JwtToken } from "../../Models/JwtToken";
+import { IApiClient } from "../Interfaces/IApiClient";
 
-export interface JwtToken extends JwtPayload {
-    acr: string;
-    at_hash: string;
-    aud: string;
-    auth_time: number;
-    azp: string;
-    email: string;
-    email_verified: boolean;
-    exp: number;
-    family_name: string;
-    given_name: string;
-    iat: number;
-    iss: string;
-    jti: string;
-    name: string;
-    nonce: string;
-    preferred_username: string;
-    roles: string[];
-    session_state: string;
-    sub: string;
-    typ: string;
-}
 const tokenKey = "swarmportalAuth";
-export class ApiClient extends internalClient {
 
-  headers: Record<string, string>;
+export class ApiClient extends internalClient implements IApiClient {
+
   private _authConfiguredAndLoaded: boolean = false;
-  oidcConfig!: OidcClientSettings;
-  oidcClient!: OidcClient;
+  private oidcConfig!: OidcClientSettings;
+  private oidcClient!: OidcClient;
   constructor(config?: Partial<OpenAPIConfig>) {
     const token = localStorage.getItem(tokenKey);
     const headers: Record<string, string> = {};
@@ -42,8 +22,7 @@ export class ApiClient extends internalClient {
     const url = "http://localhost:5109";
     //change conf to commented line for beta.encora.it building
     const conf = { ...{ BASE: url, HEADERS: headers }, ...config };
-    super(conf, ObjectGraphReconstructionRequest);
-    this.headers = headers;
+    super(conf, NewtonsoftRefReconstructingHttpRequest);
   }
 
   private async GetOidcClient(): Promise<OidcClient> {

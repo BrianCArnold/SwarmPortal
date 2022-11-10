@@ -1,9 +1,11 @@
+import { resolve } from 'inversify-react';
 import React from 'react';
-import { ApiClient } from '../services/apiClient';
+import { IApiClient } from '../services/Interfaces/IApiClient';
 import { IGroup } from '../services/openapi';
 
-class AdminLinkGroups extends React.Component<{client: ApiClient}, { enabledGroups: IGroup[], disabledGroups: IGroup[], currentGroupName: string | undefined }> {
-
+class AdminLinkGroups extends React.Component<{}, { enabledGroups: IGroup[], disabledGroups: IGroup[], currentGroupName: string | undefined }> {
+    @resolve("apiClient") private readonly client!: IApiClient;
+    
     get groupName(): string {
         if (this.state && this.state.currentGroupName) {
             return this.state.currentGroupName;
@@ -15,15 +17,15 @@ class AdminLinkGroups extends React.Component<{client: ApiClient}, { enabledGrou
         this.setState({ currentGroupName: v });
     }
     async addGroup() {
-        await this.props.client.admin.postAdminAddGroup(this.groupName);
+        await this.client.admin.postAdminAddGroup(this.groupName);
         this.loadGroups();
     }
 
     loadGroups() {
-        this.props.client.admin.getAdminDisabledGroups().then((response) => {
+        this.client.admin.getAdminDisabledGroups().then((response) => {
             this.setState({ disabledGroups: response });
         });
-        this.props.client.admin.getAdminEnabledGroupsWithNoLinks().then((response) => {
+        this.client.admin.getAdminEnabledGroupsWithNoLinks().then((response) => {
             this.setState({ enabledGroups: response });
         });
     }
@@ -33,12 +35,12 @@ class AdminLinkGroups extends React.Component<{client: ApiClient}, { enabledGrou
     }
 
     async enableGroup(group: IGroup) {
-        await this.props.client.admin.putAdminEnableGroup(group.id || -1);
+        await this.client.admin.putAdminEnableGroup(group.id || -1);
         this.loadGroups();
     }
 
     async disableGroup(group: IGroup) {
-        await this.props.client.admin.deleteAdminDisableGroup(group.id || -1);
+        await this.client.admin.deleteAdminDisableGroup(group.id || -1);
         this.loadGroups();
     }
 

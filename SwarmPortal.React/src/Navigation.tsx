@@ -1,3 +1,4 @@
+import { resolve } from 'inversify-react';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -5,14 +6,10 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { ApiClient } from './services/apiClient';
+import { IApiClient } from './services/Interfaces/IApiClient';
 
-class Navigation extends React.Component<{client: ApiClient}, { }> {
-    client: ApiClient;
-    constructor(props: {client: ApiClient}) {
-        super(props);
-        this.client = props.client;
-    }
+class Navigation extends React.Component {
+    @resolve("apiClient") private readonly client!: IApiClient;
 
     async logIn() {
         await this.client.login();

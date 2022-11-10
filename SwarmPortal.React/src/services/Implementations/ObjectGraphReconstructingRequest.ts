@@ -1,9 +1,9 @@
-import { BaseHttpRequest } from "./openapi/core/BaseHttpRequest";
-import { ApiRequestOptions } from "./openapi/core/ApiRequestOptions";
-import { CancelablePromise } from "./openapi/core/CancelablePromise";
-import { request as __request } from "./openapi/core/request";
+import { BaseHttpRequest } from "../openapi/core/BaseHttpRequest";
+import { ApiRequestOptions } from "../openapi/core/ApiRequestOptions";
+import { CancelablePromise } from "../openapi/core/CancelablePromise";
+import { request as __request } from "../openapi/core/request";
 
-export class ObjectGraphReconstructionRequest extends BaseHttpRequest {
+export class NewtonsoftRefReconstructingHttpRequest extends BaseHttpRequest {
 
     /**
      * Request method
