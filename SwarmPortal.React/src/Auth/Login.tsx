@@ -8,9 +8,9 @@ class Login extends React.Component {
     componentDidMount() {
         this.client.processLogIn().then(r => {
             console.log(r);
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 2000);
+            // setTimeout(() => {
+            //     window.location.href = "/";
+            // }, 2000);
         });
     }
     

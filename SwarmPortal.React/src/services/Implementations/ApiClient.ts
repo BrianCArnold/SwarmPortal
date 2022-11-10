@@ -5,23 +5,27 @@ import { internalClient } from "../openapi";
 import { NewtonsoftRefReconstructingHttpRequest } from "./ObjectGraphReconstructingRequest";
 import { JwtToken } from "../../Models/JwtToken";
 import { IApiClient } from "../Interfaces/IApiClient";
+import { IApiConfiguration } from "../Interfaces/IApiConfiguration";
+import { injectable, inject } from 'inversify';
 
-const tokenKey = "swarmportalAuth";
-
+//A couple parts taken from a project I'm helping another developer with, Not entirely my code.
+@injectable()
 export class ApiClient extends internalClient implements IApiClient {
-
+  get tokenKey(): string {
+    return tokenKey;
+  }
   private _authConfiguredAndLoaded: boolean = false;
   private oidcConfig!: OidcClientSettings;
   private oidcClient!: OidcClient;
-  constructor(config?: Partial<OpenAPIConfig>) {
+  constructor(
+    private config: IApiConfiguration
+  ) {
     const token = localStorage.getItem(tokenKey);
     const headers: Record<string, string> = {};
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
-    const url = "http://localhost:5109";
-    //change conf to commented line for beta.encora.it building
-    const conf = { ...{ BASE: url, HEADERS: headers }, ...config };
+    const conf = { ...{ HEADERS: headers }, ...config };
     super(conf, NewtonsoftRefReconstructingHttpRequest);
   }
 
@@ -43,14 +47,14 @@ export class ApiClient extends internalClient implements IApiClient {
     }
   }
   get token(): JwtToken {
-    return jwt_decode<JwtToken>(localStorage.getItem(tokenKey) || "");
+    return jwt_decode<JwtToken>(localStorage.getItem(this.tokenKey) || "");
   }
   get roles(): string[] {
     console.log(this.token.roles);
     return this.token.roles;
   }
   get isLoggedIn(): boolean {
-    return !!localStorage.getItem(tokenKey);
+    return !!localStorage.getItem(this.tokenKey);
   }
   async login(){
     const client = await this.GetOidcClient();
@@ -60,19 +64,20 @@ export class ApiClient extends internalClient implements IApiClient {
   async processLogIn() {
     const client = await this.GetOidcClient();
     const signinResponse = await client.processSigninResponse(window.location.href);
-    localStorage.setItem(tokenKey, signinResponse.access_token);
+    localStorage.setItem(this.tokenKey, signinResponse.access_token);
   }
   async logOut() {
     const client = await this.GetOidcClient();
     const signoutRequest = await client.createSignoutRequest({
-        post_logout_redirect_uri: "http://localhost:3000/Logout"
+        post_logout_redirect_uri: this.config.BASE + "/Logout"
     });
     window.location.href = signoutRequest.url;
   }
   async processLogOut() {
     const client = await this.GetOidcClient();
     await client.processSignoutResponse(window.location.href);
-    localStorage.removeItem(tokenKey);
+    localStorage.removeItem(this.tokenKey);
   }
 
 }
+const tokenKey = "swarmportalAuth";
