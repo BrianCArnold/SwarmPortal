@@ -1,0 +1,22 @@
+
+FROM node:18 as build-ui
+WORKDIR /app
+COPY SwarmPortal.React/package*.json /app/
+RUN npm ci
+COPY SwarmPortal.React /app/
+RUN npm run build
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as build-api
+
+WORKDIR /app
+COPY . ./
+WORKDIR /app/SwarmPortal.API
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY --from=build-api /app/SwarmPortal.API/out .
+RUN mkdir -p /app/clientapp
+COPY --from=build-ui /app/build/ ./wwwroot/
+RUN mkdir -p /app/persist
+ENTRYPOINT ["/app/SwarmPortal.API"]

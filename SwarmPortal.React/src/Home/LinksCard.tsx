@@ -1,8 +1,11 @@
+import { resolve } from 'inversify-react';
 import React from 'react';
+import { IApiConfiguration } from '../services/Interfaces/IApiConfiguration';
 import { ILinkItem } from '../services/openapi';
 import './LinksCard.scss';
 
 class LinksCard extends React.Component<{header: string, links: ILinkItem[], color: string }, {}> {
+  @resolve("apiConfig") private readonly config!: IApiConfiguration;
 
   links(): React.ReactNode[] {
     return this.props.links.map(l => (
@@ -15,7 +18,7 @@ class LinksCard extends React.Component<{header: string, links: ILinkItem[], col
   
 
   uriIconUrl(uri: string): string {
-    return "http://localhost:5109" + "/Icon/" + encodeURIComponent(uri);
+    return this.config.BASE + "/Icon/" + encodeURIComponent(uri);
   }
 
   render(): React.ReactNode {

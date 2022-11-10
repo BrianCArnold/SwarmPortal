@@ -1,4 +1,3 @@
-import type { OpenAPIConfig } from "../openapi/core/OpenAPI";
 import jwt_decode from "jwt-decode";
 import { OidcClientSettings, OidcClient } from 'oidc-client-ts';
 import { internalClient } from "../openapi";
@@ -6,7 +5,7 @@ import { NewtonsoftRefReconstructingHttpRequest } from "./ObjectGraphReconstruct
 import { JwtToken } from "../../Models/JwtToken";
 import { IApiClient } from "../Interfaces/IApiClient";
 import { IApiConfiguration } from "../Interfaces/IApiConfiguration";
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 
 //A couple parts taken from a project I'm helping another developer with, Not entirely my code.
 @injectable()
