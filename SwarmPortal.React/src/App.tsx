@@ -31,9 +31,9 @@ class App extends React.Component {
             <Route path="/" element={<Home/>} />
             <Route path="Login" element={<Login/>} />
             <Route path="Logout" element={<Logout/>} />
-            <Route path="Admin/Groups" element={<AdminLinkGroups/>} />
-            <Route path="Admin/Roles" element={<AdminLinkRoles/>} />
-            <Route path="Admin/Links" element={<AdminLinks/>} />
+            <Route path="Manage/Groups" element={<AdminLinkGroups/>} />
+            <Route path="Manage/Roles" element={<AdminLinkRoles/>} />
+            <Route path="Manage/Links" element={<AdminLinks/>} />
           </Routes>
         </Router>
       </Provider>

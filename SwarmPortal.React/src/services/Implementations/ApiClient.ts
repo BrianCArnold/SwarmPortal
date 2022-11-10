@@ -46,6 +46,10 @@ export class ApiClient extends internalClient implements IApiClient {
         return this.oidcClient;
     }
   }
+  
+  get rawToken(): string {
+    return localStorage.getItem(this.tokenKey) || "";
+  }
   get token(): JwtToken {
     return jwt_decode<JwtToken>(localStorage.getItem(this.tokenKey) || "");
   }

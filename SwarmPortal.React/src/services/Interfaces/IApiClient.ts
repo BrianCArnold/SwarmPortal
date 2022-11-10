@@ -10,6 +10,7 @@ export interface IApiClient {
   statuses: StatusesService;
   request: BaseHttpRequest;
   get token(): JwtToken;
+  get rawToken(): string;
   get roles(): string[];
   get isLoggedIn(): boolean;
   login(): Promise<void>;

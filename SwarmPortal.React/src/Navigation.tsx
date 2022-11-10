@@ -27,9 +27,9 @@ class Navigation extends React.Component {
                         <Nav.Link className="nav-link" href="/">Home</Nav.Link>
                         <NavDropdown title="Admin" id="admin-nav-dropdown">
 
-                        <NavDropdown.Item href="/admin/links">Links</NavDropdown.Item>
-                        <NavDropdown.Item href="/admin/groups">Groups</NavDropdown.Item>
-                        <NavDropdown.Item href="/admin/roles">Roles</NavDropdown.Item>
+                        <NavDropdown.Item href="/Manage/Links">Links</NavDropdown.Item>
+                        <NavDropdown.Item href="/Manage/Groups">Groups</NavDropdown.Item>
+                        <NavDropdown.Item href="/Manage/Roles">Roles</NavDropdown.Item>
                         
                         </NavDropdown>
                     </Nav>
