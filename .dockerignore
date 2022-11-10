@@ -1,1 +1,4 @@
 SwarmPortal.FrontEnd/node_modules
+SwarmPortal.FrontEnd/dist
+SwarmPortal.React/node_modules
+SwarmPortal.React/build
