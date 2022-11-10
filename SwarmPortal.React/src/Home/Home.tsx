@@ -4,6 +4,8 @@ import { ILinkItem, IStatusItem } from '../services/openapi';
 import StatusesCard from './StatusesCard';
 import { resolve } from 'inversify-react';
 import { IApiClient } from '../services/Interfaces/IApiClient';
+import { Carousel } from 'react-bootstrap';
+import './Home.scss';
 
 class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, status: Record<string, IStatusItem[]> }> {
     @resolve("apiClient") private readonly client!: IApiClient;
@@ -48,32 +50,39 @@ class Home extends React.Component<{}, { links: Record<string, ILinkItem[]>, sta
 
     render(): React.ReactNode {
         return (
-            <div className="container">
-                <div className="row py-3 mr-0">
-                    <div key="linksContainer" className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
-                        <div className="card bShadow">
-                            <h4 className="card-header bg-light text-dark">
-                            Links
-                            </h4>
-                            <div className="card-body p-3">
-                                <div className="row">
-                                    {this.links()}
+            <div className="container-flex">
+                <div className="row py-3 mx-0">
+                    <Carousel controls={false} wrap={false} variant="dark" interval={null}>
+                        <Carousel.Item>
+                            <div key="linksContainer" className="col-12 my-xxl-0 my-3">
+                                <div className="card bShadow">
+                                    <h4 className="card-header bg-light text-dark">
+                                    Links
+                                    </h4>
+                                    <div className="card-body p-3">
+                                        <div className="row">
+                                            {this.links()}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div key="statusContainer" className="col-xxl-6 col-xl-12 my-xxl-0 my-3">
-                        <div className="card bShadow">
-                            <h4 className="card-header bg-light text-dark">
-                            Status
-                            </h4>
-                            <div className="card-body p-3">
-                                <div className="row">
-                                    {this.statuses()}
+                        </Carousel.Item>    
+                        <Carousel.Item>
+                            <div key="statusContainer" className="col-12 my-xxl-0 my-3">
+                                <div className="card bShadow">
+                                    <h4 className="card-header bg-light text-dark">
+                                    Status
+                                    </h4>
+                                    <div className="card-body p-3">
+                                        <div className="row">
+                                            {this.statuses()}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </Carousel.Item>
+                    </Carousel>
+                    
                 </div>
             </div>
         );

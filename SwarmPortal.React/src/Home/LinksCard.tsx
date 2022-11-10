@@ -12,7 +12,7 @@ class LinksCard extends React.Component<{header: string, links: ILinkItem[], col
     return this.props.links.map(l => (
       <a key={l.url} title={l.url||""} href={l.url||""} className={"m-2 my-1 btn btn-sm text-dark border-0 border-bottom btn-outline-"+this.props.color+" border-"+this.props.color} >
         <SecureImage className='linkImage' alt={""} src={encodeURIComponent(l.url||"")} />
-        {l.name}
+        <span className='ms-1' >{l.name}</span>
       </a>
     ));
   }
