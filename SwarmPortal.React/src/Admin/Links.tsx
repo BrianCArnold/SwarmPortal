@@ -2,20 +2,15 @@ import React from 'react';
 import './Links.scss';
 import { IApiClient } from '../services/Interfaces/IApiClient';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef, CellClickedEvent, ValueGetterParams, ValueSetterParams, NewValueParams } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 import { IGroup, ILink, IRole } from '../services/openapi';
 import { resolve } from 'inversify-react';
-
-type linkRow = { id: number; url: string; name: string; roles: { [key: string]: boolean; }; group: string; enabled: boolean; };
+import DeleteLinkButtonCellRenderer from '../Grid/DeleteLinkButtonCellRenderer';
+import RoleLinkButtonCellRenderer from '../Grid/RoleLinkButtonCellRenderer';
+import { linkRow } from '../Models/linkRow';
 
 class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: string, linkUrl: string, adminLinks: ILink[], adminRoles: IRole[], adminGroups: IGroup[], rowData: linkRow[] }> {
     @resolve("apiClient") private readonly client!: IApiClient;
-    disableLink(data: linkRow) {
-        throw new Error('Method not implemented.');
-    }
-    enableLink(data: linkRow) {
-        throw new Error('Method not implemented.');
-    }
     
     gridColumns!: ColDef<linkRow>[];
     
@@ -23,22 +18,15 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
 
     private staticColumnDefs: ColDef<linkRow>[] = [
     { 
-        valueGetter: p => {
-            console.log(p);
-            if (p.data?.enabled) return '❌'; else return '➕';
-        }, 
-        width: 60, 
-        sortable: true, 
-        filter: true,
-        onCellClicked: (event: CellClickedEvent<linkRow>) => {
-            if (event.data) {
-                if (event.data.enabled) {
-                    this.disableLink(event.data)
-                } else { 
-                    this.enableLink(event.data) 
-                } 
-            }
-        }
+        field: 'id',
+        headerName: 'Active',
+        cellRenderer: DeleteLinkButtonCellRenderer,
+        cellRendererParams: {
+            onChange: async () => await this.loadData()
+        },
+        width: 74, 
+        sortable: false, 
+        filter: false
     },
     { field: 'group', sortable: true, filter: true },
     { field: 'name', sortable: true, filter: true },
@@ -53,31 +41,14 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
     private GenerateRoleColumns(allRoles: IRole[]): ColDef<linkRow>[] {
         return allRoles.map(r => ({
             headerName: r.name || '',
-            valueGetter: (params: ValueGetterParams<linkRow>) => {
-                if (params.data){
-                    return params.data.roles[r.name || ''];
-                } else {
-                    return '';
-                }
-            },
-            valueSetter: (params: ValueSetterParams<linkRow>) => {
-                if (params.data) {
-                    const data = params.data;
-                    data.roles[r.name || ''] = params.newValue;
-                    //I believe 'true' means successful update, need to check
-                    return true;
-                } else {
-                    return false;
-                }
-            },
             sortable: false,
             filter: false,
-            editable: true,
             resizable: true,
-            // cellEditor: CheckboxEditor,
-            // cellRenderer: CheckboxRenderer,
-            onCellValueChanged: (event: NewValueParams<linkRow>) => {
-                this.UpdateLink(event.data, r.name || '', event.newValue);
+            width: 150,
+            cellRenderer: RoleLinkButtonCellRenderer,
+            cellRendererParams: {
+                onChange: async () => await this.loadData(),
+                role: r.name || ''
             },
           }
         ))
@@ -109,13 +80,6 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
         }));
         this.gridColumns = this.generateColumnDefs(allRoles);
         // setTimeout(() => this.gridApi.sizeColumnsToFit(), 10);
-      }
-    async loadData_new(){
-        this.setState({ 
-            adminLinks: await this.client.admin.getAdminAllLinks(), 
-            adminRoles: await this.client.admin.getAdminRoles().then(roles => roles.filter(r => r.enabled)), 
-            adminGroups: await this.client.admin.getAdminGroups().then(groups => groups.filter(g => g.enabled)) 
-        });
     }
     componentDidMount() {
         this.loadData();
@@ -160,10 +124,17 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
     set linkUrl(v: string) {
         this.setState({ linkUrl: v });
     }
+    addLink() {
+        this.client.admin.postAdminAddLink({ name: this.linkName, url: this.linkUrl, group: this.linkGroup, roles: [] }).then(async () => await this.loadData());
+    }
+
+    get isAddDisabled(): boolean {
+        return this.linkGroup == '__initial_invalid' || !this.linkName || !this.linkUrl;
+    }
 
     render(): React.ReactNode {
         return ( this.state && this.rowData &&
-            <div className="container">
+            <div className="container-fluid">
                 <div className="row py-3 mr-0">
                     <div className="col-12">
                     <h2>Link Management</h2>
@@ -192,9 +163,10 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
                 </div>
                 <div className="row">
                     <div className="col-lg-2">
-                    {/* <select placeholder="Group" [(ngModel)]="linkGroup" className="form-select">
-                        <option *ngFor="let group of allGroups" [value]="group.name">{{group.name}}</option>
-                    </select> */}
+                    <select placeholder="Group" value={this.linkGroup} onChange={e => this.linkGroup = e.target.value} className="form-select">
+                        <option value="__initial_invalid">Select Group</option>
+                        {this.state.adminGroups.map(g => <option key={g.name} value={g.name||""}>{g.name}</option>)}
+                    </select>
                     </div>
                     <div className="col-lg-3">
                         <input placeholder="SwarmPortal" className="form-control" value={this.linkName} onChange={e => this.linkName = e.target.value} />
@@ -203,7 +175,7 @@ class AdminLinks extends React.Component<{}, { linkGroup: string, linkName: stri
                         <input placeholder="https://swarmportal.com" className="form-control" value={this.linkUrl} onChange={e => this.linkUrl = e.target.value} />
                     </div>
                     <div className="col-lg-2">
-                    {/* <button [disabled]="isAddDisabled" className="form-control btn btn-primary col-lg-2" (click)="addLink()">Add Link</button> */}
+                    <button disabled={this.isAddDisabled} className="form-control btn btn-primary col-lg-2" onClick={() => this.addLink()}>Add Link</button>
 
                     </div>
                 </div>
