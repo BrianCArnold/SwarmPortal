@@ -19,27 +19,26 @@ class Navigation extends React.Component {
     }
     render(): React.ReactNode {
         return (
-            <Navbar bg="light"  >
+            <Navbar collapseOnSelect expand="sm" bg="light"  >
                 <Container fluid>
                     <Navbar.Brand href="/">Swarm Portal</Navbar.Brand>
-                    
-                    <Nav className="me-auto">
-                        <Nav.Link className="nav-link" href="/">Home</Nav.Link>
-                        <NavDropdown title="Admin" id="admin-nav-dropdown">
-
-                        <NavDropdown.Item href="/Manage/Links">Links</NavDropdown.Item>
-                        <NavDropdown.Item href="/Manage/Groups">Groups</NavDropdown.Item>
-                        <NavDropdown.Item href="/Manage/Roles">Roles</NavDropdown.Item>
-                        
-                        </NavDropdown>
-                    </Nav>
+                        <Nav className="me-auto">
+                            <NavDropdown title="Admin" id="admin-nav-dropdown">
+                                <NavDropdown.Item href="/Manage/Links">Links</NavDropdown.Item>
+                                <NavDropdown.Item href="/Manage/Groups">Groups</NavDropdown.Item>
+                                <NavDropdown.Item href="/Manage/Roles">Roles</NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+                        <Form className="d-flex justify-content-end">
+                            {this.client.isLoggedIn && <Button variant='light' className="d-none d-md-block" disabled >Welcome {this.client.token.given_name}</Button>}
+                            {this.client.isLoggedIn && <Button variant='outline-success' onClick={() => this.logOut()}>Logout</Button>}
+                            {!this.client.isLoggedIn && <Button variant="outline-success me-2" onClick={() => this.logIn()} >Login</Button>} 
+                        </Form>
+                    {/* <Navbar.Toggle aria-controls='swarmportal-navbar' />
+                    <Navbar.Collapse id='swarmportal-navbar'>
+                    </Navbar.Collapse> */}
             
                 </Container>
-                <Form className="container-fluid d-flex justify-content-end">
-                {this.client.isLoggedIn && <Button variant='light' disabled >Welcome {this.client.token.given_name}</Button>}
-                {this.client.isLoggedIn && <Button variant='outline-success' onClick={() => this.logOut()}>Logout</Button>}
-                {!this.client.isLoggedIn && <Button variant="outline-success me-2" onClick={() => this.logIn()} >Login</Button>} 
-                </Form>
 
             </Navbar>
             
