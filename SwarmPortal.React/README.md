@@ -1,6 +1,6 @@
 # Swarm Portal
 
-This is a React re-implementation of the Angular project in SwarmPortal.FrontEnd. It should have complete feature parity, and near identical appearance.
+This is a React re-implementation of the Angular project in SwarmPortal.Angular. It should have complete feature parity, and near identical appearance.
 
 ## Available Scripts
 

@@ -28,9 +28,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18
-    - name: Build FrontEnd
+    - name: Build Angular
       if: success()
-      working-directory: ./SwarmPortal.FrontEnd
+      working-directory: ./SwarmPortal.Angular
       run: |
         npm ci
         npm run build
