@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "@swarm-portal/frontend": {
+    "@swarm-portal/angular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "@swarm-portal/frontend:build:production"
+              "browserTarget": "@swarm-portal/angular:build:production"
             },
             "development": {
-              "browserTarget": "@swarm-portal/frontend:build:development"
+              "browserTarget": "@swarm-portal/angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "@swarm-portal/frontend:build"
+            "browserTarget": "@swarm-portal/angular:build"
           }
         },
         "test": {

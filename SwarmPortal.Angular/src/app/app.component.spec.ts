@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title '@swarm-portal/frontend'`, () => {
+  it(`should have as title '@swarm-portal/angular'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('@swarm-portal/frontend');
+    expect(app.title).toEqual('@swarm-portal/angular');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('@swarm-portal/frontend app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('@swarm-portal/angular app is running!');
   });
 });

@@ -1,9 +1,9 @@
 
 FROM node:18 as build-ui
 WORKDIR /app
-COPY SwarmPortal.FrontEnd/package*.json /app/
+COPY SwarmPortal.Angular/package*.json /app/
 RUN npm ci
-COPY SwarmPortal.FrontEnd /app/
+COPY SwarmPortal.Angular /app/
 ARG configuration=production
 RUN npm run build -- --output-path=./dist/out --configuration $configuration
 
