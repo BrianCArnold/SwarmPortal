@@ -51,7 +51,17 @@ export class ApiClient extends internalClient implements IApiClient {
     return localStorage.getItem(this.tokenKey) || "";
   }
   get token(): JwtToken {
-    return jwt_decode<JwtToken>(localStorage.getItem(this.tokenKey) || "");
+    const result = jwt_decode<JwtToken>(localStorage.getItem(this.tokenKey) || "");
+    if (result && result.exp) {
+      const epoch = new Date(0);
+      epoch.setUTCSeconds(result.exp);
+      if (new Date().getTime() > epoch.getTime()) {
+        return result;
+      } else {
+        return jwt_decode<JwtToken>('');
+      }
+    }
+    return result;
   }
   get roles(): string[] {
     console.log(this.token.roles);
