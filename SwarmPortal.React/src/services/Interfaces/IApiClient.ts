@@ -9,7 +9,7 @@ export interface IApiClient {
   links: LinksService;
   statuses: StatusesService;
   request: BaseHttpRequest;
-  get token(): JwtToken;
+  get token(): JwtToken | null;
   get rawToken(): string;
   get roles(): string[];
   get isLoggedIn(): boolean;

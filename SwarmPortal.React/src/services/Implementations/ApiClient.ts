@@ -19,10 +19,24 @@ export class ApiClient extends internalClient implements IApiClient {
   constructor(
     private config: IApiConfiguration
   ) {
+    console.log(config);
     const token = localStorage.getItem(tokenKey);
     const headers: Record<string, string> = {};
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+    
+    
+    if (token){
+      const tokenObj = jwt_decode<JwtToken>(token || "");
+      if (tokenObj.exp) {
+        console.log(tokenObj);
+        console.log(token);
+        const epoch = new Date(tokenObj.exp*1000);
+        console.log(epoch);
+        console.log(new Date().getTime());
+        console.log(new Date().getTime() < epoch.getTime());
+        if (new Date().getTime() < epoch.getTime()) { 
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+      }
     }
     const conf = { ...{ HEADERS: headers }, ...config };
     super(conf, NewtonsoftRefReconstructingHttpRequest);
@@ -50,20 +64,24 @@ export class ApiClient extends internalClient implements IApiClient {
   get rawToken(): string {
     return localStorage.getItem(this.tokenKey) || "";
   }
-  get token(): JwtToken {
-    const result = jwt_decode<JwtToken>(localStorage.getItem(this.tokenKey) || "");
-    if (result && result.exp) {
-      const epoch = new Date(0);
-      epoch.setUTCSeconds(result.exp);
-      if (new Date().getTime() > epoch.getTime()) {
-        return result;
-      } else {
-        return jwt_decode<JwtToken>('');
+  get token(): JwtToken | null {
+    const jwt = localStorage.getItem(this.tokenKey) || "";
+    if (jwt){
+      const result = jwt_decode<JwtToken>(jwt);
+      if (result && result.exp) {
+        const epoch = new Date(result.exp*1000);
+        if (new Date().getTime() < epoch.getTime()) {
+          return result;
+        } else {
+          return null;
+        }
       }
+      return result;
     }
-    return result;
+    return null;
   }
   get roles(): string[] {
+    if (!this.token) return [];
     console.log(this.token.roles);
     return this.token.roles;
   }

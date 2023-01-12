@@ -30,7 +30,7 @@ class Navigation extends React.Component {
                             </NavDropdown>
                         </Nav>
                         <Form className="d-flex justify-content-end">
-                            {this.client.isLoggedIn && <Button variant='light' className="d-none d-md-block" disabled >Welcome {this.client.token.given_name}</Button>}
+                            {this.client.isLoggedIn && this.client.token && <Button variant='light' className="d-none d-md-block" disabled >Welcome {this.client.token.given_name}</Button>}
                             {this.client.isLoggedIn && <Button variant='outline-success' onClick={() => this.logOut()}>Logout</Button>}
                             {!this.client.isLoggedIn && <Button variant="outline-success me-2" onClick={() => this.logIn()} >Login</Button>} 
                         </Form>
